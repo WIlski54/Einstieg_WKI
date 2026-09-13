@@ -276,7 +276,7 @@ window.INHALTE = {
       },
       aufgaben: [
         {
-          nr: 9, typ: "sortierung", eyebrow: "Kettenreaktion", titel: "Die Julikrise in der richtigen Reihenfolge",
+          nr: 10, typ: "sortierung", eyebrow: "Kettenreaktion", titel: "Die Julikrise in der richtigen Reihenfolge",
           niveaus: {
             A: { hinweis: "Drei Stationen – die Daten helfen dir.", items: [
               "28. Juni · Attentat von Sarajevo",
@@ -302,7 +302,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 10, typ: "mc", eyebrow: "Grundwissen", titel: "Das Attentat von Sarajevo",
+          nr: 11, typ: "mc", eyebrow: "Grundwissen", titel: "Das Attentat von Sarajevo",
           niveaus: {
             A: { frage: "Wer wurde am 28. Juni 1914 in Sarajevo ermordet?", optionen: [
               { t: "Der österreichisch-ungarische Thronfolger Franz Ferdinand und seine Frau Sophie", ok: true },
@@ -324,7 +324,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 11, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Vom Attentat zum Krieg",
+          nr: 12, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Vom Attentat zum Krieg",
           niveaus: {
             A: { modus: "chips", ablenker: ["Paris", "Frieden"], text: "Am 28. Juni 1914 wurde der Thronfolger Franz Ferdinand in [Sarajevo] ermordet. Österreich-Ungarn machte [Serbien] verantwortlich und stellte ein [Ultimatum]. Wegen der [Bündnisse] wurde aus dem Konflikt schnell ein europäischer Krieg." },
             B: { modus: "input", text: "Der Attentäter hieß Gavrilo [Princip]. Deutschland gab Österreich-Ungarn den sogenannten [Blankoscheck]. Am [28]. Juli 1914 erklärte Österreich-Ungarn Serbien den Krieg. Russland reagierte mit der [Mobilmachung|Generalmobilmachung]. Der Einmarsch in das neutrale [Belgien] brachte Großbritannien in den Krieg." },
@@ -332,7 +332,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 12, typ: "zuordnung", eyebrow: "Akteure", titel: "Wer tat was in der Julikrise?",
+          nr: 13, typ: "zuordnung", eyebrow: "Akteure", titel: "Wer tat was in der Julikrise?",
           niveaus: {
             A: { links: "Akteur", rechts: "Handlung", paare: [
               ["Gavrilo Princip", "Erschießt den Thronfolger in Sarajevo"],
@@ -355,7 +355,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 13, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Das Tempo der Krise",
+          nr: 14, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Das Tempo der Krise",
           chart: {
             typ: "bar", horizontal: true, einheit: "Tage", yTitel: "Tage nach dem Attentat (28. Juni 1914)",
             quelle: "Zeitabstand der Ereignisse zum Attentat. Tippe auf einen Balken.",
@@ -381,7 +381,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 14, typ: "karte", eyebrow: "Karte erkunden", titel: "Julikrise – die Orte der Entscheidung", karte: "julikrise",
+          nr: 15, typ: "karte", eyebrow: "Karte erkunden", titel: "Julikrise – die Orte der Entscheidung", karte: "julikrise",
           benoetigt: { A: 3, B: 6, C: 8 },
           niveaus: {
             A: { frage: "In welcher Stadt fand das Attentat auf Franz Ferdinand statt?", optionen: [
@@ -402,7 +402,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 15, typ: "freitext", eyebrow: "Erklären", titel: "Funke oder Pulverfass?",
+          nr: 16, typ: "freitext", eyebrow: "Erklären", titel: "Funke oder Pulverfass?",
           kontext: "Klasse 9 Geschichte, Abschnitt Auslöser. Begriffe: Auslöser, Ursache, Attentat von Sarajevo, Julikrise, Blankoscheck, Bündnissystem, Kettenreaktion.",
           niveaus: {
             A: { aufgabe: "Erkläre mit eigenen Worten den Unterschied zwischen Auslöser und Ursache. Nutze das Bild vom Funken und vom Pulverfass.", starter: ["Der Auslöser war …", "Die Ursachen dagegen …", "Man kann sagen: …"], begriffe: ["Auslöser", "Ursache", "Attentat", "Bündnisse"], min: 60 },
@@ -411,7 +411,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 16, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Auslöser", abschnitt: "ausloeser",
+          nr: 17, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Auslöser", abschnitt: "ausloeser",
           hinweis: "Notiere die Stationen der Julikrise mit Datum in zeitlicher Ordnung. Vergiss die Quelle nicht.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zum Auslöser des Ersten Weltkriegs (Attentat von Sarajevo, Julikrise) auf sachliche Richtigkeit, Daten und zeitliche Ordnung.",
         },
@@ -433,7 +433,7 @@ window.INHALTE = {
       },
       aufgaben: [
         {
-          nr: 17, typ: "mc", eyebrow: "Grundwissen", titel: "Vom Bewegungskrieg zum Stellungskrieg",
+          nr: 18, typ: "mc", eyebrow: "Grundwissen", titel: "Vom Bewegungskrieg zum Stellungskrieg",
           niveaus: {
             A: { frage: "Was ist ein Stellungskrieg?", optionen: [
               { t: "Die Fronten bewegen sich kaum; die Soldaten liegen sich monatelang in Schützengräben gegenüber", ok: true },
@@ -455,7 +455,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 18, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Der Krieg in Stichworten",
+          nr: 19, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Der Krieg in Stichworten",
           niveaus: {
             A: { modus: "chips", ablenker: ["Rom", "Fahrräder"], text: "1914 stoppten die Franzosen den deutschen Vormarsch an der [Marne]. Danach erstarrte die Westfront in [Schützengräben]. 1916 tobte die Schlacht um [Verdun]. 1917 traten die [USA] in den Krieg ein." },
             B: { modus: "input", text: "Der deutsche Angriffsplan hieß [Schlieffen-Plan|Schlieffenplan]. An der Ostfront besiegte Deutschland 1914 die Russen bei [Tannenberg]. 1915 setzte Deutschland bei Ypern erstmals [Giftgas|Gas|Chlorgas] ein. Der uneingeschränkte [U-Boot-Krieg|U-Bootkrieg|Ubootkrieg|U-Boot Krieg] führte 1917 zum Kriegseintritt der USA. Nach der Revolution schied [Russland] 1917/18 aus dem Krieg aus." },
@@ -463,7 +463,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 19, typ: "zuordnung", eyebrow: "Jahr und Ereignis", titel: "Was geschah wann?",
+          nr: 20, typ: "zuordnung", eyebrow: "Jahr und Ereignis", titel: "Was geschah wann?",
           niveaus: {
             A: { links: "Jahr", rechts: "Ereignis", paare: [
               ["1914", "Marneschlacht – der Stellungskrieg beginnt"],
@@ -486,7 +486,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 20, typ: "sortierung", eyebrow: "Zeitliche Ordnung", titel: "Kriegsverlauf 1914–1918",
+          nr: 21, typ: "sortierung", eyebrow: "Zeitliche Ordnung", titel: "Kriegsverlauf 1914–1918",
           niveaus: {
             A: { hinweis: "Drei Wendepunkte – mit Jahreszahl.", items: [
               "1914 · Marneschlacht: Der Schlieffen-Plan scheitert",
@@ -512,7 +512,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 21, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Der Preis des Krieges",
+          nr: 22, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Der Preis des Krieges",
           chart: {
             typ: "bar", einheit: "Mio.", yTitel: "Gefallene Soldaten in Millionen (gerundet)",
             quelle: "Gerundete Schätzwerte; verschiedene Quellen nennen abweichende Zahlen. Tippe auf einen Balken.",
@@ -539,7 +539,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 22, typ: "karte", eyebrow: "Karte erkunden", titel: "Die Fronten des Krieges", karte: "fronten",
+          nr: 23, typ: "karte", eyebrow: "Karte erkunden", titel: "Die Fronten des Krieges", karte: "fronten",
           benoetigt: { A: 3, B: 5, C: 7 },
           niveaus: {
             A: { frage: "An welcher Front standen sich Deutschland und Frankreich gegenüber?", optionen: [
@@ -560,7 +560,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 23, typ: "freitext", eyebrow: "Erklären", titel: "Warum erstarrte die Front?",
+          nr: 24, typ: "freitext", eyebrow: "Erklären", titel: "Warum erstarrte die Front?",
           kontext: "Klasse 9 Geschichte, Abschnitt Verlauf. Begriffe: Marneschlacht, Schützengraben, Maschinengewehr, Artillerie, Stellungskrieg, Materialschlacht, totaler Krieg, Heimatfront.",
           niveaus: {
             A: { aufgabe: "Erkläre in 3–4 Sätzen, warum aus dem Bewegungskrieg 1914 ein Stellungskrieg wurde.", starter: ["Zuerst …", "Aber dann …", "Deshalb …"], begriffe: ["Marne", "Schützengraben", "Maschinengewehr"], min: 60 },
@@ -569,7 +569,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 24, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Verlauf", abschnitt: "verlauf",
+          nr: 25, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Verlauf", abschnitt: "verlauf",
           hinweis: "Ordne den Verlauf nach Jahren (1914, 1915, 1916, 1917, 1918). Ein Stichpunkt pro wichtigem Ereignis.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zum Verlauf des Ersten Weltkriegs (1914–1918) auf sachliche Richtigkeit, Jahreszahlen und zeitliche Ordnung.",
         },
@@ -591,7 +591,7 @@ window.INHALTE = {
       },
       aufgaben: [
         {
-          nr: 25, typ: "mc", eyebrow: "Grundwissen", titel: "Warum verlor Deutschland?",
+          nr: 27, typ: "mc", eyebrow: "Grundwissen", titel: "Warum verlor Deutschland?",
           niveaus: {
             A: { frage: "Wann trat der Waffenstillstand des Ersten Weltkriegs in Kraft?", optionen: [
               { t: "Am 11. November 1918", ok: true }, { t: "Am 28. Juni 1914", ok: false }, { t: "Am 8. Mai 1945", ok: false },
@@ -611,7 +611,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 26, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Die letzten Monate",
+          nr: 28, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Die letzten Monate",
           niveaus: {
             A: { modus: "chips", ablenker: ["Sieg", "Paris"], text: "In [Kiel] weigerten sich Matrosen im November 1918, noch einmal auszulaufen. Am 9. November wurde in Berlin die [Republik] ausgerufen. Am 11. November 1918 trat der [Waffenstillstand] in Kraft. Der Kriegseintritt der [USA] hatte das Kräfteverhältnis verändert." },
             B: { modus: "input", text: "Ende September 1918 verlangte die Oberste Heeresleitung um Hindenburg und [Ludendorff] einen Waffenstillstand. Der Matrosenaufstand in [Kiel] löste die [Novemberrevolution] aus. Kaiser [Wilhelm II.|Wilhelm II|Wilhelm] dankte ab und floh in die Niederlande. Philipp [Scheidemann] rief am 9. November die Republik aus. Der Waffenstillstand wurde in [Compiègne|Compiegne] unterzeichnet." },
@@ -619,7 +619,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 27, typ: "sortierung", eyebrow: "Zeitliche Ordnung", titel: "Vom Sommer 1918 zum Waffenstillstand",
+          nr: 29, typ: "sortierung", eyebrow: "Zeitliche Ordnung", titel: "Vom Sommer 1918 zum Waffenstillstand",
           niveaus: {
             A: { hinweis: "Drei Daten des Jahres 1918.", items: [
               "8. August 1918 · „Schwarzer Tag des deutschen Heeres“",
@@ -645,7 +645,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 28, typ: "zuordnung", eyebrow: "Begriffe", titel: "Begriffe des Kriegsendes",
+          nr: 30, typ: "zuordnung", eyebrow: "Begriffe", titel: "Begriffe des Kriegsendes",
           niveaus: {
             A: { links: "Begriff", rechts: "Erklärung", paare: [
               ["Waffenstillstand", "Vereinbarung, die Kämpfe zu beenden – noch kein Friedensvertrag"],
@@ -668,7 +668,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 29, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Das Kräfteverhältnis kippt",
+          nr: 31, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Das Kräfteverhältnis kippt",
           chart: {
             typ: "line", einheit: "Tsd.", yTitel: "US-Soldaten in Frankreich (in Tausend)",
             quelle: "Gerundete Werte zum Monatsende nach Angaben der American Expeditionary Forces. Tippe auf einen Punkt.",
@@ -694,7 +694,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 30, typ: "karte", eyebrow: "Karte erkunden", titel: "Orte des Kriegsendes", karte: "kriegsende",
+          nr: 32, typ: "karte", eyebrow: "Karte erkunden", titel: "Orte des Kriegsendes", karte: "kriegsende",
           benoetigt: { A: 3, B: 5, C: 7 },
           niveaus: {
             A: { frage: "Wo begann die Novemberrevolution?", optionen: [
@@ -715,7 +715,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 31, typ: "freitext", eyebrow: "Erklären", titel: "Warum endete der Krieg 1918?",
+          nr: 33, typ: "freitext", eyebrow: "Erklären", titel: "Warum endete der Krieg 1918?",
           kontext: "Klasse 9 Geschichte, Abschnitt Kriegsende. Begriffe: Kriegseintritt der USA, Erschöpfung, Hunger, Seeblockade, Bündnispartner, Oberste Heeresleitung, Novemberrevolution, Waffenstillstand, Dolchstoßlegende.",
           niveaus: {
             A: { aufgabe: "Erkläre in 3–4 Sätzen, warum Deutschland den Krieg 1918 verlor.", starter: ["Ein wichtiger Grund war …", "Außerdem …", "Am Ende …"], begriffe: ["USA", "Hunger", "Revolution"], min: 60 },
@@ -724,7 +724,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 32, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Kriegsende", abschnitt: "kriegsende",
+          nr: 34, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Kriegsende", abschnitt: "kriegsende",
           hinweis: "Notiere die Schritte von der militärischen Niederlage bis zum Waffenstillstand – mit Daten.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zum Kriegsende 1918 (Oberste Heeresleitung, Novemberrevolution, Waffenstillstand) auf sachliche Richtigkeit, Daten und zeitliche Ordnung.",
         },
@@ -746,7 +746,7 @@ window.INHALTE = {
       },
       aufgaben: [
         {
-          nr: 33, typ: "mc", eyebrow: "Grundwissen", titel: "Der Versailler Vertrag",
+          nr: 35, typ: "mc", eyebrow: "Grundwissen", titel: "Der Versailler Vertrag",
           niveaus: {
             A: { frage: "Was legte der Versailler Vertrag von 1919 fest?", optionen: [
               { t: "Deutschland musste Gebiete abtreten, Reparationen zahlen und sein Heer stark verkleinern", ok: true },
@@ -768,7 +768,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 34, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Ein neues Europa",
+          nr: 36, typ: "luecke", eyebrow: "Fachbegriffe", titel: "Ein neues Europa",
           niveaus: {
             A: { modus: "chips", ablenker: ["Monarchie", "Sieger"], text: "1919 musste Deutschland den Vertrag von [Versailles] unterschreiben. Es musste [Reparationen] an die Sieger zahlen. Aus dem Kaiserreich wurde eine [Republik]. Um künftige Kriege zu verhindern, wurde der [Völkerbund] gegründet." },
             B: { modus: "input", text: "Deutschland verlor unter anderem [Elsass-Lothringen|Elsaß-Lothringen] an Frankreich und Gebiete im Osten an das neue [Polen]. Das Heer wurde auf [100.000|100000|100 000] Mann begrenzt. Artikel [231] legte die Kriegsschuld fest. Die Vielvölkerreiche [Österreich-Ungarn|Österreich Ungarn] und das Osmanische Reich zerfielen." },
@@ -776,7 +776,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 35, typ: "zuordnung", eyebrow: "Folgen ordnen", titel: "Welche Folge gehört in welchen Bereich?",
+          nr: 37, typ: "zuordnung", eyebrow: "Folgen ordnen", titel: "Welche Folge gehört in welchen Bereich?",
           niveaus: {
             A: { links: "Folge", rechts: "Bereich", paare: [
               ["Ende der Monarchie, Weimarer Republik", "Politische Folge"],
@@ -799,7 +799,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 36, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Was Deutschland verlor",
+          nr: 38, typ: "diagramm", eyebrow: "Diagramm auswerten", titel: "Was Deutschland verlor",
           chart: {
             typ: "bar", horizontal: true, einheit: "%", yTitel: "Verlust in Prozent des Bestands von 1914",
             quelle: "Gerundete Werte zu den Bestimmungen des Versailler Vertrags. Tippe auf einen Balken.",
@@ -825,7 +825,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 37, typ: "sortierung", eyebrow: "Zeitliche Ordnung", titel: "Nach dem Krieg",
+          nr: 39, typ: "sortierung", eyebrow: "Zeitliche Ordnung", titel: "Nach dem Krieg",
           niveaus: {
             A: { hinweis: "Drei Daten nach dem Krieg.", items: [
               "11. November 1918 · Waffenstillstand",
@@ -851,7 +851,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 38, typ: "karte", eyebrow: "Karte erkunden", titel: "Europa nach 1919", karte: "europa1920",
+          nr: 40, typ: "karte", eyebrow: "Karte erkunden", titel: "Europa nach 1919", karte: "europa1920",
           benoetigt: { A: 3, B: 6, C: 10 },
           niveaus: {
             A: { frage: "Welcher Staat entstand 1918 neu aus Teilen Österreich-Ungarns?", optionen: [
@@ -872,7 +872,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 39, typ: "freitext", eyebrow: "Beurteilen", titel: "Schandfrieden oder gerechter Frieden?",
+          nr: 41, typ: "freitext", eyebrow: "Beurteilen", titel: "Schandfrieden oder gerechter Frieden?",
           kontext: "Klasse 9 Geschichte, Abschnitt Folgen. Begriffe: Versailler Vertrag, Artikel 231, Reparationen, Gebietsverluste, Völkerbund, Weimarer Republik, Revanchismus, Sicherheitsbedürfnis Frankreichs.",
           niveaus: {
             A: { aufgabe: "Nenne drei Folgen des Ersten Weltkriegs und erkläre eine davon genauer.", starter: ["Eine Folge war …", "Das bedeutete, dass …", "Eine weitere Folge …"], begriffe: ["Versailler Vertrag", "Republik", "Tote"], min: 60 },
@@ -881,7 +881,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 40, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Folgen", abschnitt: "folgen",
+          nr: 42, typ: "notizen", eyebrow: "Recherche", titel: "Meine Stichpunkte: Folgen", abschnitt: "folgen",
           hinweis: "Ordne deine Stichpunkte nach Bereichen (politisch, territorial, wirtschaftlich, gesellschaftlich) oder nach Zeit.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zu den Folgen des Ersten Weltkriegs (Versailler Vertrag, neue Staaten, Weimarer Republik, Völkerbund) auf sachliche Richtigkeit und Vollständigkeit.",
         },
@@ -901,7 +901,7 @@ window.INHALTE = {
       },
       aufgaben: [
         {
-          nr: 41, typ: "sortierung", eyebrow: "Gesamtüberblick", titel: "Der große Zeitstrahl 1914–1919",
+          nr: 44, typ: "sortierung", eyebrow: "Gesamtüberblick", titel: "Der große Zeitstrahl 1914–1919",
           niveaus: {
             A: { hinweis: "Vier Stationen mit Datum.", items: [
               "Juni 1914 · Attentat von Sarajevo",
@@ -931,7 +931,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 42, typ: "mc", eyebrow: "Quellenkritik", titel: "Verlässliche Quellen erkennen",
+          nr: 45, typ: "mc", eyebrow: "Quellenkritik", titel: "Verlässliche Quellen erkennen",
           niveaus: {
             A: { frage: "Welche Quelle ist für deine Recherche am verlässlichsten?", optionen: [
               { t: "Das Online-Angebot der Bundeszentrale für politische Bildung (bpb.de)", ok: true },
@@ -953,7 +953,7 @@ window.INHALTE = {
           },
         },
         {
-          nr: 43, typ: "quellen", eyebrow: "Quellenverzeichnis", titel: "Meine Quellen",
+          nr: 48, typ: "quellen", eyebrow: "Quellenverzeichnis", titel: "Meine Quellen",
           hinweis: "Trage mindestens zwei verlässliche Quellen ein, die du für deine Stichpunkte genutzt hast, und begründe kurz, warum du sie für verlässlich hältst.",
           min: 2,
         },

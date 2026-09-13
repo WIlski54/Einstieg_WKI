@@ -7,7 +7,7 @@
   <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.jpg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=v) }}">
   <script src="{{ url_for('static', filename='vendor/socket.io-4.7.5.min.js') }}" defer></script>
-  <script>window.DASH = {limit: {{ token_limit }}, aufgabenGesamt: {{ aufgaben_gesamt }}, abschnitte: {{ abschnitte|tojson }}};</script>
+  <script>window.DASH = {token: {{ lehrer_token|tojson }}, limit: {{ token_limit }}, aufgabenGesamt: {{ aufgaben_gesamt }}, abschnitte: {{ abschnitte|tojson }}};</script>
   <script src="{{ url_for('static', filename='js/dashboard.js', v=v) }}" defer></script>
 </head>
 <body class="dashboard-page">
