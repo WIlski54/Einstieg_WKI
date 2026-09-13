@@ -168,61 +168,61 @@ templates/…, tests/…
 
 ### Task 1: Backend-Zerlegung, Konfiguration, Migrationen ohne Startlöschung
 Files: Create `config.py`, `db.py`, `presence.py`; Modify `app.py`; Test `tests/test_db.py`
-- [ ] Test: Tabellen existieren nach `init_db()`; zweiter Aufruf auf alter DB (nur `schueler` ohne `resume_token_hash`) ergänzt Spalte, verwirft keine Zeilen; `socket_id` wird beim Start geleert; Daten überleben Import.
-- [ ] Implementieren, Tests grün, Commit `refactor: Backend in Module zerlegen, additive Migrationen`.
+- [x] Test: Tabellen existieren nach `init_db()`; zweiter Aufruf auf alter DB (nur `schueler` ohne `resume_token_hash`) ergänzt Spalte, verwirft keine Zeilen; `socket_id` wird beim Start geleert; Daten überleben Import.
+- [x] Implementieren, Tests grün, Commit `refactor: Backend in Module zerlegen, additive Migrationen`.
 
 ### Task 2: Resume-Token, Lehrkraft-Aktionstoken, Präsenz
 Files: Modify `app.py`, `presence.py`, `templates/*.html`; Test `tests/test_identity.py`, `tests/test_presence.py`
-- [ ] Tests: Login liefert Token; `/api/resume` mit gültigem Token verbindet, mit falschem 403; Logout löscht Hash; Lehrer-Header ohne Session autorisiert; Schüler-Login löscht Lehrer-Flag nicht; zwei Sockets → online bis letzter Disconnect; Lehrer-Socket im selben Profil ändert nichts.
-- [ ] Implementieren, Commit `feat: Resume-Token, Lehrer-Aktionstoken, exakte Präsenz`.
+- [x] Tests: Login liefert Token; `/api/resume` mit gültigem Token verbindet, mit falschem 403; Logout löscht Hash; Lehrer-Header ohne Session autorisiert; Schüler-Login löscht Lehrer-Flag nicht; zwei Sockets → online bis letzter Disconnect; Lehrer-Socket im selben Profil ändert nichts.
+- [x] Implementieren, Commit `feat: Resume-Token, Lehrer-Aktionstoken, exakte Präsenz`.
 
 ### Task 3: Server-Autosave mit Revisionen, Notizen-Sync, Flush-Protokoll
 Files: Modify `app.py`, `db.py`; Test `tests/test_autosave.py`
-- [ ] Tests: höhere Revision gewinnt, niedrigere abgelehnt (`accepted:false`); falsche `app_id`/Schema/Typ/Größe → 400; Notizen-Tabelle spiegelt `texte.nt-*`/`nq-*`; `request_flush()` protokolliert `online/confirmed/missing`.
-- [ ] Implementieren, Commit `feat: Server-Autosave mit monotonen Revisionen`.
+- [x] Tests: höhere Revision gewinnt, niedrigere abgelehnt (`accepted:false`); falsche `app_id`/Schema/Typ/Größe → 400; Notizen-Tabelle spiegelt `texte.nt-*`/`nq-*`; `request_flush()` protokolliert `online/confirmed/missing`.
+- [x] Implementieren, Commit `feat: Server-Autosave mit monotonen Revisionen`.
 
 ### Task 4: KI-Modul mit Gruppenfreigabe, persistenter Sperre, Chat-Speicherung
 Files: Create `ki.py`; Modify `app.py`; Test `tests/test_ki.py`
-- [ ] Tests: Prüfreihenfolge (Sperre → Tagesbudget → Gruppe → Einzel), Gruppe Zeit/Typ/Klasse/Budget, Sperre überlebt Neuimport, Einzelanfrage ohne Freigabe blockiert ohne Protokoll-Duplikat, Chat wird in `chat_messages` gespeichert, Zeichnung/Handschrift-Routen ohne Key liefern Hinweis.
-- [ ] Implementieren, Commit `feat: KI-Freigaben (Einzel + Gruppe), persistente Sperre, Chatverlauf`.
+- [x] Tests: Prüfreihenfolge (Sperre → Tagesbudget → Gruppe → Einzel), Gruppe Zeit/Typ/Klasse/Budget, Sperre überlebt Neuimport, Einzelanfrage ohne Freigabe blockiert ohne Protokoll-Duplikat, Chat wird in `chat_messages` gespeichert, Zeichnung/Handschrift-Routen ohne Key liefern Hinweis.
+- [x] Implementieren, Commit `feat: KI-Freigaben (Einzel + Gruppe), persistente Sperre, Chatverlauf`.
 
 ### Task 5: Lesestrecke serverseitig
 Files: Create `inhalte_server.py`; Modify `app.py`; Test `tests/test_lesestrecke.py`
-- [ ] Tests: GET liefert keine Lösungen; richtige Antwort → nächste Phase; falsche → `retry_until` 60/75/90 s eskalierend; Antwort vor Ablauf → 429; letzte Phase → Station `L1` erledigt.
-- [ ] Implementieren (5 Abschnitte × 4 Absätze mit je einer eindeutigen Frage), Commit `feat: gegatete Lesestrecke`.
+- [x] Tests: GET liefert keine Lösungen; richtige Antwort → nächste Phase; falsche → `retry_until` 60/75/90 s eskalierend; Antwort vor Ablauf → 429; letzte Phase → Station `L1` erledigt.
+- [x] Implementieren (5 Abschnitte × 4 Absätze mit je einer eindeutigen Frage), Commit `feat: gegatete Lesestrecke`.
 
 ### Task 6: Snapshots (temporär) und Zeichnungen-API
 Files: Modify `db.py`, `app.py`; Test `tests/test_snapshots.py`
-- [ ] Tests: Snapshot speichern/laden/löschen; Zeichnungen überleben; Laden ersetzt Live-Tabellen und invalidiert Sockets; Reset räumt Präsenz.
-- [ ] Commit `feat: temporäre Lehrkraft-Snapshots, Zeichnungen`.
+- [x] Tests: Snapshot speichern/laden/löschen; Zeichnungen überleben; Laden ersetzt Live-Tabellen und invalidiert Sockets; Reset räumt Präsenz.
+- [x] Commit `feat: temporäre Lehrkraft-Snapshots, Zeichnungen`.
 
 ### Task 7: IServ-Archiv (Krypto, WebDAV, Abschluss, Wiederherstellung)
 Files: Create `iserv_archiv.py`; Modify `app.py`; Test `tests/test_iserv.py`
-- [ ] Tests: Konfig-Validierung (https, Zugangsdaten in URL, Pfad `..`, Timeout-Bereich, 32-Byte-Key); Roundtrip; Manipulation/falscher Key → Fehler; Dateiname; Fake-WebDAV: Listing filtert Marker + App-ID, PUT mit `If-None-Match`, Abschluss löscht nur bei Digest-Gleichheit, fehlgeschlagener Download/Digest lässt alles stehen; Ansicht entfernt Hashes, Fortsetzung behält sie; Remote-Löschen validiert Eigentum.
-- [ ] Commit `feat: verschlüsseltes IServ-WebDAV-Archiv mit Verifizieren-vor-Löschen`.
+- [x] Tests: Konfig-Validierung (https, Zugangsdaten in URL, Pfad `..`, Timeout-Bereich, 32-Byte-Key); Roundtrip; Manipulation/falscher Key → Fehler; Dateiname; Fake-WebDAV: Listing filtert Marker + App-ID, PUT mit `If-None-Match`, Abschluss löscht nur bei Digest-Gleichheit, fehlgeschlagener Download/Digest lässt alles stehen; Ansicht entfernt Hashes, Fortsetzung behält sie; Remote-Löschen validiert Eigentum.
+- [x] Commit `feat: verschlüsseltes IServ-WebDAV-Archiv mit Verifizieren-vor-Löschen`.
 
 ### Task 8: Fortsetzungsmodus
 Files: Modify `app.py`, `db.py`; Create `templates/warten.html`, `static/js/warten.js`; Test `tests/test_fortsetzung.py`
-- [ ] Tests: Token-Rejoin; Login ohne Token → Anfrage + Warteseite; eindeutige Sammelzuordnung; Mehrdeutigkeit bleibt manuell; ein Ziel nur einmal; Ablehnen/Neustart; Beenden löscht keine Lernplätze.
-- [ ] Commit `feat: Fortsetzungsstunde`.
+- [x] Tests: Token-Rejoin; Login ohne Token → Anfrage + Warteseite; eindeutige Sammelzuordnung; Mehrdeutigkeit bleibt manuell; ein Ziel nur einmal; Ablehnen/Neustart; Beenden löscht keine Lernplätze.
+- [x] Commit `feat: Fortsetzungsstunde`.
 
 ### Task 9: Inhalte (Neunummerierung, Zeichenaufträge, Blitzfragen, Domino), Strukturtests
 Files: Modify `static/js/inhalte.js`, `config.py`; Test `tests/test_inhalte.py`
-- [ ] Commit `feat: neue Stationen und Nummerierung`.
+- [x] Commit `feat: neue Stationen und Nummerierung`.
 
 ### Task 10: Frontend-Kern, Autosave-Client, Aufgaben-Renderer mit Serialisierung
 Files: Create `kern.js`, `autosave.js`, `aufgaben.js`, `ki.js`, `reader.js`, `app.js`; Modify `index.html`, `app.css`
-- [ ] Browserprobe: Reload stellt alles wieder her; Interaktion während Laden bleibt; JSON-Export/-Import; Textfallback.
-- [ ] Commit `feat: Zustandsvertrag, IndexedDB- und Server-Autosave im Browser`.
+- [x] Browserprobe: Reload stellt alles wieder her; Interaktion während Laden bleibt; JSON-Export/-Import; Textfallback.
+- [x] Commit `feat: Zustandsvertrag, IndexedDB- und Server-Autosave im Browser`.
 
 ### Task 11: Karte, Lesestrecke, Zeichnen, Handschrift, Spiele
 Files: Create `karte.js`, `lesestrecke.js`, `zeichnen.js`, `spiele.js`
-- [ ] Browserprobe je Modul, Touch-Ziele ≥ 44 px, kein Overflow bei 375/768/1024.
-- [ ] Commit je Modul.
+- [x] Browserprobe je Modul, Touch-Ziele ≥ 44 px, kein Overflow bei 375/768/1024.
+- [x] Commit je Modul.
 
 ### Task 12: Dashboard und Detail (Snapshots, IServ, Fortsetzung, Gruppenfreigabe, Autosave-Zeit, Zeichnungen, Chatverlauf)
-- [ ] Commit `feat: Dashboard-Verwaltung`.
+- [x] Commit `feat: Dashboard-Verwaltung`.
 
 ### Task 13: Deployment, README, .env.example, Push
 Files: `Dockerfile`, `gunicorn.conf.py`, `requirements.txt`, `.dockerignore`, `.env.example`, `.gitattributes`, `README.md`
-- [ ] Secret-Check, Push auf `https://github.com/WIlski54/Einstieg_WKI.git`.
+- [x] Secret-Check, Push auf `https://github.com/WIlski54/Einstieg_WKI.git`.
