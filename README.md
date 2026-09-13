@@ -1,71 +1,126 @@
 # Der Erste Weltkrieg (1914–1918) – Interaktives Arbeitsblatt
 
-Digitale Vollversion des Recherche-Arbeitsblatts „Der Erste Weltkrieg (1914–1918)“
-für Geschichte in Klasse 9 (Gesamtschule Meiderich). Flask + Socket.IO, iPad-first.
+Digitale Vollversion des Recherche-Arbeitsblatts „Der Erste Weltkrieg (1914–1918)“ für
+Geschichte, Klasse 9 (Klassenunterricht), Gesamtschule Meiderich. Umgesetzt nach dem
+GSM-Produktionsstandard „Interaktives Arbeitsblatt mit Autosave und IServ-Archivierung“
+(Stand September 2026): Flask + Socket.IO, SQLite-WAL, iPad-first.
 
-## Aufbau
+## Was die App kann
 
-Jeder Abschnitt des analogen Arbeitsblatts ist ein eigener Reiter. Jeder Reiter enthält
-eine Kompakt-Info (M1–M5), die vollständige Palette der interaktiven Aufgabentypen
-mit Niveau A/B/C und das Feld für die eigenen Recherche-Stichpunkte samt Quelle.
+**Lernende**
 
-| Reiter | Aufgaben | Typen |
-|---|---|---|
-| Arbeitsblatt | – | Aufgabenstellung, Seitenansicht, Original-PDF, Recherche-Tipps |
-| Ursachen | 1–8 | MC · Lückentext · Zuordnung · Sortierung · Diagramm (Militärausgaben) · Karte (Blöcke 1914) · KI-Freitext · Stichpunkte |
-| Auslöser | 9–16 | Sortierung (Julikrise) · MC · Lückentext · Zuordnung · Diagramm (Tempo der Krise) · Karte (Orte der Julikrise) · KI-Freitext · Stichpunkte |
-| Verlauf | 17–24 | MC · Lückentext · Zuordnung · Sortierung · Diagramm (Gefallene) · Karte (Fronten) · KI-Freitext · Stichpunkte |
-| Kriegsende | 25–32 | MC · Lückentext · Sortierung · Zuordnung · Diagramm (US-Truppen) · Karte (Orte 1918) · KI-Freitext · Stichpunkte |
-| Folgen | 33–40 | MC · Lückentext · Zuordnung · Diagramm (Verluste Versailles) · Sortierung · Karte (Europa 1920) · KI-Freitext · Stichpunkte |
-| Zeitstrahl & Quellen | 41–43, T | Gesamt-Zeitstrahl · Quellenkritik-MC · Quellenverzeichnis · Transferaufgabe (KI) |
+- pseudonymer Lernplatz mit sicherer Wiederaufnahme (Resume-Token, kein Fingerprinting)
+- 54 Stationen in sechs Reitern: fünf Lesestrecken (L1–L5, Lösungen nur auf dem Server),
+  Multiple Choice, Lückentext, Zuordnung, Sortierung, Diagramme, Karten mit echten Küstenlinien,
+  Freitext, Recherche-Stichpunkte, drei Zeichenaufträge (Fabric.js), Blitzfragen ohne Wiederholung,
+  Begriffs-Domino, Quellenverzeichnis, Transferaufgabe
+- A/B/C-Differenzierung pro Aufgabe – der Niveauwechsel ändert nur die jeweilige Karte
+- Handschrift mit Finger oder Pencil für Stichpunkte, Transkription durch die KI nach Freigabe
+- automatische Sicherung: IndexedDB (48 h) und Server-Autosave mit monotonen Revisionen,
+  Flush bei Tabwechsel und Schließen, JSON-Export/-Import mit Textfallback für das iPad
+- KI-Tutor, KI-Textfeedback, KI-Zeichenbewertung – nur nach Freigabe der Lehrkraft
+- Fokus-Reader für das Original-Arbeitsblatt (Rasterseiten, PDF-Ansicht, separater Link)
 
-Niveau-Differenzierung (pro Aufgabe wählbar):
+**Lehrkraft (`/lehrer`)**
 
-| Typ | A – Basis | B – Standard | C – Experte |
-|---|---|---|---|
-| Multiple Choice | 1 von 3 | 1 von 4 | 2 von 4 (Multi-Select) |
-| Lückentext | Wortkiste (Tap-Chips) | freie Eingabe | kausaler Text, mehr Lücken |
-| Zuordnung | 3 Paare | 4 Paare | 5 Paare |
-| Sortierung | 3–4 Schritte mit Datum | 5–6 Schritte ohne Datum | 7–9 Schritte ohne Datum |
-| Diagramm / Karte | Ablesen | Zusammenhang | Interpretation und Quellenkritik |
-| Freitext | Satzstarter + Begriffe | Fachbegriffe | Beurteilung (AFB III) |
+- Live-Dashboard: Präsenz aus echten Sockets, Fortschritt, Antwortversuche, letzter Autosave,
+  Zeichnungen, KI-Chats
+- KI-Einzelfreigaben und zeitlich begrenzte Gruppenfreigaben mit Budgets, persistente Sperren
+- Zwischenstände (unverschlüsselt, kurzfristig) speichern, laden, löschen
+- IServ-Archiv über HTTPS-WebDAV: HKDF-SHA256 + AES-256-GCM, `.iabackup`, Verifizieren-vor-Löschen
+- Wiederherstellung als „Ansicht“ (ohne Resume-Hashes) oder „Fortsetzungsstunde“ (mit Token-Rejoin
+  und manueller bzw. automatischer Zuordnung)
+- Ein Neustart, Redeploy oder späterer Lehrkraft-Login löscht keine laufende Sitzung.
 
-Weitere Bausteine: Fortschrittsbalken, Wiederaufnahme des Fortschritts nach Reload,
-KI-Tutor (Avatar-Chat) und KI-Feedback mit Lehrerfreigabe, Live-Dashboard mit
-KPI-Kacheln, Token-Budget, Freigabe-Panel und Klassenübersicht, Schüler-Detailansicht
-mit Live-Antwortprotokoll, Stichpunkten/Quellen, Chat-Monitor, KI-Sperre und
-DSGVO-Löschung. Inhalte liegen in `static/js/inhalte.js`, die Logik in `static/js/app.js`.
+## Projektstruktur
+
+```text
+app.py               Routen, Socket.IO-Handler, Wiring
+config.py            Umgebungsvariablen, Konstanten, APP_ID, Stationen
+db.py                SQLite, additive Migrationen, Snapshots, Bereinigung
+presence.py          Online-Präsenz aus Socket-Mengen
+ki.py                Gemini, Prompts, Freigabeprüfung, Budgets, Sperren
+iserv_archiv.py      Konfiguration, Krypto, WebDAV, Abschluss-Transaktion
+inhalte_server.py    Lesestrecken mit Lösungen (nur serverseitig)
+static/js/inhalte.js Aufgaben, Karten, Blitzfragen, Domino, Zeichenaufträge
+static/js/*.js       kern, autosave, aufgaben, karte, lesestrecke, zeichnen, spiele, ki, reader, app
+templates/           login, index, warten, lehrer_login, dashboard, schueler_detail
+tests/               pytest-Suite (Autosave, Identität, Präsenz, KI, Snapshots, IServ, Fortsetzung, …)
+```
 
 ## Lokal starten
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate          # Windows: .\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env               # Windows: Copy-Item .env.example .env
+Copy-Item .env.example .env           # macOS/Linux: cp .env.example .env
 python app.py
 ```
 
-Dann `http://127.0.0.1:5000` öffnen. Ohne `.env` lautet das Lehrerpasswort `geschichte9`;
-vor einem echten Einsatz muss es über `LEHRER_PASSWORD` geändert werden.
-Für KI-Tutor und KI-Feedback wird `GEMINI_API_KEY` benötigt; ohne Schlüssel bleiben alle
-Aufgaben nutzbar, die KI-Flächen zeigen einen Hinweis.
+Dann `http://127.0.0.1:5000` öffnen. In der `.env` müssen mindestens `SECRET_KEY` und
+`LEHRER_PASSWORD` gesetzt sein; ohne Lehrerpasswort bleibt der Lehrerbereich gesperrt.
+Ohne `GEMINI_API_KEY` bleiben alle Aufgaben nutzbar, die KI-Flächen zeigen einen Hinweis.
 
-Tests: `pip install pytest && pytest tests`
+Tests:
 
-## Datenschutz
+```bash
+pip install pytest
+pytest tests
+```
 
-- Login nur mit Pseudonym und Klasse, Datenschutz- und KI-Hinweis muss bestätigt werden.
-- Gespeichert werden Fortschritt, Antwortversuche (max. 500 Zeichen), Stichpunkte/Quellen
-  und Metadaten der KI-Anfragen. Chat-Inhalte werden nicht gespeichert, nur live an die
-  Detailansicht der Lehrkraft gesendet.
-- Beim Start der Anwendung werden alle Sitzungsdaten gelöscht (`KEEP_SESSION_DATA=1` schaltet
-  das ab). Die Lehrkraft kann einzelne Pseudonyme oder die ganze Sitzung löschen.
+## Umgebungsvariablen
+
+Siehe `.env.example`. Alle Secrets sind ausschließlich Runtime-Variablen.
+
+| Variable | Bedeutung |
+|---|---|
+| `SECRET_KEY` | Flask-Session-Schlüssel (Pflicht im Betrieb) |
+| `LEHRER_PASSWORD` | Passwort des Lehrerbereichs (Pflicht) |
+| `SESSION_COOKIE_SECURE` | `1` hinter HTTPS |
+| `GEMINI_API_KEY`, `GEMINI_MODEL`, `DAILY_TOKEN_LIMIT` | KI, optional |
+| `ISERV_WEBDAV_URL`, `ISERV_WEBDAV_USERNAME`, `ISERV_WEBDAV_PASSWORD` | WebDAV-Zugang, nur HTTPS |
+| `ISERV_BACKUP_PATH` | Zielordner (POSIX-Pfad, wird nicht angelegt) |
+| `ISERV_BACKUP_ENCRYPTION_KEY` | 32 Byte URL-safe Base64 |
+| `ISERV_TIMEOUT_SECONDS` | 2–60 |
+| `ISERV_CA_BUNDLE` | optionale schulische CA (PEM) |
+
+## Ablauf einer Stunde
+
+1. Lernende melden sich mit Pseudonym und Klasse an; das Gerät merkt sich den Lernplatz.
+2. Alles wird automatisch gesichert. „Antwort abgeben“, „Stichpunkte abgeben“ und
+   „Zeichnung abgeben“ schreiben bewertbare Versuche ins Protokoll.
+3. Am Stundenende: **Stunde abschließen & archivieren**. Die App fordert verbundene Geräte zum
+   letzten Autosave auf, verschlüsselt den Snapshot, lädt ihn hoch, liest ihn zurück, entschlüsselt
+   und vergleicht den Digest. Erst dann werden die Daten auf dem App-Server gelöscht.
+4. Fortsetzung: Archiv im Modus „Fortsetzungsstunde“ laden. Geräte mit gespeichertem Lernplatz
+   verbinden sich automatisch; andere melden sich an und werden im Dashboard zugeordnet.
 
 ## Deployment (Coolify)
 
-- Build Pack `Dockerfile`, Base Directory `/geschichte-erster-weltkrieg`,
-  Dockerfile Location `/geschichte-erster-weltkrieg/Dockerfile`
-- interner Port `5000`, Healthcheck `/health`, persistentes Volume nach `/app/data`
-- Environment Variables aus `.env.example` in Coolify setzen (`SESSION_COOKIE_SECURE=1` hinter HTTPS)
-- Der Dockerfile startet genau einen Gunicorn-/Eventlet-Worker, damit Socket.IO stabil bleibt.
+- Build Pack **Dockerfile**, interner Port **5000**, Healthcheck `/health`
+- persistentes Volume nach **`/app/data`** (SQLite mit WAL)
+- Environment Variables aus `.env.example` setzen, `SESSION_COOKIE_SECURE=1`
+- Secrets nur zur Runtime („Available at Buildtime“ aus)
+- genau ein Gunicorn-Worker (`gunicorn.conf.py`, gthread + simple-websocket)
+
+Vor dem ersten Push in ein öffentliches Repo:
+
+```bash
+git grep -I --cached -n "AIzaSy"
+git check-ignore -v .env
+```
+
+## Datenschutz
+
+- Nur Pseudonym und Klasse; Datenschutz- und KI-Hinweis vor dem Login, Pflichtcheckbox.
+- Gespeichert: Fortschritt, Antwortversuche, Stichpunkte, Quellen, Zeichnungen (Objekt-JSON +
+  Vorschau), automatischer Arbeitsstand, KI-Anfragen und KI-Chats der Sitzung.
+- Nach erfolgreichem IServ-Archiv werden die Sitzungsdaten auf dem App-Server gelöscht
+  (`secure_delete`, WAL-Truncate, VACUUM). Provider-Snapshots, Volume-Backups und Proxy-Logs
+  sind davon nicht erfasst und müssen separat geregelt werden.
+
+## Bewusste Abweichung vom Standard
+
+MathJax ist nicht eingebunden – Geschichte braucht kein LaTeX. KI-Antworten werden escaped und
+mit einfachem Markdown (fett, Zeilenumbrüche) dargestellt.

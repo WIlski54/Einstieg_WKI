@@ -66,9 +66,9 @@ window.WK = (() => {
   async function postJSON(url, payload, opts) {
     try {
       const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload || {}), keepalive: !!(opts && opts.keepalive) });
-      if (res.status === 401) { sessionEnded("abgelaufen"); return { fehler: "Sitzung abgelaufen", status: 401 }; }
+      if (res.status === 401) { sessionEnded("abgelaufen"); return { fehler: "Sitzung abgelaufen", httpStatus: 401 }; }
       const data = await res.json().catch(() => ({}));
-      data.status = res.status;
+      data.httpStatus = res.status;   // nie „status“: das Feld gehört den API-Antworten
       if (!res.ok && data.fehler === undefined && data.error) data.fehler = data.error;
       return data;
     } catch (e) {
@@ -78,10 +78,10 @@ window.WK = (() => {
   async function getJSON(url) {
     try {
       const res = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (res.status === 401) { sessionEnded("abgelaufen"); return { fehler: "Sitzung abgelaufen", status: 401 }; }
-      if (res.status === 204) return { status: 204, leer: true };
+      if (res.status === 401) { sessionEnded("abgelaufen"); return { fehler: "Sitzung abgelaufen", httpStatus: 401 }; }
+      if (res.status === 204) return { httpStatus: 204, leer: true };
       const data = await res.json().catch(() => ({}));
-      data.status = res.status;
+      data.httpStatus = res.status;
       return data;
     } catch (e) {
       return { fehler: "Keine Verbindung zum Server.", offline: true };
@@ -236,5 +236,6 @@ window.WK = (() => {
     showFb, clearFb, retryBtn, showToast, postJSON, getJSON,
     lernplatzSpeichern, lernplatzLoeschen, dirty, updateProgress, markComplete, sendAntwort,
     buildNav, showTab, beimOeffnen, sessionEnded, setupSocket, on, emit, actions,
+    get socket() { return socket; },
   };
 })();

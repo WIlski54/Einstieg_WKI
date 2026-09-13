@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Erster Weltkrieg · Fortsetzung</title>
-  <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.jpg') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=v) }}">
   <script>window.WARTEN = {appId: {{ app_id|tojson }}, schuelerId: {{ schueler_id|tojson }}, resumeToken: {{ resume_token|tojson }}};</script>
   <script src="{{ url_for('static', filename='js/warten.js', v=v) }}" defer></script>
 </head>
 <body class="login-page teacher-login-page">
   <main class="compact-login-card" role="status" aria-live="polite">
-    <img src="{{ url_for('static', filename='img/logo-gsm.jpg') }}" alt="Gesamtschule Meiderich" class="compact-logo">
+    <img src="{{ url_for('static', filename='img/logo-gsm.png') }}" alt="Gesamtschule Meiderich" class="compact-logo">
     <span class="eyebrow">Fortsetzungsstunde</span>
     <h1>Gleich geht es weiter{% if pseudonym %}, {{ pseudonym }}{% endif %}</h1>
     <div class="waiting-status" id="warten-status"><span class="spinner"></span><span id="warten-text">Deine Lehrkraft ordnet dir gerade deinen alten Arbeitsstand zu …</span></div>

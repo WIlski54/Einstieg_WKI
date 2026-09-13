@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Erster Weltkrieg · Anmeldung</title>
-  <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.jpg') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=v) }}">
   <script>window.LOGIN = {appId: {{ app_id|tojson }}, fortsetzung: {{ fortsetzung.active|tojson }}};</script>
 </head>
@@ -12,8 +12,7 @@
   <main class="login-shell">
     <section class="login-brand" aria-label="Thema">
       <div class="login-logos">
-        <img src="{{ url_for('static', filename='img/logo-gsm.jpg') }}" alt="Gesamtschule Meiderich" class="login-logo">
-        <img src="{{ url_for('static', filename='img/logo-wk.png') }}" alt="" class="login-logo login-logo-wk">
+        <img src="{{ url_for('static', filename='img/logo-gsm.png') }}" alt="Gesamtschule Meiderich" class="login-logo">
       </div>
       <span class="eyebrow light">Geschichte · Klasse 9</span>
       <h1>Der Erste Weltkrieg<br>1914–1918</h1>
@@ -21,6 +20,7 @@
       <div class="login-timeline" aria-hidden="true">
         <span>1914</span><i></i><span>1916</span><i></i><span>1918</span><i></i><span>1919</span>
       </div>
+      <img src="{{ url_for('static', filename='img/logo-wk.png') }}" alt="" class="login-logo-wk">
     </section>
 
     <section class="login-card">

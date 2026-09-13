@@ -76,12 +76,12 @@ WK.lesestrecke = (() => {
     const key = el.dataset.key;
     $$(".mc-btn", el.closest(".mc-options")).forEach(b => { b.disabled = true; });
     const r = await postJSON(`/api/lesestrecke/${key}/antwort`, { phase: parseInt(el.dataset.phase, 10), wahl: parseInt(el.dataset.wahl, 10) });
-    if (r.offline || (r.fehler && r.status !== 429 && r.status !== 409)) {
+    if (r.offline || (r.fehler && r.httpStatus !== 429 && r.httpStatus !== 409)) {
       $$(".mc-btn", el.closest(".mc-options")).forEach(b => { b.disabled = false; });
       showToast("⚠️ Keine Verbindung – die Antwort wurde nicht gewertet. Bitte noch einmal.", "#d97706");
       return;
     }
-    if (r.status === 409 || r.status === 429) { await mount(key, true); return; }
+    if (r.httpStatus === 409 || r.httpStatus === 429) { await mount(key, true); return; }
     daten[key].status = r.status;
     state.runtime["lese-" + key] = { frage: false };
     if (r.korrekt) {

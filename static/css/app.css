@@ -54,15 +54,15 @@ textarea { resize: vertical; line-height: 1.5; }
 .btn-danger-outline { background: transparent; border-color: var(--danger); color: var(--danger); }
 .btn-ghost-light { background: rgba(255, 255, 255, .14); color: #fff; border-color: rgba(255, 255, 255, .35); }
 .btn-wide { width: 100%; }
-.btn-sm { min-height: 38px; padding: 6px 12px; font-size: .88rem; }
+.btn-sm { min-height: 44px; padding: 6px 12px; font-size: .88rem; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 
 /* Layout */
 .app-shell { width: min(1120px, calc(100% - 24px)); margin: 14px auto 110px; }
 .ws-header { padding: 16px 20px 12px; color: #fff; background: radial-gradient(circle at 88% 8%, rgba(247, 184, 0, .28), transparent 30%), linear-gradient(135deg, #0d1b2a, #1c3a5e); border-radius: 20px; box-shadow: var(--shadow); }
 .header-logos { display: flex; align-items: center; gap: 16px; }
-.logo-gsm { height: 56px; width: auto; background: #fff; border-radius: 8px; padding: 4px 8px; }
-.logo-wk { height: 56px; width: auto; margin-left: auto; border-radius: 8px; mix-blend-mode: lighten; }
+.logo-gsm { height: 52px; width: auto; }
+.logo-wk { height: 60px; width: auto; margin-left: auto; }
 .header-text { flex: 1; min-width: 0; }
 .ws-title { margin: 0; font-size: clamp(1.3rem, 3.6vw, 1.9rem); }
 .ws-subtitle { margin: 0 0 2px; opacity: .85; font-size: .85rem; }
@@ -266,10 +266,11 @@ body.ki-locked .tutor-fab { background: #6b7280; box-shadow: none; }
 /* Login */
 .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; background: linear-gradient(135deg, #eef4f8, #dbe8f3); }
 .login-shell { width: min(980px, 100%); display: grid; grid-template-columns: 1.05fr 1fr; border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(13, 27, 42, .25); background: #fff; }
-.login-brand { padding: 36px 32px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(247, 184, 0, .3), transparent 30%), linear-gradient(150deg, #0d1b2a, #1c3a5e 60%, #006AB3); display: flex; flex-direction: column; gap: 10px; }
+.login-brand { position: relative; padding: 36px 32px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(247, 184, 0, .3), transparent 30%), linear-gradient(150deg, #0d1b2a, #1c3a5e 60%, #006AB3); display: flex; flex-direction: column; gap: 10px; }
 .login-logos { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.login-logo { height: 54px; width: auto; background: #fff; border-radius: 8px; padding: 4px 8px; }
-.login-logo-wk { background: transparent; mix-blend-mode: lighten; padding: 0; }
+.login-logo { height: 56px; width: auto; }
+.login-logo-wk { position: absolute; right: 26px; bottom: 30px; height: 74px; width: auto; filter: drop-shadow(0 0 12px rgba(173, 0, 124, .45)); }
+.login-timeline { padding-right: 96px; }
 .login-brand h1 { font-size: clamp(1.7rem, 3.5vw, 2.5rem); margin: 0; }
 .login-brand p { opacity: .9; }
 .login-timeline { display: flex; align-items: center; gap: 8px; margin-top: auto; font-weight: 900; color: #ffd766; }
@@ -294,7 +295,7 @@ body.ki-locked .tutor-fab { background: #6b7280; box-shadow: none; }
 .dashboard-page { background: var(--bg-page); }
 .dashboard-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 14px 22px; color: #fff; background: linear-gradient(135deg, #0d1b2a, #1c3a5e); }
 .dashboard-brand { display: flex; align-items: center; gap: 12px; }
-.dashboard-brand img { height: 48px; width: auto; background: #fff; border-radius: 8px; padding: 3px 6px; }
+.dashboard-brand img { height: 44px; width: auto; }
 .dashboard-brand h1 { margin: 0; font-size: 1.25rem; }
 .dashboard-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .dashboard-main { width: min(1240px, calc(100% - 28px)); margin: 18px auto 60px; display: grid; gap: 16px; }
@@ -378,7 +379,9 @@ th { font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color:
   .card { padding: 14px 14px; }
   .match-columns { grid-template-columns: 1fr; }
   .quelle-grid { grid-template-columns: 1fr; }
-  .logo-gsm, .logo-wk { height: 42px; }
+  .logo-gsm { height: 38px; }
+  .logo-wk { display: none; }
+  .ws-subtitle { font-size: .78rem; }
   .chart-wrap { height: 260px; }
   .hs-label { font-size: 17px; }
   .tutor-panel { right: 8px; bottom: 76px; width: calc(100% - 16px); }
