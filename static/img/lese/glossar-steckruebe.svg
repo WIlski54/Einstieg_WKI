@@ -1,0 +1,10 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='Steckrübenwinter 1916/17' font-family='Lato, Arial, sans-serif'>
+<title>Steckrübenwinter 1916/17</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<ellipse cx='200' cy='130' rx='90' ry='34' fill='#fff' stroke='#6b7280' stroke-width='4'/>
+<path d='M180,126 q20,-40 44,0 q-10,14 -44,0 z' fill='#e0b04a' stroke='#8b5e3c' stroke-width='2'/><path d='M202,100 l4,-16 l6,4' fill='none' stroke='#16a34a' stroke-width='3'/>
+<text x='200' y='190' font-size='12' font-weight='900' fill='#004b80' text-anchor='middle'>Nur Steckrüben – kein Brot, keine Kartoffeln</text>
+<text x='200' y='210' font-size='10' font-weight='400' fill='#1e293b' text-anchor='middle'>Die britische Seeblockade lässt kaum Lebensmittel nach Deutschland.</text>
+<text x='200' y='226' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>Hunderttausende sterben an Hunger und Krankheit.</text>
+<text x='200' y='40' font-size='14' font-weight='900' fill='#dc2626' text-anchor='middle'>Winter 1916/17</text>
+</svg>

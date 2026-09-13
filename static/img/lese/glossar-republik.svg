@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='Ausrufung der Republik am 9. November 1918' font-family='Lato, Arial, sans-serif'>
+<title>Ausrufung der Republik am 9. November 1918</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<rect x='40' y='120' width='140' height='70' fill='#fff' stroke='#004b80' stroke-width='2'/><path d='M70,120 a40,32 0 0 1 80,0 z' fill='#fff' stroke='#004b80' stroke-width='2'/>
+<rect x='90' y='100' width='40' height='20' fill='#004b80'/>
+<circle cx='110' cy='92' r='5.4' fill='#dc2626'/><path d='M102.8,113.6 v-9.0 a7.2,7.2 0 0 1 14.4,0 v9.0 z' fill='#dc2626'/>
+<text x='110' y='210' font-size='11' font-weight='900' fill='#1e293b' text-anchor='middle'>Philipp Scheidemann (SPD)</text>
+<text x='110' y='224' font-size='9' font-weight='400' fill='#6b7280' text-anchor='middle'>ruft vom Reichstag die Republik aus</text>
+<rect x='220' y='60' width='160' height='50' rx='10' fill='#fff' stroke='#dc2626' stroke-width='2'/><text x='300.0' y='81.5' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Kaiser Wilhelm II.</text><text x='300.0' y='96.5' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>dankt ab</text>
+<defs><marker id='m004b80' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#004b80'/></marker></defs><line x1='300' y1='112' x2='300' y2='132' stroke='#004b80' stroke-width='3' marker-end='url(#m004b80)'/>
+<rect x='220' y='136' width='160' height='50' rx='10' fill='#dcfce7' stroke='#16a34a' stroke-width='2'/><text x='300.0' y='157.66666666666666' font-size='11' font-weight='700' fill='#1e293b' text-anchor='middle'>Friedrich Ebert (SPD)</text><text x='300.0' y='171.66666666666666' font-size='11' font-weight='700' fill='#1e293b' text-anchor='middle'>führt die Regierung</text>
+<text x='200' y='34' font-size='14' font-weight='900' fill='#004b80' text-anchor='middle'>Berlin, 9. November 1918</text>
+</svg>

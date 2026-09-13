@@ -1,0 +1,16 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='Marokkokrisen 1905 und 1911' font-family='Lato, Arial, sans-serif'>
+<title>Marokkokrisen 1905 und 1911</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<path d='M120,60 q60,-30 140,0 q40,60 20,120 q-80,40 -160,0 q-30,-60 0,-120 z' fill='#f1ead9' stroke='#6b7280' stroke-width='2'/>
+<text x='200' y='130' font-size='16' font-weight='900' fill='#004b80' text-anchor='middle'>Marokko</text>
+<text x='200' y='150' font-size='11' font-weight='400' fill='#6b7280' text-anchor='middle'>(Nordafrika)</text>
+<rect x='40' y='40' width='34' height='22' rx='3' fill='#dc2626' stroke='#fff' stroke-width='1.5'/><text x='57.0' y='56.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>F</text>
+<defs><marker id='mdc2626' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#dc2626'/></marker></defs><line x1='80' y1='52' x2='130' y2='90' stroke='#dc2626' stroke-width='3' marker-end='url(#mdc2626)'/>
+<text x='58' y='80' font-size='10' font-weight='700' fill='#dc2626' text-anchor='middle'>will Marokko</text>
+<rect x='320' y='40' width='34' height='22' rx='3' fill='#004b80' stroke='#fff' stroke-width='1.5'/><text x='337.0' y='56.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>D</text>
+<defs><marker id='m004b80' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#004b80'/></marker></defs><line x1='320' y1='52' x2='268' y2='90' stroke='#004b80' stroke-width='3' marker-end='url(#m004b80)'/>
+<text x='340' y='80' font-size='10' font-weight='700' fill='#004b80' text-anchor='middle'>mischt sich ein</text>
+<path d='M186,88 l10,16 l-8,3 l12,18' fill='none' stroke='#dc2626' stroke-width='4' stroke-linecap='round'/>
+<text x='200' y='205' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>1905 und 1911: fast Krieg zwischen Frankreich und Deutschland</text>
+<text x='200' y='222' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>Deutschland geht leer aus – und fühlt sich ausgegrenzt</text>
+</svg>

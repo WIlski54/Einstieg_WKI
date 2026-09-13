@@ -1,0 +1,20 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='Wettlauf um Kolonien' font-family='Lato, Arial, sans-serif'>
+<title>Wettlauf um Kolonien</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<rect x='16' y='60' width='120' height='90' rx='10' fill='#fff' stroke='#006AB3' stroke-width='2'/><text x='76.0' y='101.33333333333333' font-size='13' font-weight='700' fill='#1e293b' text-anchor='middle'>Großmächte</text><text x='76.0' y='117.33333333333333' font-size='13' font-weight='700' fill='#1e293b' text-anchor='middle'>Europas</text>
+<rect x='28' y='152' width='28' height='18' rx='3' fill='#006AB3' stroke='#fff' stroke-width='1.5'/><text x='42.0' y='166.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>GB</text>
+<rect x='62' y='152' width='28' height='18' rx='3' fill='#dc2626' stroke='#fff' stroke-width='1.5'/><text x='76.0' y='166.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>F</text>
+<rect x='96' y='152' width='28' height='18' rx='3' fill='#004b80' stroke='#fff' stroke-width='1.5'/><text x='110.0' y='166.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>D</text>
+<defs><marker id='m004b80' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#004b80'/></marker></defs><line x1='140' y1='90' x2='232' y2='60' stroke='#004b80' stroke-width='3' marker-end='url(#m004b80)'/>
+<defs><marker id='m004b80' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#004b80'/></marker></defs><line x1='140' y1='110' x2='232' y2='150' stroke='#004b80' stroke-width='3' marker-end='url(#m004b80)'/>
+<text x='186' y='70' font-size='12' font-weight='700' fill='#AD007C' text-anchor='middle'>Wettlauf</text>
+<text x='186' y='140' font-size='12' font-weight='700' fill='#AD007C' text-anchor='middle'>Wettlauf</text>
+<rect x='240' y='30' width='140' height='64' rx='10' fill='#f1ead9' stroke='#6b7280' stroke-width='2'/><text x='310.0' y='66.33333333333333' font-size='13' font-weight='700' fill='#1e293b' text-anchor='middle'>Afrika</text>
+<rect x='240' y='120' width='140' height='64' rx='10' fill='#f1ead9' stroke='#6b7280' stroke-width='2'/><text x='310.0' y='156.33333333333334' font-size='13' font-weight='700' fill='#1e293b' text-anchor='middle'>Asien</text>
+<rect x='250' y='62' width='26' height='20' fill='#8b5e3c' stroke='#5b3b22'/>
+<text x='304' y='77' font-size='11' font-weight='700' fill='#1e293b' text-anchor='middle'>Rohstoffe</text>
+<circle cx='262' cy='160' r='9' fill='#F7B800' stroke='#b8860b'/><circle cx='276' cy='166' r='9' fill='#F7B800' stroke='#b8860b'/>
+<text x='318' y='170' font-size='11' font-weight='700' fill='#1e293b' text-anchor='middle'>Märkte</text>
+<circle cx='40' cy='210' r='14' fill='#fff' stroke='#004b80' stroke-width='2'/><line x1='40' y1='210' x2='40' y2='200' stroke='#004b80' stroke-width='2'/><line x1='40' y1='210' x2='48' y2='214' stroke='#004b80' stroke-width='2'/>
+<text x='64' y='214' font-size='12' font-weight='700' fill='#dc2626' text-anchor='start'>Deutschland: erst seit 1871 – kommt zu spät</text>
+</svg>

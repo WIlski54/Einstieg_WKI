@@ -1,0 +1,19 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='Die Julikrise als Kettenreaktion' font-family='Lato, Arial, sans-serif'>
+<title>Die Julikrise als Kettenreaktion</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<text x='200' y='32' font-size='14' font-weight='900' fill='#004b80' text-anchor='middle'>Jeder Schritt löst den nächsten aus</text>
+<g transform='rotate(0 48 170)'><rect x='30' y='60' width='36' height='110' rx='6' fill='#fde7f3' stroke='#004b80' stroke-width='2'/><text x='48' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 48 120)'>Ö-U</text></g>
+<text x='48' y='200' font-size='11' font-weight='700' fill='#dc2626' text-anchor='middle'>28.7.</text>
+<g transform='rotate(-9 108 170)'><rect x='90' y='60' width='36' height='110' rx='6' fill='#fff' stroke='#004b80' stroke-width='2'/><text x='108' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 108 120)'>Russland</text></g>
+<text x='108' y='200' font-size='11' font-weight='700' fill='#dc2626' text-anchor='middle'>30.7.</text>
+<g transform='rotate(-18 168 170)'><rect x='150' y='60' width='36' height='110' rx='6' fill='#fff' stroke='#004b80' stroke-width='2'/><text x='168' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 168 120)'>Deutschl.</text></g>
+<text x='168' y='200' font-size='11' font-weight='700' fill='#dc2626' text-anchor='middle'>1.8.</text>
+<g transform='rotate(-27 228 170)'><rect x='210' y='60' width='36' height='110' rx='6' fill='#fff' stroke='#004b80' stroke-width='2'/><text x='228' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 228 120)'>Frankr.</text></g>
+<text x='228' y='200' font-size='11' font-weight='700' fill='#dc2626' text-anchor='middle'>3.8.</text>
+<g transform='rotate(-36 288 170)'><rect x='270' y='60' width='36' height='110' rx='6' fill='#fff' stroke='#004b80' stroke-width='2'/><text x='288' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 288 120)'>Belgien</text></g>
+<text x='288' y='200' font-size='11' font-weight='700' fill='#dc2626' text-anchor='middle'>4.8.</text>
+<g transform='rotate(-40 348 170)'><rect x='330' y='60' width='36' height='110' rx='6' fill='#fff' stroke='#004b80' stroke-width='2'/><text x='348' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 348 120)'>GB</text></g>
+<text x='348' y='200' font-size='11' font-weight='700' fill='#dc2626' text-anchor='middle'>4.8.</text>
+<defs><marker id='mAD007C' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#AD007C'/></marker></defs><line x1='12' y1='96' x2='40' y2='100' stroke='#AD007C' stroke-width='3' marker-end='url(#mAD007C)'/>
+<text x='200' y='228' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>Attentat → Kriegserklärung → Mobilmachung → Krieg in ganz Europa</text>
+</svg>

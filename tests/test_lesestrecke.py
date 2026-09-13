@@ -15,12 +15,48 @@ def test_inhalte_vollstaendig_und_eindeutig():
             assert a["erklaerung"] and a["text"] and a["frage"]
 
 
+def test_jeder_abschnitt_hat_ein_schaubild():
+    import os
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for key, strecke in inh.LESESTRECKEN.items():
+        for a in strecke["abschnitte"]:
+            assert a.get("bild") and a.get("bild_alt"), (key, a["ueberschrift"])
+            assert os.path.exists(os.path.join(root, "static", "img", "lese", a["bild"] + ".svg")), a["bild"]
+
+
+def test_glossar_deckt_alle_fetten_begriffe(student):
+    """Jeder fett markierte Begriff ist entweder ein Datum oder hat einen Glossareintrag."""
+    import os
+    import re
+    import glossar
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    datum = re.compile(r"^\d{1,2}\.(/\d{1,2}\.)? ?[A-Za-zä]+( \d{4})?$|^\d{4}$")
+    fehlend = []
+    for key, strecke in inh.LESESTRECKEN.items():
+        for a in strecke["abschnitte"]:
+            for begriff in re.findall(r"<strong>(.*?)</strong>", a["text"]):
+                if datum.match(begriff.strip()):
+                    continue
+                if glossar.eintrag_fuer(begriff) is None:
+                    fehlend.append((key, begriff))
+    assert not fehlend, fehlend
+    for key, e in glossar.GLOSSAR.items():
+        assert len(e["text"]) < 420, key
+        if e.get("bild"):
+            assert os.path.exists(os.path.join(root, "static", "img", "lese", e["bild"] + ".svg")), key
+    r = student.get("/api/glossar").get_json()
+    assert r["ok"] and "marokkokrise" in r["eintraege"] and r["aliase"]["marokkokrisen 1905 und 1911"] == "marokkokrise"
+    assert r["eintraege"]["marokkokrise"]["bild"].endswith("glossar-marokkokrise.svg")
+    assert r["eintraege"]["tannenberg"]["bild"] is None
+
+
 def test_client_daten_enthalten_keine_loesung(student):
     r = student.get("/api/lesestrecke/ursachen").get_json()
     assert r["ok"] and r["anzahl"] == 4 and r["status"]["phase"] == 0
     for a in r["abschnitte"]:
         assert "loesung" not in a and "erklaerung" not in a
         assert len(a["optionen"]) == 3
+        assert a["bild"].startswith("/static/img/lese/") and a["bild_alt"]
     assert student.get("/api/lesestrecke/unbekannt").status_code == 404
 
 

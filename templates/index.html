@@ -20,6 +20,7 @@
   <script src="{{ url_for('static', filename='js/zeichnen.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/spiele.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/schritte.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/glossar.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/ki.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/reader.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/app.js', v=v) }}" defer></script>
@@ -180,6 +181,17 @@
       </div>
       <p class="hint" id="backup-msg" role="status" aria-live="polite"></p>
       <p class="hint">Geladene Antworten werden nicht automatisch als neue Versuche ins Lehrkraft-Protokoll übertragen.</p>
+    </div>
+  </div>
+
+  <!-- Glossar: Erklärung zu einem Fachbegriff -->
+  <div class="ki-overlay" id="glossar-dialog" hidden>
+    <div class="ki-modal glossar-modal" role="dialog" aria-modal="true" aria-labelledby="glossar-titel">
+      <span class="eyebrow">Fachbegriff</span>
+      <h3 id="glossar-titel">Begriff</h3>
+      <figure class="glossar-figur" id="glossar-figur" hidden><img id="glossar-bild" alt=""></figure>
+      <p id="glossar-text" class="glossar-text"></p>
+      <button class="btn btn-primary btn-wide" type="button" id="glossar-close" data-action="glossar-close">Verstanden – zurück zum Text</button>
     </div>
   </div>
 

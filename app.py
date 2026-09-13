@@ -1170,6 +1170,15 @@ def api_lesestrecke_antwort(abschnitt):
     return jsonify({"ok": True, "korrekt": korrekt, "erklaerung": erklaerung, "status": status, "station": strecke["station"]})
 
 
+import glossar  # noqa: E402
+
+
+@app.route("/api/glossar")
+@schueler_required
+def api_glossar():
+    return jsonify(dict(glossar.glossar_fuer_client(), ok=True))
+
+
 # ── IServ-Archiv ─────────────────────────────────────────────────────────────
 def _iserv_client():
     return iserv_archiv.make_client()

@@ -1,0 +1,18 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='Das Attentat von Sarajevo' font-family='Lato, Arial, sans-serif'>
+<title>Das Attentat von Sarajevo</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<text x='200' y='30' font-size='15' font-weight='900' fill='#004b80' text-anchor='middle'>Sarajevo, 28. Juni 1914</text>
+<rect x='150' y='110' width='150' height='44' rx='10' fill='#004b80'/><rect x='180' y='90' width='80' height='26' rx='8' fill='#004b80'/>
+<circle cx='180' cy='158' r='12' fill='#111'/><circle cx='270' cy='158' r='12' fill='#111'/>
+<circle cx='205' cy='96' r='4.800000000000001' fill='#fff'/><path d='M198.6,115.2 v-8.0 a6.4,6.4 0 0 1 12.8,0 v8.0 z' fill='#fff'/>
+<circle cx='238' cy='96' r='4.800000000000001' fill='#fff'/><path d='M231.6,115.2 v-8.0 a6.4,6.4 0 0 1 12.8,0 v8.0 z' fill='#fff'/>
+<text x='225' y='184' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Franz Ferdinand + Sophie</text>
+<text x='225' y='200' font-size='11' font-weight='400' fill='#6b7280' text-anchor='middle'>im offenen Auto</text>
+<circle cx='60' cy='110' r='6.6000000000000005' fill='#dc2626'/><path d='M51.2,136.4 v-11.0 a8.8,8.8 0 0 1 17.6,0 v11.0 z' fill='#dc2626'/>
+<text x='60' y='158' font-size='12' font-weight='700' fill='#dc2626' text-anchor='middle'>Gavrilo Princip</text>
+<text x='60' y='172' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>serbischer Nationalist</text>
+<defs><marker id='mdc2626' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#dc2626'/></marker></defs><line x1='80' y1='118' x2='146' y2='124' stroke='#dc2626' stroke-width='3' marker-end='url(#mdc2626)' stroke-dasharray='6 4'/>
+<rect x='300' y='60' width='90' height='44' rx='10' fill='#fde7f3' stroke='#AD007C' stroke-width='2'/><text x='345.0' y='78.5' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Schuld?</text><text x='345.0' y='93.5' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Serbien!</text>
+<defs><marker id='mAD007C' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#AD007C'/></marker></defs><line x1='300' y1='96' x2='270' y2='106' stroke='#AD007C' stroke-width='2' marker-end='url(#mAD007C)' stroke-dasharray='4 3'/>
+<text x='200' y='226' font-size='11' font-weight='400' fill='#6b7280' text-anchor='middle'>Der Funke für die Julikrise</text>
+</svg>

@@ -37,13 +37,16 @@ WK.lesestrecke = (() => {
         <span class="done-badge"${st.fertig ? "" : " hidden"}>✅ gelesen</span>
       </header>
       <p class="lese-progress" role="status">${st.fertig ? `Alle ${n} Abschnitte gelesen – zum Nachschlagen aufklappen.` : `Abschnitt ${st.phase + 1} von ${n}`} <span class="lese-dots" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i class="${i < st.phase || st.fertig ? "done" : i === st.phase ? "now" : ""}"></i>`).join("")}</span></p>`;
+    // Text und Schaubild nebeneinander; in der Fragephase bleibt beides ausgeblendet.
+    const inhalt = a => `<div class="lese-inhalt"><div class="lese-text">${a.text}</div>${a.bild ? `<figure class="lese-figur"><img src="${esc(a.bild)}" alt="${esc(a.bild_alt || "Schaubild")}" loading="lazy"></figure>` : ""}</div>`;
     gelesen.forEach((a, i) => {
-      html += `<details class="lese-done"${st.fertig && i === 0 ? "" : ""}><summary>✅ ${i + 1}. ${esc(a.ueberschrift)}</summary><div class="lese-text">${a.text}</div>${a.erklaerung ? `<p class="lese-erkl">💡 ${esc(a.erklaerung)}</p>` : ""}</details>`;
+      html += `<details class="lese-done"><summary>✅ ${i + 1}. ${esc(a.ueberschrift)}</summary>${inhalt(a)}${a.erklaerung ? `<p class="lese-erkl">💡 ${esc(a.erklaerung)}</p>` : ""}</details>`;
     });
     if (!st.fertig) {
       const a = d.abschnitte[st.phase];
       const gesperrt = st.retry_until > jetzt;
-      html += `<section class="lese-now" aria-live="polite"><h3>${st.phase + 1}. ${esc(a.ueberschrift)}</h3><div class="lese-text">${a.text}</div>`;
+      const frageModus = !gesperrt && state.runtime["lese-" + key] && state.runtime["lese-" + key].frage;
+      html += `<section class="lese-now" aria-live="polite"><h3>${st.phase + 1}. ${esc(a.ueberschrift)}</h3>${frageModus ? "" : inhalt(a)}`;
       if (gesperrt) {
         const rest = Math.ceil(st.retry_until - jetzt);
         html += `<div class="feedback-box feedback-err show">❌ Das war nicht richtig. Lies den Abschnitt noch einmal in Ruhe – die Frage kommt in <strong id="lese-count-${key}">${rest}</strong> Sekunden wieder.</div>`;
@@ -53,9 +56,9 @@ WK.lesestrecke = (() => {
           if (r <= 0) { clearInterval(timers[key]); st.retry_until = 0; render(key); }
           else if (el) el.textContent = r;
         }, 1000);
-      } else if (state.runtime["lese-" + key] && state.runtime["lese-" + key].frage) {
+      } else if (frageModus) {
         const opts = shuffle(a.optionen.map((t, i) => ({ t, i })));
-        html += `<div class="lese-frage"><p class="task-question">🔒 ${esc(a.frage)}</p><div class="mc-options" role="group">${opts.map(o => `<button class="mc-btn" type="button" data-action="lese-antwort" data-key="${key}" data-phase="${st.phase}" data-wahl="${o.i}">${esc(o.t)}</button>`).join("")}</div>
+        html += `<div class="lese-frage"><p class="hint">Der Text ist jetzt ausgeblendet. Beantworte die Frage aus dem Gedächtnis.</p><p class="task-question">🔒 ${esc(a.frage)}</p><div class="mc-options" role="group">${opts.map(o => `<button class="mc-btn" type="button" data-action="lese-antwort" data-key="${key}" data-phase="${st.phase}" data-wahl="${o.i}">${esc(o.t)}</button>`).join("")}</div>
           <div class="btn-row"><button class="btn btn-quiet btn-sm" type="button" data-action="lese-zurueck" data-key="${key}">← Abschnitt noch einmal lesen</button></div></div>`;
       } else {
         html += `<div class="btn-row"><button class="btn btn-primary" type="button" data-action="lese-weiter" data-key="${key}">Gelesen – zur Frage →</button></div>`;
@@ -66,6 +69,7 @@ WK.lesestrecke = (() => {
     }
     html += `</article>`;
     host.innerHTML = html;
+    if (WK.glossar) WK.glossar.verlinken(host);
     if (st.fertig && !state.completed.has(station(key))) markComplete(station(key));
     if (WK.schritte) WK.schritte.aktualisieren(key);
   }

@@ -1,0 +1,18 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' role='img' aria-label='1917: die Wende' font-family='Lato, Arial, sans-serif'>
+<title>1917: die Wende</title>
+<rect width='400' height='240' rx='14' fill='#eef5fb'/>
+<rect x='0' y='120' width='250' height='120' fill='#cfe3f2'/>
+<path d='M40,120 h60 l-6,10 h-48 z' fill='#004b80'/><rect x='61.0' y='111' width='18.0' height='9' fill='#004b80'/><rect x='68.2' y='104' width='4' height='8' fill='#004b80'/>
+<path d='M110,120 l30,-12 v12 z' fill='#dc2626'/>
+<path d='M60,170 h70 a10,10 0 0 1 0,20 h-70 a10,10 0 0 1 0,-20 z' fill='#374151'/><rect x='88' y='160' width='14' height='10' fill='#374151'/>
+<text x='96' y='210' font-size='11' font-weight='700' fill='#004b80' text-anchor='middle'>U-Boot versenkt Schiffe</text>
+<text x='96' y='224' font-size='10' font-weight='400' fill='#004b80' text-anchor='middle'>ab Februar 1917 ohne Warnung</text>
+<rect x='280' y='130' width='60' height='36' rx='3' fill='#006AB3' stroke='#fff' stroke-width='1.5'/><text x='310.0' y='153.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>USA</text>
+<defs><marker id='m006AB3' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#006AB3'/></marker></defs><line x1='280' y1='148' x2='236' y2='148' stroke='#006AB3' stroke-width='4' marker-end='url(#m006AB3)'/>
+<text x='310' y='186' font-size='12' font-weight='900' fill='#006AB3' text-anchor='middle'>April 1917:</text>
+<text x='310' y='202' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>USA treten ein</text>
+<rect x='20' y='20' width='150' height='70' rx='10' fill='#fff' stroke='#AD007C' stroke-width='2'/><text x='95.0' y='51.5' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Russland 1917:</text><text x='95.0' y='66.5' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Revolution</text>
+<defs><marker id='mAD007C' markerWidth='8' markerHeight='8' refX='6' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 z' fill='#AD007C'/></marker></defs><line x1='174' y1='55' x2='220' y2='55' stroke='#AD007C' stroke-width='3' marker-end='url(#mAD007C)'/>
+<rect x='224' y='26' width='160' height='58' rx='10' fill='#fde7f3' stroke='#AD007C' stroke-width='2'/><text x='304.0' y='51.666666666666664' font-size='11' font-weight='700' fill='#1e293b' text-anchor='middle'>März 1918:</text><text x='304.0' y='65.66666666666666' font-size='11' font-weight='700' fill='#1e293b' text-anchor='middle'>Frieden von Brest-Litowsk</text>
+<text x='200' y='106' font-size='11' font-weight='700' fill='#6b7280' text-anchor='middle'>Russland steigt aus – die USA kommen dazu</text>
+</svg>
