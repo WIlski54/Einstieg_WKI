@@ -9,3 +9,4 @@ data/*.db-shm
 data/*.db-wal
 .DS_Store
 Thumbs.db
+.claude/

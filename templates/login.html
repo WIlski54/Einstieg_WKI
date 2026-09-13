@@ -6,17 +6,18 @@
   <title>Erster Weltkrieg · Anmeldung</title>
   <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.jpg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=v) }}">
+  <script>window.LOGIN = {appId: {{ app_id|tojson }}, fortsetzung: {{ fortsetzung.active|tojson }}};</script>
 </head>
 <body class="login-page">
   <main class="login-shell">
     <section class="login-brand" aria-label="Thema">
       <div class="login-logos">
         <img src="{{ url_for('static', filename='img/logo-gsm.jpg') }}" alt="Gesamtschule Meiderich" class="login-logo">
-        <img src="{{ url_for('static', filename='img/logo-wk.png') }}" alt="WK" class="login-logo login-logo-wk">
+        <img src="{{ url_for('static', filename='img/logo-wk.png') }}" alt="" class="login-logo login-logo-wk">
       </div>
       <span class="eyebrow light">Geschichte · Klasse 9</span>
       <h1>Der Erste Weltkrieg<br>1914–1918</h1>
-      <p>Ursachen, Auslöser, Verlauf, Kriegsende und Folgen – recherchieren, ordnen, erklären.</p>
+      <p>Ursachen, Auslöser, Verlauf, Kriegsende und Folgen – lesen, recherchieren, ordnen, zeichnen, erklären.</p>
       <div class="login-timeline" aria-hidden="true">
         <span>1914</span><i></i><span>1916</span><i></i><span>1918</span><i></i><span>1919</span>
       </div>
@@ -26,7 +27,14 @@
       <span class="eyebrow">Dein Lernplatz</span>
       <h2>Starte mit einem Pseudonym</h2>
       <p class="muted">Nutze keinen echten Namen. Ein Fantasiename reicht.</p>
+      {% if fortsetzung.active %}<div class="alert alert-info" role="status">🔁 Fortsetzungsstunde: Melde dich mit demselben Pseudonym und derselben Klasse wie beim letzten Mal an. Deine Lehrkraft ordnet dir deinen alten Arbeitsstand zu.</div>{% endif %}
+      <div class="alert alert-info" id="resume-box" hidden>
+        <strong>Weiterarbeiten?</strong> <span id="resume-text">Auf diesem Gerät ist ein Lernplatz gespeichert.</span>
+        <div class="btn-row"><button class="btn btn-primary btn-sm" type="button" id="resume-btn">▶️ Weiterarbeiten</button><button class="btn btn-quiet btn-sm" type="button" id="resume-forget">Anderer Lernplatz</button></div>
+        <p class="hint" id="resume-msg"></p>
+      </div>
       {% if error %}<div class="alert alert-error" role="alert">{{ error }}</div>{% endif %}
+      {% if request.args.get('abgemeldet') %}<div class="alert alert-info" role="status">Du bist abgemeldet. Dein Arbeitsstand bleibt bei deiner Lehrkraft gesichert.</div>{% endif %}
       <form method="post" class="stack-lg">
         <label class="field-label" for="pseudonym">Pseudonym</label>
         <input id="pseudonym" name="pseudonym" minlength="2" maxlength="30" autocomplete="off" required placeholder="z. B. Silberfuchs">
@@ -36,12 +44,13 @@
 
         <div class="privacy-box">
           <strong>Datenschutz- und KI-Hinweis</strong>
-          <p>Gespeichert werden dein Pseudonym, deine Klasse, deine Antworten, Recherche-Stichpunkte, Quellen, dein Lernfortschritt und die Zeitpunkte deiner KI-Freigaben. Deine Lehrkraft kann diese Unterrichtsdaten sehen.</p>
+          <p>Gespeichert werden dein Pseudonym, deine Klasse, deine Antworten und Versuche, Recherche-Stichpunkte, Quellen, Zeichnungen, dein automatisch gesicherter Arbeitsstand, dein Lernfortschritt, die Zeitpunkte deiner KI-Freigaben sowie deine KI-Chats. Deine Lehrkraft kann diese Unterrichtsdaten sehen.</p>
           <details>
             <summary>Langfassung anzeigen</summary>
             <div class="privacy-long">
-              <p>Verwende keine Klarnamen, Kontaktdaten oder andere sensible Angaben. Die Daten liegen nur in der Datenbank dieser Lernapp und werden beim nächsten Start der Anwendung oder auf Wunsch deiner Lehrkraft gelöscht.</p>
-              <p>Der KI-Tutor und das KI-Feedback verwenden generative KI (Google Gemini) – erst nachdem deine Lehrkraft die Nutzung freigegeben hat. Chat-Inhalte werden nicht dauerhaft gespeichert, die Lehrkraft kann sie während der Stunde live mitlesen. KI kann Fehler machen und ersetzt keine Bewertung durch die Lehrkraft.</p>
+              <p>Verwende keine Klarnamen, Kontaktdaten oder andere sensible Angaben. Dein Arbeitsstand wird auf diesem Gerät (bis zu 48 Stunden) und auf dem Server der Lernapp gesichert, damit du nach einem Neustart oder in einer späteren Stunde weiterarbeiten kannst. Dafür bleibt auf dem Gerät ein zufälliger Schlüssel gespeichert – ohne Klarnamen, ohne Gerätekennung.</p>
+              <p>Der KI-Tutor, das KI-Feedback, die Bewertung von Zeichnungen und die Handschrifterkennung verwenden generative KI (Google Gemini) – erst nachdem deine Lehrkraft die Nutzung freigegeben hat. KI-Chats und KI-Rückmeldungen werden für diese Unterrichtssitzung gespeichert und sind für die Lehrkraft einsehbar. KI kann Fehler machen und ersetzt keine Bewertung durch die Lehrkraft.</p>
+              <p>Am Stundenende kann die Lehrkraft den gesamten pseudonymen Arbeitsstand verschlüsselt auf dem Schulserver (IServ) archivieren; danach werden die Daten auf dem App-Server gelöscht. Die Lehrkraft kann deine Daten auch auf Wunsch einzeln löschen.</p>
               <p>Für Auskunft, Berichtigung oder Löschung wende dich an deine Lehrkraft oder an die schulische Datenschutzbeauftragte bzw. den schulischen Datenschutzbeauftragten. Dieser Text ist eine schulische Transparenzvorlage und keine Rechtsberatung.</p>
             </div>
           </details>
@@ -57,5 +66,27 @@
       <a class="teacher-link" href="{{ url_for('lehrer_login') }}">🏫 Lehrerbereich</a>
     </section>
   </main>
+  <script>
+    (() => {
+      const KEY = (window.LOGIN.appId || "gsm") + ":lernplatz";
+      let lp = null;
+      try { lp = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { lp = null; }
+      if (!lp || !lp.schueler_id || !lp.token) return;
+      const box = document.getElementById("resume-box"), msg = document.getElementById("resume-msg");
+      document.getElementById("resume-text").textContent = "Auf diesem Gerät ist der Lernplatz „" + (lp.pseudonym || "?") + "“ gespeichert.";
+      box.hidden = false;
+      document.getElementById("resume-forget").addEventListener("click", () => { try { localStorage.removeItem(KEY); } catch (e) { /* egal */ } box.hidden = true; });
+      document.getElementById("resume-btn").addEventListener("click", async () => {
+        msg.textContent = "Verbinde …";
+        try {
+          const res = await fetch("/api/resume", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ schueler_id: lp.schueler_id, token: lp.token }) });
+          const d = await res.json();
+          if (res.ok && d.ok) { location.href = d.wartend ? "/warten" : "/arbeitsblatt"; return; }
+          if (res.status === 404) { msg.innerHTML = window.LOGIN.fortsetzung || d.fortsetzung_aktiv ? 'Dein Arbeitsstand wird gerade wiederhergestellt. <a href="/warten">Auf die Zuordnung warten →</a>' : 'Auf dem Server liegt kein Arbeitsstand mehr (die Stunde wurde archiviert). Wenn deine Lehrkraft eine Fortsetzungsstunde startet: <a href="/warten">hier warten →</a>. Sonst melde dich unten neu an.'; return; }
+          msg.textContent = d.error || "Weiterarbeiten nicht möglich – bitte neu anmelden.";
+        } catch (e) { msg.textContent = "Keine Verbindung zum Server."; }
+      });
+    })();
+  </script>
 </body>
 </html>

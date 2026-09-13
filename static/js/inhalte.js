@@ -106,13 +106,7 @@ window.INHALTE = {
     {
       key: "ursachen", label: "Ursachen", icon: "🧭", kurz: "U",
       intro: {
-        eyebrow: "Kompakt-Info M1", titel: "Langfristige Ursachen: Warum war Europa 1914 ein „Pulverfass“?",
-        absaetze: [
-          "<strong>Imperialismus:</strong> Die europäischen Großmächte wetteiferten um Kolonien, Rohstoffe und Absatzmärkte. Deutschland, erst 1871 gegründet, kam zu spät und forderte einen „Platz an der Sonne“. In den <strong>Marokkokrisen 1905 und 1911</strong> standen Deutschland und Frankreich kurz vor einem Krieg.",
-          "<strong>Nationalismus:</strong> Viele Menschen hielten das eigene Volk für überlegen. Frankreich wollte das 1871 verlorene <strong>Elsass-Lothringen</strong> zurück. Serbische Nationalisten wollten alle Südslawen in einem Staat vereinen – eine Bedrohung für den Vielvölkerstaat Österreich-Ungarn.",
-          "<strong>Militarismus und Wettrüsten:</strong> Das Militär genoss hohes Ansehen, Krieg galt als normales Mittel der Politik. Deutschland und Großbritannien lieferten sich ein <strong>Flottenwettrüsten</strong>, alle Großmächte vergrößerten ihre Heere. Die Generalstäbe hatten fertige Kriegspläne – Deutschland den <strong>Schlieffen-Plan</strong>: erst Frankreich schnell besiegen, dann gegen Russland kämpfen.",
-          "<strong>Bündnissystem:</strong> Europa war in zwei Blöcke geteilt: der <strong>Dreibund</strong> (Deutschland, Österreich-Ungarn, Italien; 1882) und die <strong>Triple Entente</strong> (Frankreich, Russland, Großbritannien; 1907). Ein Streit zwischen zwei Staaten konnte so alle Großmächte in den Krieg ziehen. Besonders gefährlich war der <strong>Balkan</strong>, wo das Osmanische Reich Gebiete verlor und Österreich-Ungarn und Russland um Einfluss kämpften.",
-        ],
+        eyebrow: "Lesestrecke M1", titel: "Langfristige Ursachen: Warum war Europa 1914 ein „Pulverfass“?",
         begriffe: ["Imperialismus", "Nationalismus", "Militarismus", "Wettrüsten", "Bündnissystem", "Dreibund", "Triple Entente", "Schlieffen-Plan", "Pulverfass Balkan"],
       },
       aufgaben: [
@@ -258,6 +252,14 @@ window.INHALTE = {
           hinweis: "Wie auf dem Original-AB: Notiere stichpunktartig die wichtigsten Ursachen. Nutze die Kompakt-Info und mindestens eine eigene Quelle.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zu den Ursachen des Ersten Weltkriegs auf sachliche Richtigkeit und Vollständigkeit (Imperialismus, Nationalismus, Militarismus, Bündnissystem).",
         },
+        {
+          nr: 9, typ: "zeichnen", eyebrow: "Zeichnen", titel: "Das Bündnissystem als Skizze", geraet: "buendnis",
+          niveaus: {
+            A: { aufgabe: "Zeichne zwei große Kästen oder Kreise: einen für den Dreibund, einen für die Triple Entente. Schreibe die passenden Staaten hinein (Textwerkzeug) und verbinde die Verbündeten mit Linien.", elemente: ["Kasten Dreibund mit Deutschland, Österreich-Ungarn, Italien", "Kasten Triple Entente mit Frankreich, Russland, Großbritannien", "Verbindungslinien zwischen Verbündeten", "Beschriftungen"], hinweis: "Tipp: Erst die zwei Kästen, dann die sechs Namen, zum Schluss die Linien." },
+            B: { aufgabe: "Skizziere das Bündnissystem von 1914 als Netz: Staaten als Kästen, Bündnisse als Linien, dazu Serbien und Belgien am Rand. Markiere mit einem Pfeil, wo die Julikrise begann.", elemente: ["sechs Großmächte als Kästen", "Bündnislinien Dreibund und Entente", "Serbien und Belgien", "Pfeil oder Markierung bei Sarajevo/Österreich-Ungarn"], hinweis: "Nutze zwei Farben für die beiden Blöcke." },
+            C: { aufgabe: "Zeichne ein Schema der Kettenreaktion vom Attentat bis zur Kriegserklärung Großbritanniens: Staaten als Kästen, jede Reaktion als beschrifteter Pfeil mit Datum. Ergänze den Schlieffen-Plan als Pfeil durch Belgien.", elemente: ["Kästen für Serbien, Österreich-Ungarn, Deutschland, Russland, Frankreich, Belgien, Großbritannien", "nummerierte oder datierte Pfeile in Reihenfolge der Julikrise", "Blankoscheck als Pfeil Berlin → Wien", "Schlieffen-Plan als Pfeil durch Belgien nach Frankreich"], hinweis: "Die Reihenfolge der Pfeile ist der Kern der Aufgabe." },
+          },
+        },
       ],
     },
 
@@ -265,13 +267,7 @@ window.INHALTE = {
     {
       key: "ausloeser", label: "Auslöser", icon: "🎯", kurz: "A",
       intro: {
-        eyebrow: "Kompakt-Info M2", titel: "Der Auslöser: Das Attentat von Sarajevo und die Julikrise",
-        absaetze: [
-          "Am <strong>28. Juni 1914</strong> erschoss der bosnisch-serbische Nationalist <strong>Gavrilo Princip</strong> in Sarajevo den österreichisch-ungarischen Thronfolger <strong>Franz Ferdinand</strong> und seine Frau Sophie. Princip gehörte zu einer Gruppe, die von der serbischen Geheimorganisation „Schwarze Hand“ unterstützt wurde. Österreich-Ungarn machte Serbien verantwortlich.",
-          "Am <strong>5./6. Juli</strong> sicherte Deutschland seinem Verbündeten uneingeschränkte Unterstützung zu – den <strong>„Blankoscheck“</strong>. Am <strong>23. Juli</strong> stellte Wien Serbien ein <strong>Ultimatum</strong> mit fast unerfüllbaren Forderungen. Serbien nahm fast alle Punkte an, doch am <strong>28. Juli</strong> erklärte Österreich-Ungarn Serbien den Krieg.",
-          "Jetzt griff das Bündnissystem: Russland machte am <strong>30. Juli</strong> als Schutzmacht Serbiens mobil. Deutschland erklärte am <strong>1. August</strong> Russland und am <strong>3. August</strong> Frankreich den Krieg. Am <strong>4. August</strong> marschierten deutsche Truppen in das neutrale <strong>Belgien</strong> ein – daraufhin erklärte Großbritannien Deutschland den Krieg.",
-          "Diese fünf Wochen nennt man <strong>Julikrise</strong>. Das Attentat war nur der <strong>Auslöser</strong> (der „Funke“), die eigentlichen <strong>Ursachen</strong> (das „Pulverfass“) lagen tiefer. Viele Menschen jubelten im August 1914 – das sogenannte „Augusterlebnis“ –, doch die Begeisterung war längst nicht überall so groß, wie die Propaganda behauptete.",
-        ],
+        eyebrow: "Lesestrecke M2", titel: "Der Auslöser: Das Attentat von Sarajevo und die Julikrise",
         begriffe: ["Attentat von Sarajevo", "Gavrilo Princip", "Franz Ferdinand", "Blankoscheck", "Ultimatum", "Julikrise", "Mobilmachung", "Neutralität Belgiens", "Auslöser vs. Ursache"],
       },
       aufgaben: [
@@ -422,13 +418,7 @@ window.INHALTE = {
     {
       key: "verlauf", label: "Verlauf", icon: "🪖", kurz: "V",
       intro: {
-        eyebrow: "Kompakt-Info M3", titel: "Der Verlauf: Vom Bewegungskrieg zur Materialschlacht",
-        absaetze: [
-          "<strong>1914:</strong> Der Schlieffen-Plan scheiterte im September in der <strong>Marneschlacht</strong> – die Deutschen wurden vor Paris gestoppt. Die Westfront erstarrte zum <strong>Stellungskrieg</strong>: Schützengräben von der Nordsee bis zur Schweiz. Im Osten besiegte Deutschland die Russen bei <strong>Tannenberg</strong>; die Ostfront blieb beweglicher.",
-          "<strong>1915/1916:</strong> Bei <strong>Ypern</strong> setzte Deutschland 1915 erstmals Giftgas ein. Italien trat auf Seiten der Entente ein. 1916 tobten die <strong>Materialschlachten</strong> um <strong>Verdun</strong> (rund 700.000 Tote und Verwundete) und an der <strong>Somme</strong> (über eine Million Verluste, erste Panzer) – ohne dass sich die Front wesentlich verschob. Maschinengewehre und Artillerie machten jeden Angriff zum Massensterben.",
-          "<strong>1917:</strong> Der <strong>uneingeschränkte U-Boot-Krieg</strong> führte im April zum <strong>Kriegseintritt der USA</strong>. In Russland stürzten die Revolutionen den Zaren; die Bolschewiki schlossen im März 1918 den Frieden von <strong>Brest-Litowsk</strong>.",
-          "<strong>Totaler Krieg:</strong> Der Krieg erfasste die ganze Gesellschaft: Frauen arbeiteten in Rüstungsfabriken, die britische Seeblockade führte zum <strong>„Steckrübenwinter“</strong> 1916/17 mit Hunger in Deutschland, Propaganda lenkte die Stimmung. <strong>1918:</strong> Die deutsche Frühjahrsoffensive scheiterte; ab dem <strong>8. August</strong>, dem „schwarzen Tag des deutschen Heeres“, drängten die Alliierten mit Panzern und frischen US-Truppen die Deutschen zurück.",
-        ],
+        eyebrow: "Lesestrecke M3", titel: "Der Verlauf: Vom Bewegungskrieg zur Materialschlacht",
         begriffe: ["Schlieffen-Plan", "Marneschlacht", "Stellungskrieg", "Zweifrontenkrieg", "Materialschlacht", "Verdun", "Somme", "Giftgas", "U-Boot-Krieg", "Kriegseintritt der USA", "totaler Krieg", "Heimatfront"],
       },
       aufgaben: [
@@ -573,6 +563,14 @@ window.INHALTE = {
           hinweis: "Ordne den Verlauf nach Jahren (1914, 1915, 1916, 1917, 1918). Ein Stichpunkt pro wichtigem Ereignis.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zum Verlauf des Ersten Weltkriegs (1914–1918) auf sachliche Richtigkeit, Jahreszahlen und zeitliche Ordnung.",
         },
+        {
+          nr: 26, typ: "zeichnen", eyebrow: "Zeichnen", titel: "Der Schützengraben", geraet: "schuetzengraben",
+          niveaus: {
+            A: { aufgabe: "Zeichne den Querschnitt eines Schützengrabens: Graben, Brustwehr mit Sandsäcken, Stacheldraht davor und das Niemandsland. Beschrifte drei Teile.", elemente: ["Graben (Vertiefung)", "Brustwehr/Sandsäcke", "Stacheldraht", "Niemandsland", "mindestens drei Beschriftungen"], hinweis: "Ein Querschnitt ist ein Schnitt von der Seite – wie ein aufgeschnittener Kuchen." },
+            B: { aufgabe: "Zeichne zwei gegenüberliegende Grabensysteme mit Niemandsland dazwischen. Ergänze eine Maschinengewehr-Stellung, Stacheldraht und einen Unterstand und beschrifte alles.", elemente: ["zwei Gräben gegenüber", "Niemandsland", "MG-Stellung", "Stacheldraht", "Unterstand", "Beschriftungen"], hinweis: "Achte auf den Abstand: Das Niemandsland war oft nur 50 bis 300 Meter breit." },
+            C: { aufgabe: "Zeichne ein Schema, das erklärt, warum ein Angriff im Stellungskrieg scheiterte: Angreifer im Niemandsland, MG-Stellungen mit Schussfeld als Pfeile, Artilleriefeuer, Stacheldraht. Markiere die entscheidende Stelle und beschrifte sie.", elemente: ["Angreifer im offenen Niemandsland", "MG-Stellungen mit Schussfeld-Pfeilen", "Artillerie", "Stacheldraht als Hindernis", "Markierung und Erklärung der entscheidenden Stelle"], hinweis: "Die Zeichnung soll eine Erklärung sein, kein Schlachtenbild." },
+          },
+        },
       ],
     },
 
@@ -580,13 +578,7 @@ window.INHALTE = {
     {
       key: "kriegsende", label: "Kriegsende", icon: "🕊️", kurz: "K",
       intro: {
-        eyebrow: "Kompakt-Info M4", titel: "Das Kriegsende: Niederlage, Revolution, Waffenstillstand",
-        absaetze: [
-          "Im Sommer 1918 war der Krieg für Deutschland militärisch verloren: Die Frühjahrsoffensive war gescheitert, täglich trafen rund 10.000 frische US-Soldaten in Frankreich ein, die Heimat hungerte. Am <strong>29. September 1918</strong> verlangte die <strong>Oberste Heeresleitung</strong> (Hindenburg und Ludendorff) einen sofortigen Waffenstillstand. Grundlage sollten die <strong>14 Punkte</strong> des US-Präsidenten <strong>Wilson</strong> sein (Selbstbestimmungsrecht der Völker, Völkerbund).",
-          "Mit den <strong>Oktoberreformen</strong> wurde das Kaiserreich parlamentarisiert: Prinz <strong>Max von Baden</strong> wurde Reichskanzler und war nun vom Reichstag abhängig. Gleichzeitig brachen die Verbündeten weg: Bulgarien (29. September), das Osmanische Reich (30. Oktober) und Österreich-Ungarn (3. November) schlossen Waffenstillstände.",
-          "Als die Marineführung die Flotte zu einer letzten, aussichtslosen Schlacht auslaufen lassen wollte, verweigerten die Matrosen den Befehl. Der <strong>Matrosenaufstand in Kiel</strong> (3./4. November) wurde zur <strong>Novemberrevolution</strong>: Überall bildeten sich Arbeiter- und Soldatenräte. Am <strong>9. November 1918</strong> wurde die Abdankung Kaiser Wilhelms II. verkündet; <strong>Philipp Scheidemann</strong> rief die Republik aus, <strong>Friedrich Ebert</strong> (SPD) übernahm die Regierung.",
-          "Am <strong>11. November 1918</strong> unterzeichnete Matthias Erzberger im Wald von <strong>Compiègne</strong> den Waffenstillstand. Ludendorff und andere verbreiteten später die <strong>Dolchstoßlegende</strong>: Das „im Felde unbesiegte“ Heer sei von der Heimat verraten worden. Das war falsch – die Militärführung selbst hatte den Waffenstillstand gefordert. Die Lüge belastete die junge Republik schwer.",
-        ],
+        eyebrow: "Lesestrecke M4", titel: "Das Kriegsende: Niederlage, Revolution, Waffenstillstand",
         begriffe: ["Oberste Heeresleitung", "Hindenburg", "Ludendorff", "14 Punkte Wilsons", "Oktoberreformen", "Matrosenaufstand", "Novemberrevolution", "Ausrufung der Republik", "Waffenstillstand von Compiègne", "Dolchstoßlegende"],
       },
       aufgaben: [
@@ -735,13 +727,7 @@ window.INHALTE = {
     {
       key: "folgen", label: "Folgen", icon: "🧩", kurz: "F",
       intro: {
-        eyebrow: "Kompakt-Info M5", titel: "Die Folgen: Ein neues Europa und die „Urkatastrophe“",
-        absaetze: [
-          "<strong>Menschliche Verluste:</strong> Rund 9 bis 10 Millionen Soldaten und etwa 6 bis 7 Millionen Zivilisten starben, dazu kamen Millionen Verwundete und Kriegsversehrte. Die <strong>Spanische Grippe</strong> 1918–1920 forderte weltweit weitere Millionen Opfer. Eine ganze Generation war traumatisiert.",
-          "<strong>Versailler Vertrag (28. Juni 1919):</strong> Deutschland durfte nicht mitverhandeln. Es musste den <strong>Kriegsschuldartikel 231</strong> anerkennen, <strong>Reparationen</strong> zahlen (1921 auf 132 Milliarden Goldmark festgelegt), rund <strong>13 Prozent seines Gebiets</strong> abtreten (Elsass-Lothringen an Frankreich, Posen und Westpreußen an Polen, alle Kolonien) und sein Heer auf <strong>100.000 Mann</strong> verkleinern. Viele Deutsche nannten ihn „Schandfrieden“ oder „Diktat“ – eine schwere Hypothek für die <strong>Weimarer Republik</strong>.",
-          "<strong>Neue Landkarte:</strong> Vier Reiche zerfielen – das deutsche Kaiserreich, Österreich-Ungarn, das Russische Reich und das Osmanische Reich. Neue Staaten entstanden: <strong>Polen, die Tschechoslowakei, Jugoslawien</strong>, die baltischen Staaten, Finnland. In Russland herrschten nach der Revolution die Bolschewiki. Der <strong>Völkerbund</strong> (1920) sollte künftige Kriege verhindern – die USA traten ihm allerdings nicht bei.",
-          "<strong>Langfristige Folgen:</strong> Frauen hatten in Fabriken Männer ersetzt und erhielten in Deutschland 1918/19 das <strong>Wahlrecht</strong>. Schulden, Inflation (1923 Hyperinflation) und Revanchismus vergifteten die Politik. Weil der Erste Weltkrieg den Boden für Faschismus, Nationalsozialismus und den Zweiten Weltkrieg bereitete, nannte ihn der Historiker George F. Kennan die <strong>„Urkatastrophe des 20. Jahrhunderts“</strong>.",
-        ],
+        eyebrow: "Lesestrecke M5", titel: "Die Folgen: Ein neues Europa und die „Urkatastrophe“",
         begriffe: ["Versailler Vertrag", "Artikel 231", "Reparationen", "Gebietsverluste", "Völkerbund", "Weimarer Republik", "Zerfall der Vielvölkerreiche", "neue Staaten", "Frauenwahlrecht", "Urkatastrophe"],
       },
       aufgaben: [
@@ -885,6 +871,14 @@ window.INHALTE = {
           hinweis: "Ordne deine Stichpunkte nach Bereichen (politisch, territorial, wirtschaftlich, gesellschaftlich) oder nach Zeit.",
           kiFrage: "Prüfe diese Recherche-Stichpunkte zu den Folgen des Ersten Weltkriegs (Versailler Vertrag, neue Staaten, Weimarer Republik, Völkerbund) auf sachliche Richtigkeit und Vollständigkeit.",
         },
+        {
+          nr: 43, typ: "zeichnen", eyebrow: "Zeichnen", titel: "Plakat oder Karikatur zu Versailles", geraet: "plakat",
+          niveaus: {
+            A: { aufgabe: "Gestalte ein einfaches Plakat mit dem Titel „Versailles 1919“: Zeichne Deutschland als Kasten und drei Pfeile nach außen, die zeigen, was es abgeben musste (Gebiete, Kolonien, Heer). Beschrifte die Pfeile.", elemente: ["Titel Versailles 1919", "Kasten Deutschland", "drei beschriftete Pfeile: Gebiete, Kolonien, Heer"], hinweis: "Das Textwerkzeug hilft bei Titel und Beschriftungen." },
+            B: { aufgabe: "Entwirf eine Karikatur, wie sie 1919 in einer deutschen ODER französischen Zeitung erschienen sein könnte. Nutze Symbole (Waage, Ketten, Geldsack, Taube) und eine Bildunterschrift.", elemente: ["erkennbare Perspektive (deutsch oder französisch)", "mindestens zwei Symbole", "Bildunterschrift"], hinweis: "Eine Karikatur übertreibt bewusst – das ist erlaubt." },
+            C: { aufgabe: "Zeichne zwei kleine Karikaturen nebeneinander: eine aus deutscher Sicht („Diktat“) und eine aus französischer Sicht („Sicherheit“). Zeige dieselbe Szene aus zwei Blickwinkeln und beschrifte beide Perspektiven.", elemente: ["zwei Bildhälften", "deutsche Perspektive mit Beschriftung", "französische Perspektive mit Beschriftung", "gemeinsames Motiv aus zwei Sichtweisen"], hinweis: "Die Gegenüberstellung ist die Beurteilung – Bild statt Text." },
+          },
+        },
       ],
     },
 
@@ -951,6 +945,64 @@ window.INHALTE = {
               { t: "Wikipedia darf man in der Schule grundsätzlich nicht nutzen", ok: false },
             ] },
           },
+        },
+        {
+          nr: 46, typ: "blitz", eyebrow: "Blitzfragen", titel: "Blitzrunde – nichts wiederholt sich",
+          hinweis: "Jede Frage kommt nur einmal, bis der Vorrat leer ist. Die Antworten werden jedes Mal neu gemischt.",
+          niveaus: {
+            A: { ziel: 6, stufen: [1], hinweis: "Sechs leichte Fragen richtig beantworten." },
+            B: { ziel: 8, stufen: [1, 2], hinweis: "Acht Fragen aus zwei Schwierigkeitsstufen." },
+            C: { ziel: 10, stufen: [1, 2, 3], hinweis: "Zehn Fragen – auch die kniffligen." },
+          },
+          pool: [
+            { id: "b01", stufe: 1, frage: "In welchem Jahr begann der Erste Weltkrieg?", optionen: ["1914", "1918", "1939"], ok: 0 },
+            { id: "b02", stufe: 1, frage: "Wo wurde Franz Ferdinand ermordet?", optionen: ["Sarajevo", "Wien", "Belgrad"], ok: 0 },
+            { id: "b03", stufe: 1, frage: "Wie hieß der Attentäter von Sarajevo?", optionen: ["Gavrilo Princip", "Philipp Scheidemann", "Erich Ludendorff"], ok: 0 },
+            { id: "b04", stufe: 1, frage: "Welche drei Staaten bildeten den Dreibund?", optionen: ["Deutschland, Österreich-Ungarn, Italien", "Frankreich, Russland, Großbritannien", "Serbien, Belgien, Bulgarien"], ok: 0 },
+            { id: "b05", stufe: 1, frage: "Wann trat der Waffenstillstand in Kraft?", optionen: ["11. November 1918", "28. Juni 1919", "9. November 1918"], ok: 0 },
+            { id: "b06", stufe: 1, frage: "Welches Land trat 1917 in den Krieg ein?", optionen: ["Die USA", "Italien", "Japan"], ok: 0 },
+            { id: "b07", stufe: 1, frage: "Wie nennt man den Krieg in Schützengräben, bei dem sich die Front kaum bewegt?", optionen: ["Stellungskrieg", "Bewegungskrieg", "Seekrieg"], ok: 0 },
+            { id: "b08", stufe: 1, frage: "Wo begann die Novemberrevolution?", optionen: ["Kiel", "München", "Berlin"], ok: 0 },
+            { id: "b09", stufe: 1, frage: "Wie hieß der Friedensvertrag mit Deutschland 1919?", optionen: ["Versailler Vertrag", "Vertrag von Trianon", "Frieden von Brest-Litowsk"], ok: 0 },
+            { id: "b10", stufe: 1, frage: "Welches Gebiet fiel 1919 an Frankreich zurück?", optionen: ["Elsass-Lothringen", "Belgien", "Das Saarland für immer"], ok: 0 },
+            { id: "b11", stufe: 2, frage: "Was bezeichnet der „Blankoscheck“?", optionen: ["Deutschlands uneingeschränkte Unterstützungszusage an Österreich-Ungarn", "Serbiens Antwort auf das Ultimatum", "Die Reparationszahlungen"], ok: 0 },
+            { id: "b12", stufe: 2, frage: "In welcher Schlacht scheiterte der Schlieffen-Plan?", optionen: ["Marneschlacht 1914", "Schlacht um Verdun 1916", "Tannenberg 1914"], ok: 0 },
+            { id: "b13", stufe: 2, frage: "Was führte zum Kriegseintritt der USA?", optionen: ["Der uneingeschränkte U-Boot-Krieg", "Der Einmarsch in Belgien", "Die Oktoberrevolution"], ok: 0 },
+            { id: "b14", stufe: 2, frage: "Welcher Frieden beendete 1918 den Krieg im Osten?", optionen: ["Brest-Litowsk", "Compiègne", "Saint-Germain"], ok: 0 },
+            { id: "b15", stufe: 2, frage: "Was besagte Artikel 231 des Versailler Vertrags?", optionen: ["Deutschland trägt die Kriegsschuld", "Deutschland darf 100.000 Soldaten haben", "Das Saargebiet kommt zum Völkerbund"], ok: 0 },
+            { id: "b16", stufe: 2, frage: "Wer rief am 9. November 1918 die Republik aus?", optionen: ["Philipp Scheidemann", "Friedrich Ebert", "Max von Baden"], ok: 0 },
+            { id: "b17", stufe: 2, frage: "Was war der „Steckrübenwinter“?", optionen: ["Der Hungerwinter 1916/17 durch die britische Seeblockade", "Die erste Schlacht mit Panzern", "Der Winter der Novemberrevolution"], ok: 0 },
+            { id: "b18", stufe: 2, frage: "Welche Waffe wurde 1915 bei Ypern erstmals eingesetzt?", optionen: ["Giftgas", "Panzer", "U-Boot"], ok: 0 },
+            { id: "b19", stufe: 3, frage: "Warum blieb Italien 1914 trotz Dreibund neutral?", optionen: ["Der Dreibund war ein Verteidigungsbündnis und Italien hatte eigene Ziele", "Italien hatte 1914 keine Armee", "Großbritannien hatte Italien besetzt"], ok: 0 },
+            { id: "b20", stufe: 3, frage: "Was war an der Dolchstoßlegende falsch?", optionen: ["Die Oberste Heeresleitung selbst hatte den Waffenstillstand gefordert", "Es gab keine Revolution in Deutschland", "Der Krieg war 1918 noch nicht verloren"], ok: 0 },
+            { id: "b21", stufe: 3, frage: "Welche zwei Ereignisse folgten in der Julikrise unmittelbar aufeinander?", optionen: ["Russische Generalmobilmachung und deutsche Kriegserklärung an Russland", "Marneschlacht und Tannenberg", "Kriegseintritt der USA und Brest-Litowsk"], ok: 0 },
+            { id: "b22", stufe: 3, frage: "Was bedeutete der „Polnische Korridor“ für Deutschland?", optionen: ["Ostpreußen war vom übrigen Reichsgebiet getrennt", "Deutschland verlor das Rheinland", "Polen erhielt Berlin"], ok: 0 },
+            { id: "b23", stufe: 3, frage: "Warum stand die deutsche Frühjahrsoffensive 1918 unter Zeitdruck?", optionen: ["Immer mehr US-Truppen trafen in Frankreich ein", "Russland griff im Osten wieder an", "Die Alliierten hatten Giftgas verboten"], ok: 0 },
+            { id: "b24", stufe: 3, frage: "Was meinte George F. Kennan mit „Urkatastrophe des 20. Jahrhunderts“?", optionen: ["Der Erste Weltkrieg bereitete den Boden für Faschismus und Zweiten Weltkrieg", "Der Erste Weltkrieg war der erste Krieg mit Flugzeugen", "Die Spanische Grippe kostete mehr Menschen das Leben als der Krieg"], ok: 0 },
+          ],
+        },
+        {
+          nr: 47, typ: "domino", eyebrow: "Spiel", titel: "Begriffs-Domino",
+          hinweis: "Jeder Stein zeigt links eine Erklärung und rechts einen Begriff. Lege den Stein an, dessen Erklärung zum offenen Begriff der Kette passt.",
+          niveaus: {
+            A: { steine: 6, hinweis: "Sechs Steine – die Grundbegriffe." },
+            B: { steine: 9, hinweis: "Neun Steine." },
+            C: { steine: 12, hinweis: "Alle zwölf Steine – die Kette schließt sich." },
+          },
+          paare: [
+            { id: "d01", begriff: "Imperialismus", definition: "Wettlauf der Großmächte um Kolonien und Weltgeltung" },
+            { id: "d02", begriff: "Nationalismus", definition: "Überhöhung des eigenen Volkes gegenüber anderen" },
+            { id: "d03", begriff: "Militarismus", definition: "Hohes Ansehen des Militärs, Krieg als normales Mittel" },
+            { id: "d04", begriff: "Blankoscheck", definition: "Uneingeschränkte Unterstützungszusage Berlins an Wien" },
+            { id: "d05", begriff: "Ultimatum", definition: "Forderung mit Frist – sonst folgen Konsequenzen" },
+            { id: "d06", begriff: "Stellungskrieg", definition: "Krieg in Schützengräben ohne Frontbewegung" },
+            { id: "d07", begriff: "Materialschlacht", definition: "Massenhafter Einsatz von Artillerie und Munition, riesige Verluste" },
+            { id: "d08", begriff: "Heimatfront", definition: "Zivilbevölkerung, die für den Krieg arbeitet und hungert" },
+            { id: "d09", begriff: "Novemberrevolution", definition: "Aufstand von Matrosen, Soldaten und Arbeitern 1918" },
+            { id: "d10", begriff: "Waffenstillstand", definition: "Ende der Kämpfe, aber noch kein Friedensvertrag" },
+            { id: "d11", begriff: "Reparationen", definition: "Zahlungen für Kriegsschäden an die Sieger" },
+            { id: "d12", begriff: "Völkerbund", definition: "Internationale Organisation zur Verhinderung künftiger Kriege" },
+          ],
         },
         {
           nr: 48, typ: "quellen", eyebrow: "Quellenverzeichnis", titel: "Meine Quellen",

@@ -3,13 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Der Erste Weltkrieg · Interaktives Arbeitsblatt</title>
+  <title>{{ titel }} · Interaktives Arbeitsblatt</title>
   <link rel="icon" href="{{ url_for('static', filename='img/logo-gsm.jpg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=v) }}">
   <script src="{{ url_for('static', filename='vendor/socket.io-4.7.5.min.js') }}" defer></script>
   <script src="{{ url_for('static', filename='vendor/chart-4.4.1.umd.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='vendor/fabric-5.3.0.min.js') }}" defer></script>
   <script>window.APP = {schuelerId: {{ schueler_id|tojson }}, pseudonym: {{ pseudonym|tojson }}, klasse: {{ klasse|tojson }}, aufgabenGesamt: {{ aufgaben_gesamt }}, resumeToken: {{ resume_token|tojson }}, appId: {{ app_id|tojson }}, schemaVersion: {{ schema_version }}};</script>
   <script src="{{ url_for('static', filename='js/inhalte.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/karte-daten.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/kern.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/autosave.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/aufgaben.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/karte.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/lesestrecke.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/zeichnen.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/spiele.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/ki.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/reader.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/app.js', v=v) }}" defer></script>
 </head>
 <body class="student-page">
@@ -19,32 +30,34 @@
         <img src="{{ url_for('static', filename='img/logo-gsm.jpg') }}" alt="Gesamtschule Meiderich" class="logo-gsm">
         <div class="header-text">
           <p class="ws-subtitle">Geschichte · Klasse {{ klasse }} · Recherche-Arbeitsblatt</p>
-          <h1 class="ws-title">Der Erste Weltkrieg (1914–1918)</h1>
+          <h1 class="ws-title">{{ titel }}</h1>
         </div>
-        <img src="{{ url_for('static', filename='img/logo-wk.png') }}" alt="WK" class="logo-wk">
+        <img src="{{ url_for('static', filename='img/logo-wk.png') }}" alt="" class="logo-wk">
       </div>
       <div class="header-bottom">
         <span class="student-chip">👤 {{ pseudonym }} · Klasse {{ klasse }}</span>
         <div class="progress-panel" aria-label="Lernfortschritt">
           <div class="progress-track"><span id="progress-fill"></span></div>
-          <span id="progress-text">0 / {{ aufgaben_gesamt }} Aufgaben</span><span id="progress-pct" class="progress-pct">0 %</span>
+          <span id="progress-text">0 / {{ aufgaben_gesamt }} Stationen</span><span id="progress-pct" class="progress-pct">0 %</span>
         </div>
+        <span class="autosave-chip" id="autosave-status" role="status" aria-live="polite" data-kind="">automatische Sicherung startet …</span>
+        <button class="btn btn-ghost-light btn-sm" type="button" data-action="backup-open" aria-label="Sicherung: JSON sichern oder laden">💾 Sicherung</button>
         <form action="{{ url_for('logout') }}" method="post"><button class="btn btn-ghost-light btn-sm" type="submit">Abmelden</button></form>
       </div>
     </header>
 
-    <nav class="tab-bar" id="tab-bar" aria-label="Abschnitte des Arbeitsblatts"></nav>
+    <nav class="tab-bar" id="tab-bar" aria-label="Abschnitte des Arbeitsblatts" role="tablist"></nav>
 
     <main>
-      <section class="tab-panel" id="tab-material" data-panel="material">
+      <section class="tab-panel" id="tab-material" data-panel="material" role="tabpanel">
         <article class="card intro-card">
           <span class="eyebrow">Original-Arbeitsblatt</span>
-          <h2>Der Erste Weltkrieg (1914–1918) – Recherche-Arbeitsblatt</h2>
+          <h2>{{ titel }} – Recherche-Arbeitsblatt</h2>
           <div class="aufgabe-box">
             <strong>Aufgabe</strong>
             <p>Recherchiere die wichtigsten Informationen zum Ersten Weltkrieg. Ergänze die Abschnitte unter den Überschriften stichpunktartig. Achte auf eine sinnvolle zeitliche Ordnung, verwende mindestens zwei verlässliche Quellen und notiere diese am Ende deiner Einträge.</p>
           </div>
-          <p>Das analoge Arbeitsblatt hat fünf Abschnitte. In dieser digitalen Version bekommt jeder Abschnitt einen eigenen Reiter mit Kompakt-Info, Übungen und einem Feld für deine Recherche-Stichpunkte. Der letzte Reiter bündelt den Zeitstrahl und dein Quellenverzeichnis.</p>
+          <p>Das analoge Arbeitsblatt hat fünf Abschnitte. In dieser digitalen Version bekommt jeder Abschnitt einen eigenen Reiter: zuerst eine kurze Lesestrecke mit Verständnisfragen, dann Übungen, eine Zeichenaufgabe und das Feld für deine eigenen Recherche-Stichpunkte mit Quelle. Der letzte Reiter bündelt Zeitstrahl, Blitzfragen, Domino und dein Quellenverzeichnis.</p>
           <div class="section-map">
             <a class="section-pill" data-action="tab" data-tab="ursachen" href="#tab-ursachen">🧭 Ursachen</a>
             <a class="section-pill" data-action="tab" data-tab="ausloeser" href="#tab-ausloeser">🎯 Auslöser</a>
@@ -57,26 +70,29 @@
 
         <article class="card">
           <span class="eyebrow">So arbeitest du</span>
-          <h3>Niveaus, Rückmeldung und KI</h3>
+          <h3>Niveaus, Rückmeldung, Sicherung und KI</h3>
           <ul class="howto">
-            <li><strong>Niveau wählen:</strong> Bei jeder Übung kannst du zwischen 🟢 A (Basis), 🟡 B (Standard) und 🔴 C (Experte) wechseln. Fang ruhig mit A an und steigere dich.</li>
-            <li><strong>Sofortige Rückmeldung:</strong> Multiple Choice, Lückentexte, Zuordnungen, Reihenfolgen, Diagramme und Karten werden direkt geprüft.</li>
-            <li><strong>Stichpunkte &amp; Quellen:</strong> In jedem Abschnitt notierst du wie auf dem Papier-AB eigene Stichpunkte mit Quelle. Sie werden automatisch gespeichert.</li>
-            <li><strong>KI-Tutor:</strong> Über den Button unten rechts kannst du Fragen stellen, über „Mit KI prüfen lassen“ Rückmeldung zu Texten bekommen. Beides muss deine Lehrkraft zuerst freigeben – die KI gibt keine Lösungen vor.</li>
+            <li><strong>Niveau wählen:</strong> Bei jeder Aufgabe kannst du zwischen 🟢 A (Basis), 🟡 B (Standard) und 🔴 C (Experte) wechseln – nur diese eine Karte ändert sich. Fang ruhig mit A an und steigere dich.</li>
+            <li><strong>Sofortige Rückmeldung:</strong> Multiple Choice, Lückentexte, Zuordnungen, Reihenfolgen, Diagramme, Karten, Blitzfragen und Domino werden direkt geprüft.</li>
+            <li><strong>Automatische Sicherung:</strong> Alles, was du eingibst, wird auf diesem Gerät und auf dem Server gesichert – auch ohne Klick. Der Stand oben rechts zeigt dir das. Zusätzlich kannst du über „Sicherung“ eine JSON-Datei sichern oder laden.</li>
+            <li><strong>Abgeben:</strong> „Antwort abgeben“, „Stichpunkte abgeben“ und „Zeichnung abgeben“ schicken deine Arbeit ins Protokoll der Lehrkraft.</li>
+            <li><strong>KI:</strong> Der KI-Tutor unten rechts, das KI-Feedback zu Texten, die Bewertung deiner Zeichnungen und die Handschrifterkennung brauchen die Freigabe deiner Lehrkraft. Die KI gibt keine Lösungen vor.</li>
           </ul>
         </article>
 
         <article class="card">
           <span class="eyebrow">Originalmaterial</span>
           <h3>Das Arbeitsblatt als Vorlage</h3>
-          <p class="muted">Die Seitenansicht funktioniert zuverlässig auf dem iPad. Das PDF kannst du zusätzlich separat öffnen.</p>
-          <div class="material-pages">
-            <figure><img src="{{ url_for('static', filename='material/arbeitsblatt_seite1.png') }}" alt="Arbeitsblatt Seite 1: Aufgabe, Ursachen, Auslöser, Verlauf" loading="lazy"><figcaption>Seite 1 · Ursachen, Auslöser, Verlauf</figcaption><button class="btn btn-outline btn-sm" type="button" data-action="reader" data-src="{{ url_for('static', filename='material/arbeitsblatt_seite1.png') }}">🔍 Groß anzeigen</button></figure>
-            <figure><img src="{{ url_for('static', filename='material/arbeitsblatt_seite2.png') }}" alt="Arbeitsblatt Seite 2: Kriegsende, Folgen" loading="lazy"><figcaption>Seite 2 · Kriegsende, Folgen</figcaption><button class="btn btn-outline btn-sm" type="button" data-action="reader" data-src="{{ url_for('static', filename='material/arbeitsblatt_seite2.png') }}">🔍 Groß anzeigen</button></figure>
-          </div>
-          <div class="btn-row">
-            <a class="btn btn-primary" href="{{ url_for('static', filename='material/erster_weltkrieg_arbeitsblatt.pdf') }}" target="_blank" rel="noopener">📄 Original-PDF öffnen</a>
-          </div>
+          <details class="material-details">
+            <summary>📄 Original-Arbeitsblatt (2 Seiten) anzeigen</summary>
+            <div class="material-pages">
+              <figure><img src="{{ url_for('static', filename='material/arbeitsblatt_seite1.png') }}" alt="Arbeitsblatt Seite 1 von 2: Aufgabenstellung, Ursachen, Auslöser, Verlauf" loading="lazy"><figcaption>Seite 1 von 2 · Ursachen, Auslöser, Verlauf</figcaption><button class="btn btn-outline btn-sm" type="button" data-action="reader-open" data-page="1">🔍 Groß anzeigen</button></figure>
+              <figure><img src="{{ url_for('static', filename='material/arbeitsblatt_seite2.png') }}" alt="Arbeitsblatt Seite 2 von 2: Kriegsende, Folgen" loading="lazy"><figcaption>Seite 2 von 2 · Kriegsende, Folgen</figcaption><button class="btn btn-outline btn-sm" type="button" data-action="reader-open" data-page="2">🔍 Groß anzeigen</button></figure>
+            </div>
+            <div class="btn-row">
+              <a class="btn btn-primary" href="{{ url_for('static', filename='material/erster_weltkrieg_arbeitsblatt.pdf') }}" target="_blank" rel="noopener">📄 PDF separat öffnen</a>
+            </div>
+          </details>
         </article>
 
         <article class="card">
@@ -87,7 +103,7 @@
             <li><strong>bpb.de</strong> – Bundeszentrale für politische Bildung: Dossiers und Zeitleisten.</li>
             <li><strong>dhm.de/lemo</strong> – Lebendiges Museum Online des Deutschen Historischen Museums.</li>
             <li><strong>planet-wissen.de</strong> sowie Dokumentationen von ARD/ZDF.</li>
-            <li><strong>Wikipedia:</strong> gut zum Einstieg – wichtige Angaben über die Belege oder eine zweite Quelle prüfen.</li>
+            <li><strong>Wikipedia:</strong> gut zum Einstieg – wichtige Angaben über die Belege oder eine zweite Quelle prüfen. KI-Chatbots können Fakten und Quellen erfinden.</li>
           </ul>
         </article>
       </section>
@@ -96,10 +112,22 @@
     </main>
   </div>
 
-  <!-- Fokus-Reader für die Seitenbilder -->
-  <section id="reader" class="reader" hidden role="dialog" aria-modal="true" aria-label="Arbeitsblatt groß">
-    <header class="reader-header"><strong>Original-Arbeitsblatt</strong><button class="btn btn-accent btn-sm" type="button" data-action="reader-close">Schließen</button></header>
-    <div class="reader-body"><img id="reader-img" src="" alt="Arbeitsblatt-Seite"></div>
+  <!-- Fokus-Reader für das Original -->
+  <section id="reader" class="reader" hidden role="dialog" aria-modal="true" aria-label="Original-Arbeitsblatt groß"
+           data-pdf="{{ url_for('static', filename='material/erster_weltkrieg_arbeitsblatt.pdf') }}"
+           data-pages='[{"src": "{{ url_for('static', filename='material/arbeitsblatt_seite1.png') }}", "alt": "Arbeitsblatt Seite 1 von 2: Aufgabenstellung, Ursachen, Auslöser, Verlauf"}, {"src": "{{ url_for('static', filename='material/arbeitsblatt_seite2.png') }}", "alt": "Arbeitsblatt Seite 2 von 2: Kriegsende, Folgen"}]'>
+    <header class="reader-header"><strong>Original-Arbeitsblatt</strong><span id="reader-page" class="reader-pageinfo">Seite 1 von 2</span><button class="btn btn-accent btn-sm" type="button" id="reader-close-top" data-action="reader-close">Schließen</button></header>
+    <div class="reader-body">
+      <img id="reader-img" src="" alt="Arbeitsblatt-Seite">
+      <iframe id="reader-frame" class="reader-frame" title="PDF-Ansicht des Arbeitsblatts" hidden></iframe>
+    </div>
+    <footer class="reader-footer">
+      <button class="btn btn-ghost-light btn-sm" type="button" id="reader-prev" data-action="reader-prev">← Vorherige Seite</button>
+      <button class="btn btn-ghost-light btn-sm" type="button" id="reader-next" data-action="reader-next">Nächste Seite →</button>
+      <button class="btn btn-ghost-light btn-sm" type="button" id="reader-pdf-toggle" data-action="reader-pdf">PDF-Ansicht</button>
+      <a class="btn btn-ghost-light btn-sm" href="{{ url_for('static', filename='material/erster_weltkrieg_arbeitsblatt.pdf') }}" target="_blank" rel="noopener">PDF separat öffnen</a>
+      <button class="btn btn-accent btn-sm" type="button" id="reader-close-bottom" data-action="reader-close">Schließen</button>
+    </footer>
   </section>
 
   <!-- KI-Tutor -->
@@ -108,34 +136,59 @@
   </button>
   <aside class="tutor-panel" id="tutor-panel" hidden>
     <header>
-      <img src="{{ url_for('static', filename='img/gsm_avatar.png') }}" alt="GSM-Tutor">
+      <img src="{{ url_for('static', filename='img/gsm_avatar.png') }}" alt="">
       <div><strong>GSM-Tutor</strong><small id="tutor-note">KI-Tutor · Freigabe durch Lehrkraft nötig</small></div>
       <button type="button" data-action="tutor-close" aria-label="Tutor schließen">×</button>
     </header>
-    <div class="chat-messages" id="chat-messages">
-      <div class="chat-message assistant"><strong>GSM-Tutor</strong><p>Hallo! Ich helfe dir beim Ersten Weltkrieg – mit Erklärungen, Rückfragen und Tipps zu verlässlichen Quellen. Lösungen verrate ich nicht. Was möchtest du wissen?</p></div>
+    <div class="chat-messages" id="chat-messages" aria-live="polite">
+      <div class="chat-message assistant"><strong>GSM-Tutor</strong><p>Hallo! Ich helfe dir beim Ersten Weltkrieg – mit Erklärungen, Rückfragen und Tipps zu verlässlichen Quellen. Lösungen verrate ich nicht. Schreib deine Frage, dann bittest du deine Lehrkraft um Freigabe.</p></div>
     </div>
     <div class="chat-input-row">
+      <label class="sr-only" for="chat-input">Deine Frage an den KI-Tutor</label>
       <input id="chat-input" type="text" maxlength="500" placeholder="Deine Frage zum Thema …" autocomplete="off">
       <button class="btn btn-ai" type="button" data-action="chat-send">Senden</button>
     </div>
-    <p class="chat-note">🤖 Du sprichst mit einer KI (Google Gemini). Deine Lehrkraft kann den Chat live mitlesen.</p>
+    <p class="chat-note">🤖 Du sprichst mit einer KI (Google Gemini). Deine Lehrkraft kann den Chat mitlesen; er wird für diese Unterrichtssitzung gespeichert.</p>
   </aside>
 
   <!-- Freigabe-Modal -->
   <div class="ki-overlay" id="ki-overlay" hidden>
     <div class="ki-modal" role="dialog" aria-modal="true" aria-labelledby="ki-modal-title">
-      <span class="ki-modal-icon" id="ki-modal-icon">🤖</span>
+      <span class="ki-modal-icon" id="ki-modal-icon" aria-hidden="true">🤖</span>
       <h3 id="ki-modal-title">KI-Funktion freigeben</h3>
       <p id="ki-modal-text"></p>
-      <div class="waiting-status" id="ki-waiting" hidden><span class="spinner"></span>Warte auf die Lehrkraft …</div>
+      <div class="waiting-status" id="ki-waiting" hidden><span class="spinner" aria-hidden="true"></span>Warte auf die Lehrkraft …</div>
       <button class="btn btn-ai btn-wide" type="button" id="ki-request-confirm" data-action="ki-confirm">📤 Freigabe anfragen</button>
       <button class="btn btn-quiet btn-wide" type="button" data-action="ki-cancel">Abbrechen</button>
     </div>
   </div>
 
+  <!-- Sicherungs-Dialog: JSON sichern / laden mit Textfallback -->
+  <div class="ki-overlay" id="backup-dialog" hidden>
+    <div class="ki-modal backup-modal" role="dialog" aria-modal="true" aria-labelledby="backup-title">
+      <h3 id="backup-title">💾 Arbeitsstand sichern oder laden</h3>
+      <p class="muted">Deine Arbeit wird automatisch gesichert. Hier kannst du zusätzlich eine JSON-Datei sichern oder einen gesicherten Stand laden – zum Beispiel beim Gerätewechsel.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" type="button" data-action="backup-export">⬇️ JSON sichern</button>
+        <button class="btn btn-outline" type="button" data-action="backup-copy">📋 Text kopieren</button>
+      </div>
+      <label class="field-label" for="backup-text">Dein Arbeitsstand als Text (zum Kopieren)</label>
+      <textarea id="backup-text" class="backup-text" rows="4" readonly></textarea>
+      <label class="field-label" for="backup-import">JSON laden: Text einfügen …</label>
+      <textarea id="backup-import" class="backup-text" rows="3" placeholder='{"schema_version": 2, "app_id": "…"}'></textarea>
+      <label class="field-label" for="backup-file">… oder Datei wählen</label>
+      <input id="backup-file" type="file" accept="application/json,.json">
+      <div class="btn-row">
+        <button class="btn btn-primary" type="button" data-action="backup-import">⬆️ JSON laden</button>
+        <button class="btn btn-quiet" type="button" id="backup-close" data-action="backup-close">Schließen</button>
+      </div>
+      <p class="hint" id="backup-msg" role="status" aria-live="polite"></p>
+      <p class="hint">Geladene Antworten werden nicht automatisch als neue Versuche ins Lehrkraft-Protokoll übertragen.</p>
+    </div>
+  </div>
+
   <div class="ki-overlay session-overlay" id="session-overlay" hidden>
-    <div class="ki-modal"><span class="ki-modal-icon">🔒</span><h3>Sitzung beendet</h3><p id="session-overlay-text"></p><a class="btn btn-primary btn-wide" href="{{ url_for('login') }}">Neu anmelden</a></div>
+    <div class="ki-modal"><span class="ki-modal-icon" aria-hidden="true">🔒</span><h3>Sitzung beendet</h3><p id="session-overlay-text"></p><a class="btn btn-primary btn-wide" href="{{ url_for('login') }}">Zur Anmeldung</a></div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

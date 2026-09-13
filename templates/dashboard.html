@@ -12,9 +12,10 @@
 </head>
 <body class="dashboard-page">
   <header class="dashboard-header">
-    <div class="dashboard-brand"><img src="{{ url_for('static', filename='img/logo-gsm.jpg') }}" alt="GSM"><div><span class="eyebrow light">Geschichte · Klasse 9</span><h1>Der Erste Weltkrieg · Live-Dashboard</h1></div></div>
+    <div class="dashboard-brand"><img src="{{ url_for('static', filename='img/logo-gsm.jpg') }}" alt="GSM"><div><span class="eyebrow light">Geschichte · Klasse 9 · Klassenunterricht</span><h1>{{ titel }} · Live-Dashboard</h1></div></div>
     <div class="dashboard-actions">
       <span class="pill {{ 'pill-open' if ki_konfiguriert else 'pill-locked' }}">{{ 'KI konfiguriert' if ki_konfiguriert else 'KI ohne Schlüssel' }}</span>
+      <span class="pill {{ 'pill-open' if iserv.konfiguriert else 'pill-offline' }}" id="iserv-pill">{{ 'IServ konfiguriert' if iserv.konfiguriert else 'IServ nicht konfiguriert' }}</span>
       <button class="btn btn-ghost-light btn-sm" id="refresh-dashboard" type="button">Aktualisieren</button>
       <form action="{{ url_for('lehrer_logout') }}" method="post"><button class="btn btn-accent btn-sm" type="submit">Abmelden</button></form>
     </div>
@@ -36,12 +37,12 @@
 
     <div class="dashboard-columns">
       <section class="dashboard-card">
-        <header class="card-title"><div><span class="eyebrow">Jetzt entscheiden</span><h2>KI-Freigaben</h2></div><span class="count-badge" id="request-count">{{ offene|length }}</span></header>
-        <p class="help-text">Schüler:innen fragen KI-Tutor oder KI-Feedback an. Eine Freigabe gilt für den jeweiligen Typ bis zum Ende der Sitzung; „KI sperren“ in der Tabelle beendet alles sofort.</p>
+        <header class="card-title"><div><span class="eyebrow">Jetzt entscheiden</span><h2>KI-Einzelfreigaben</h2></div><span class="count-badge" id="request-count">{{ offene|length }}</span></header>
+        <p class="help-text">Lernende fragen Tutor, Textfeedback, Zeichenbewertung oder Handschrifterkennung an. Eine Freigabe gilt für den jeweiligen Typ bis zum Ende der Sitzung.</p>
         <div id="request-list" class="request-list">
           {% for a in offene %}
           <div class="request-item" data-id="{{ a.id }}">
-            <span class="request-typ">{{ 'Tutor' if a.typ == 'chat' else 'Feedback' }}</span>
+            <span class="request-typ">{{ a.typ }}</span>
             <div class="who"><strong>{{ a.pseudonym }}</strong><small>Klasse {{ a.klasse }} · {{ a.kontext }} · {{ a.erstellt_at[11:16] }}</small></div>
             <button class="btn btn-primary btn-sm" data-decide="freigegeben" data-id="{{ a.id }}" type="button">✅ Freigeben</button>
             <button class="btn btn-danger-outline btn-sm" data-decide="abgelehnt" data-id="{{ a.id }}" type="button">✕</button>
@@ -51,20 +52,85 @@
       </section>
 
       <section class="dashboard-card">
+        <header class="card-title"><div><span class="eyebrow">Zeitlich begrenzt</span><h2>KI-Gruppenfreigabe</h2></div><span class="pill pill-offline" id="gruppe-pill">inaktiv</span></header>
+        <p class="help-text" id="gruppe-status">Gibt bestimmte KI-Funktionen für eine Klasse oder alle frei – ohne Einzelanfragen. Endet bei Zeit- oder Budgetablauf.</p>
+        <form id="gruppe-form" class="gruppe-form">
+          <fieldset><legend>Funktionen</legend>
+            <label class="check-inline"><input type="checkbox" name="typ" value="chat" checked> Tutor</label>
+            <label class="check-inline"><input type="checkbox" name="typ" value="korrektur" checked> Textfeedback</label>
+            <label class="check-inline"><input type="checkbox" name="typ" value="zeichnung"> Zeichenbewertung</label>
+            <label class="check-inline"><input type="checkbox" name="typ" value="handschrift"> Handschrift</label>
+          </fieldset>
+          <div class="gruppe-grid">
+            <label>Klasse (leer = alle)<input name="klasse" maxlength="20" placeholder="9a"></label>
+            <label>Minuten<input name="minuten" type="number" min="1" max="1440" value="45"></label>
+            <label>Gruppenbudget (Tokens, 0 = ohne)<input name="token_limit" type="number" min="0" value="20000"></label>
+            <label>Pro Lernplatz (Tokens, 0 = ohne)<input name="per_student_limit" type="number" min="0" value="1500"></label>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary btn-sm" type="submit">▶️ Gruppenfreigabe starten</button>
+            <button class="btn btn-outline btn-sm" type="button" data-gruppe="stop">⏹ Beenden</button>
+            <button class="btn btn-danger-outline btn-sm" type="button" data-gruppe="sperren">🚫 KI für Gruppe sperren</button>
+            <button class="btn btn-quiet btn-sm" type="button" data-gruppe="entsperren">Sperre aufheben</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <div class="dashboard-columns">
+      <section class="dashboard-card">
+        <header class="card-title"><div><span class="eyebrow">Kurzfristig · unverschlüsselt</span><h2>Zwischenstände auf dem App-Server</h2></div><span class="count-badge" id="snapshot-count">0</span></header>
+        <p class="help-text">Benannte Momentaufnahmen der ganzen Sitzung. Sie liegen unverschlüsselt auf dem App-Server und sind kein Ersatz für ein IServ-Archiv. „Laden“ ersetzt die laufende Sitzung nach Bestätigung und aktiviert den Fortsetzungsmodus.</p>
+        <div class="btn-row"><input id="snapshot-name" maxlength="60" placeholder="Name, z. B. Stunde 2 Ende"><button class="btn btn-primary btn-sm" type="button" id="snapshot-save">💾 Zwischenstand speichern</button></div>
+        <div id="snapshot-list" class="request-list"><p class="empty-state">Noch keine Zwischenstände.</p></div>
+      </section>
+
+      <section class="dashboard-card">
+        <header class="card-title"><div><span class="eyebrow">Langzeit · verschlüsselt</span><h2>IServ-Archiv</h2></div></header>
+        <p class="help-text" id="iserv-status">{% if iserv.konfiguriert %}Ziel: {{ iserv.host }} · {{ iserv.pfad }}{% else %}{{ iserv.fehler }}{% endif %}</p>
+        <div class="btn-row">
+          <button class="btn btn-outline btn-sm" type="button" id="iserv-test">🔌 Verbindung testen</button>
+          <button class="btn btn-outline btn-sm" type="button" id="iserv-list">📂 Archive laden</button>
+        </div>
+        <div class="btn-row"><input id="iserv-name" maxlength="60" placeholder="Name des Archivs, z. B. 9a Stunde 2"><button class="btn btn-danger" type="button" id="iserv-abschluss">🔒 Stunde abschließen &amp; archivieren</button></div>
+        <p class="help-text">Ablauf: Flush an verbundene Geräte → Snapshot → verschlüsseln → hochladen → zurücklesen → entschlüsseln → Digest prüfen → erst dann werden die Daten auf dem App-Server gelöscht.</p>
+        <div id="iserv-protokoll" class="protokoll" hidden></div>
+        <div id="iserv-archive" class="request-list"></div>
+      </section>
+    </div>
+
+    <section class="dashboard-card" id="fortsetzung-card">
+      <header class="card-title"><div><span class="eyebrow">Wiederaufnahme</span><h2>Fortsetzungsstunde</h2></div><span class="pill pill-offline" id="fortsetzung-pill">{{ 'aktiv' if fortsetzung.active else 'inaktiv' }}</span></header>
+      <p class="help-text" id="fortsetzung-status">Nach dem Laden eines Zwischenstands oder Archivs im Modus „Fortsetzung“ verbinden sich Geräte mit passendem Schlüssel automatisch. Lernende ohne Schlüssel melden sich mit Pseudonym und Klasse an und warten hier auf ihre Zuordnung.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" type="button" id="fortsetzung-auto">✨ Eindeutige Treffer zuordnen</button>
+        <button class="btn btn-outline btn-sm" type="button" id="fortsetzung-beenden">Fortsetzungsmodus beenden</button>
+      </div>
+      <div id="fortsetzung-anfragen" class="request-list"><p class="empty-state">Keine wartenden Lernenden.</p></div>
+      <p class="help-text" id="fortsetzung-ziele"></p>
+    </section>
+
+    <div class="dashboard-columns">
+      <section class="dashboard-card">
         <header class="card-title"><div><span class="eyebrow">Abschnitte</span><h2>Aufbau des Arbeitsblatts</h2></div></header>
         <div class="table-wrap"><table>
-          <thead><tr><th>Kürzel</th><th>Abschnitt</th><th>Aufgaben</th></tr></thead>
+          <thead><tr><th>Kürzel</th><th>Abschnitt</th><th>Stationen</th></tr></thead>
           <tbody>{% for a in abschnitte %}<tr><td><span class="abschnitt-chip">{{ a.kurz }}</span></td><td>{{ a.titel }}</td><td>{{ a.aufgaben|join(', ') }}</td></tr>{% endfor %}</tbody>
         </table></div>
-        <p class="help-text">Jeder Abschnitt enthält Multiple Choice, Lückentext, Zuordnung, Sortierung, Diagramm bzw. Karte, einen KI-Freitext und die Recherche-Stichpunkte. Aufgabe T ist die Transferaufgabe.</p>
+        <p class="help-text">L1–L5 sind die Lesestrecken (Lösungen nur auf dem Server), 9/26/43 Zeichenaufträge, 46 Blitzfragen, 47 Domino, 48 Quellenverzeichnis, T die Transferaufgabe.</p>
+      </section>
+      <section class="dashboard-card">
+        <header class="card-title"><div><span class="eyebrow">Sitzung</span><h2>Verwaltung</h2></div></header>
+        <p class="help-text">Ein späterer Lehrkraft-Login setzt die Klasse nicht zurück. Ein Neustart oder Redeploy der App löscht keine Daten mehr.</p>
+        <div class="btn-row"><button class="btn btn-danger-outline btn-sm" id="reset-session" type="button">Alle Sitzungsdaten löschen</button></div>
       </section>
     </div>
 
     <section class="dashboard-card">
-      <header class="card-title"><div><span class="eyebrow">Klassenübersicht</span><h2>Lernende</h2></div><button class="btn btn-danger-outline btn-sm" id="reset-session" type="button">Alle Sitzungsdaten löschen</button></header>
+      <header class="card-title"><div><span class="eyebrow">Klassenübersicht</span><h2>Lernende</h2></div></header>
       <div class="table-wrap"><table>
-        <thead><tr><th>Status</th><th>Pseudonym</th><th>Klasse</th><th>Fortschritt</th><th>Abschnitte</th><th>Antworten</th><th>Notizen</th><th>KI</th><th>Letzte Aktivität</th><th>Aktionen</th></tr></thead>
-        <tbody id="student-table"><tr id="no-students"><td colspan="10" class="empty-state">Noch niemand angemeldet.</td></tr></tbody>
+        <thead><tr><th>Status</th><th>Pseudonym</th><th>Klasse</th><th>Fortschritt</th><th>Abschnitte</th><th>Antworten</th><th>Notizen</th><th>Zeichnungen</th><th>Autosave</th><th>KI</th><th>Aktiv</th><th>Aktionen</th></tr></thead>
+        <tbody id="student-table"><tr id="no-students"><td colspan="12" class="empty-state">Noch niemand angemeldet.</td></tr></tbody>
       </table></div>
     </section>
   </main>

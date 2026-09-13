@@ -1,22 +1,36 @@
-/* Lehrer-Dashboard – Live-Übersicht über Socket.IO */
+/* Lehrer-Dashboard – Live-Übersicht, KI-Freigaben (Einzel + Gruppe), Zwischenstände, IServ, Fortsetzung.
+   Alle Lehrkraftaktionen tragen das Aktionstoken im Header und funktionieren auch, wenn Lehrkraft
+   und Lernende dasselbe Browserprofil verwenden. */
 (() => {
   "use strict";
   const DASH = window.DASH || {};
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const zeit = iso => (iso || "").slice(11, 16);
+  const datum = iso => (iso || "").slice(0, 16).replace("T", " ");
   const students = {};
   const requests = {};
   let gesperrt = new Set();
+  const HEAD = { "Content-Type": "application/json", "X-Lehrer-Token": DASH.token || "" };
 
   function toast(text, color) {
     const t = $("#toast"); t.textContent = text; t.style.background = color || "#16a34a"; t.classList.add("show");
-    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 3000);
+    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 3200);
   }
-  async function post(url, payload) {
-    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload || {}) });
-    if (res.status === 401) { location.href = "/lehrer/login"; return {}; }
-    return res.json().catch(() => ({}));
+  async function post(url, payload, method) {
+    try {
+      const res = await fetch(url, { method: method || "POST", headers: HEAD, body: method === "DELETE" ? undefined : JSON.stringify(payload || {}) });
+      if (res.status === 401) { location.href = "/lehrer/login"; return {}; }
+      const d = await res.json().catch(() => ({})); d._status = res.status; return d;
+    } catch (e) { return { ok: false, error: "Keine Verbindung zum Server." }; }
+  }
+  async function get(url) {
+    try {
+      const res = await fetch(url, { headers: HEAD });
+      if (res.status === 401) { location.href = "/lehrer/login"; return {}; }
+      return await res.json();
+    } catch (e) { return { ok: false, error: "Keine Verbindung zum Server." }; }
   }
 
   // ── Budget & KPIs ──
@@ -49,8 +63,10 @@
       <td><div class="abschnitt-chips">${chips}</div></td>
       <td>${s.antworten || 0}</td>
       <td>${s.notizen || 0}/6</td>
+      <td>${s.zeichnungen || 0}</td>
+      <td title="Revision ${s.autosave_revision || 0}">${s.autosave_at ? zeit(s.autosave_at) : "–"}</td>
       <td><span class="pill ${locked ? "pill-locked" : "pill-open"}">${locked ? "gesperrt" : "frei"}</span>${s.pending ? ` <span class="pill pill-locked">${s.pending} offen</span>` : ""}</td>
-      <td>${esc((s.last_active || "").slice(11, 16))}</td>
+      <td>${esc(zeit(s.last_active))}</td>
       <td><div class="row-actions">
         <a class="btn btn-outline btn-sm" href="/lehrer/schueler/${s.id}">Detail</a>
         <button class="btn btn-quiet btn-sm" data-lock="${s.id}" type="button">${locked ? "KI freigeben" : "KI sperren"}</button>
@@ -70,15 +86,16 @@
   function removeStudent(id) {
     delete students[id];
     const tr = $(`#student-table tr[data-id="${id}"]`); if (tr) tr.remove();
-    if (!Object.keys(students).length) $("#student-table").innerHTML = '<tr id="no-students"><td colspan="10" class="empty-state">Noch niemand angemeldet.</td></tr>';
+    if (!Object.keys(students).length) $("#student-table").innerHTML = '<tr id="no-students"><td colspan="12" class="empty-state">Noch niemand angemeldet.</td></tr>';
     renderKpis();
   }
 
-  // ── Anfragen ──
+  // ── Einzelanfragen ──
+  const TYP = { chat: "Tutor", korrektur: "Feedback", zeichnung: "Zeichnung", handschrift: "Handschrift" };
   function requestHTML(a, isNew) {
     return `<div class="request-item${isNew ? " is-new" : ""}" data-id="${a.id}">
-      <span class="request-typ">${a.typ === "chat" ? "Tutor" : "Feedback"}</span>
-      <div class="who"><strong>${esc(a.pseudonym)}</strong><small>Klasse ${esc(a.klasse)} · ${esc(a.kontext || "")} · ${esc((a.erstellt_at || "").slice(11, 16))}</small></div>
+      <span class="request-typ">${TYP[a.typ] || esc(a.typ)}</span>
+      <div class="who"><strong>${esc(a.pseudonym)}</strong><small>Klasse ${esc(a.klasse)} · ${esc(a.kontext || "")} · ${esc(zeit(a.erstellt_at))}</small></div>
       <button class="btn btn-primary btn-sm" data-decide="freigegeben" data-id="${a.id}" type="button">✅ Freigeben</button>
       <button class="btn btn-danger-outline btn-sm" data-decide="abgelehnt" data-id="${a.id}" type="button">✕</button>
     </div>`;
@@ -95,7 +112,7 @@
   function addRequest(a) {
     requests[a.id] = a; renderRequests(null, true);
     if (students[a.schueler_id]) { students[a.schueler_id].pending = (students[a.schueler_id].pending || 0) + 1; upsertStudent(students[a.schueler_id]); }
-    toast(`🤖 ${a.pseudonym} fragt ${a.typ === "chat" ? "den KI-Tutor" : "KI-Feedback"} an`, "#AD007C");
+    toast(`🤖 ${a.pseudonym} fragt ${TYP[a.typ] || a.typ} an`, "#AD007C");
   }
   function removeRequest(id, sid) {
     delete requests[id];
@@ -104,7 +121,131 @@
     renderRequests(null);
   }
 
-  // ── Aktionen ──
+  // ── Gruppenfreigabe ──
+  function renderGruppe(g) {
+    const pill = $("#gruppe-pill");
+    if (g.locked) { pill.textContent = "gesperrt"; pill.className = "pill pill-locked"; }
+    else if (g.active) { pill.textContent = "aktiv"; pill.className = "pill pill-open"; }
+    else { pill.textContent = "inaktiv"; pill.className = "pill pill-offline"; }
+    const st = $("#gruppe-status");
+    if (g.locked) st.textContent = "KI für die Gruppe gesperrt – wartende Einzelanfragen wurden abgelehnt. Nur „Sperre aufheben“ hebt das auf.";
+    else if (g.active) st.textContent = `Aktiv bis ${zeit(g.expires_at)} · Funktionen: ${(g.typen || []).map(t => TYP[t] || t).join(", ")} · Klasse: ${g.klasse || "alle"} · verbraucht ${g.tokens_used}${g.token_limit ? " / " + g.token_limit : ""} Tokens${g.per_student_limit ? " · pro Lernplatz max. " + g.per_student_limit : ""}.`;
+    else st.textContent = (g.abgelaufen ? "Die letzte Gruppenfreigabe ist abgelaufen. " : g.budget_erschoepft ? "Das Gruppenbudget ist erschöpft. " : "") + "Keine Gruppenfreigabe aktiv – Lernende brauchen Einzelfreigaben.";
+  }
+  $("#gruppe-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.target;
+    const typen = $$("input[name=typ]:checked", f).map(i => i.value);
+    if (!typen.length) { toast("Mindestens eine Funktion wählen", "#d97706"); return; }
+    const r = await post("/api/lehrer/gruppenfreigabe", { aktion: "start", typen, klasse: f.klasse.value, minuten: parseInt(f.minuten.value, 10), token_limit: parseInt(f.token_limit.value, 10) || 0, per_student_limit: parseInt(f.per_student_limit.value, 10) || 0 });
+    if (r.ok) { renderGruppe(r.gruppenfreigabe); toast("✅ Gruppenfreigabe gestartet"); } else toast(r.error || "Fehler", "#dc2626");
+  });
+  document.addEventListener("click", async e => {
+    const g = e.target.closest("[data-gruppe]"); if (!g) return;
+    if (g.dataset.gruppe === "sperren" && !confirm("KI für die ganze Gruppe sperren? Wartende Anfragen werden abgelehnt.")) return;
+    const r = await post("/api/lehrer/gruppenfreigabe", { aktion: g.dataset.gruppe });
+    if (r.ok) { renderGruppe(r.gruppenfreigabe); toast(g.dataset.gruppe === "sperren" ? "🚫 Gruppe gesperrt" : "Aktualisiert"); } else toast(r.error || "Fehler", "#dc2626");
+  });
+
+  // ── Zwischenstände ──
+  function renderSnapshots(list) {
+    const host = $("#snapshot-list"); $("#snapshot-count").textContent = list.length;
+    if (!list.length) { host.innerHTML = '<p class="empty-state">Noch keine Zwischenstände.</p>'; return; }
+    host.innerHTML = list.map(s => `<div class="request-item" data-snap="${s.id}"><span class="request-typ">temp</span><div class="who"><strong>${esc(s.name)}</strong><small>${datum(s.created_at)} · ${Math.round((s.groesse || 0) / 1024)} KB</small></div>
+      <button class="btn btn-primary btn-sm" type="button" data-snap-load="${s.id}">📥 Laden</button><button class="btn btn-danger-outline btn-sm" type="button" data-snap-del="${s.id}">✕</button></div>`).join("");
+  }
+  $("#snapshot-save").addEventListener("click", async () => {
+    const r = await post("/api/lehrer/snapshots", { name: $("#snapshot-name").value.trim() });
+    if (r.ok) { renderSnapshots(r.snapshots); $("#snapshot-name").value = ""; toast("💾 Zwischenstand gespeichert"); } else toast(r.error || "Fehler", "#dc2626");
+  });
+  document.addEventListener("click", async e => {
+    const l = e.target.closest("[data-snap-load]");
+    if (l) {
+      if (!confirm("Diesen Zwischenstand laden? Die laufende Sitzung wird ersetzt, verbundene Lernende werden abgemeldet und der Fortsetzungsmodus startet.")) return;
+      const r = await post(`/api/lehrer/snapshots/${l.dataset.snapLoad}/laden`);
+      if (r.ok) { toast(`📥 ${r.lernende} Lernplätze geladen – Fortsetzungsmodus aktiv`); loadState(); } else toast(r.error || "Fehler", "#dc2626");
+      return;
+    }
+    const d = e.target.closest("[data-snap-del]");
+    if (d) { if (!confirm("Diesen Zwischenstand löschen?")) return; const r = await post(`/api/lehrer/snapshots/${d.dataset.snapDel}`, null, "DELETE"); if (r.ok) renderSnapshots(r.snapshots); else toast(r.error || "Fehler", "#dc2626"); }
+  });
+
+  // ── IServ ──
+  function protokoll(html, fehler) { const p = $("#iserv-protokoll"); p.hidden = false; p.className = "protokoll " + (fehler ? "protokoll-err" : "protokoll-ok"); p.innerHTML = html; }
+  $("#iserv-test").addEventListener("click", async () => {
+    const r = await post("/api/lehrer/iserv/test");
+    if (r.ok) { toast("🔌 Verbindung zu IServ ok"); protokoll(`Verbindung ok · Ordner „${esc(r.pfad)}“ erreichbar.`); } else { toast(r.error || "Fehler", "#dc2626"); protokoll("⚠️ " + esc(r.error || "Verbindung fehlgeschlagen"), true); }
+  });
+  function renderArchive(list) {
+    const host = $("#iserv-archive");
+    if (!list.length) { host.innerHTML = '<p class="empty-state">Keine Archive dieses Arbeitsblatts gefunden.</p>'; return; }
+    host.innerHTML = list.map(a => `<div class="request-item" data-archiv="${esc(a.dateiname)}"><span class="request-typ">IServ</span><div class="who"><strong>${esc(a.name)}</strong><small>${esc(a.created_at_utc).replace("T", " ").slice(0, 16)} UTC · ${a.lernende} Lernende · ${a.antworten} Antworten · ${a.zeichnungen} Zeichnungen · ${Math.round(a.groesse / 1024)} KB</small></div>
+      <button class="btn btn-quiet btn-sm" type="button" data-archiv-vorschau="${esc(a.dateiname)}">👁 Vorschau</button>
+      <button class="btn btn-outline btn-sm" type="button" data-archiv-restore="ansicht" data-datei="${esc(a.dateiname)}">Ansicht</button>
+      <button class="btn btn-primary btn-sm" type="button" data-archiv-restore="fortsetzung" data-datei="${esc(a.dateiname)}">Fortsetzungsstunde</button>
+      <button class="btn btn-danger-outline btn-sm" type="button" data-archiv-del="${esc(a.dateiname)}">✕</button></div>`).join("");
+  }
+  $("#iserv-list").addEventListener("click", async () => {
+    $("#iserv-archive").innerHTML = '<p class="empty-state">Archive werden geladen und entschlüsselt …</p>';
+    const r = await get("/api/lehrer/iserv/archive");
+    if (r.ok) renderArchive(r.archive); else { $("#iserv-archive").innerHTML = ""; toast(r.error || "Fehler", "#dc2626"); protokoll("⚠️ " + esc(r.error || ""), true); }
+  });
+  $("#iserv-abschluss").addEventListener("click", async () => {
+    const name = $("#iserv-name").value.trim();
+    if (!confirm("Stunde abschließen?\n\nDer komplette Stand wird verschlüsselt auf IServ archiviert. Erst nach erfolgreicher Prüfung werden alle Daten auf dem App-Server gelöscht und die Lernenden abgemeldet.")) return;
+    const btn = $("#iserv-abschluss"); btn.disabled = true; btn.textContent = "⏳ Archivierung läuft …";
+    const r = await post("/api/lehrer/iserv/abschluss", { name });
+    btn.disabled = false; btn.textContent = "🔒 Stunde abschließen & archivieren";
+    if (r.ok) {
+      const p = r.protokoll;
+      protokoll(`<strong>✅ Archiv geschrieben und verifiziert.</strong><br>Datei: ${esc(p.dateiname)}<br>Digest: <code>${esc((p.digest || "").slice(0, 16))}…</code><br>Flush: ${p.flush.confirmed.length} bestätigt, ${p.flush.missing.length} ohne Antwort (offline-Geräte sind durch ihre früheren Autosaves abgedeckt)<br>${p.schritte.map(esc).join("<br>")}`);
+      toast("🔒 Stunde archiviert, Server bereinigt"); loadState();
+    } else { protokoll("⚠️ " + esc(r.error || "Archivierung fehlgeschlagen") + " – es wurde nichts gelöscht.", true); toast("Archivierung fehlgeschlagen – Daten bleiben erhalten", "#dc2626"); }
+  });
+  document.addEventListener("click", async e => {
+    const v = e.target.closest("[data-archiv-vorschau]");
+    if (v) { const r = await post("/api/lehrer/iserv/vorschau", { dateiname: v.dataset.archivVorschau }); if (r.ok) { const a = r.archiv; protokoll(`<strong>Vorschau „${esc(a.name)}“</strong> · ${a.lernende} Lernende · ${a.antworten} Antworten · ${a.arbeitsstaende} Arbeitsstände · ${a.zeichnungen} Zeichnungen · ${a.chat_messages} KI-Nachrichten<br>${esc(a.pseudonyme.join(", "))}`); } else protokoll("⚠️ " + esc(r.error || ""), true); return; }
+    const w = e.target.closest("[data-archiv-restore]");
+    if (w) {
+      const modus = w.dataset.archivRestore;
+      const text = modus === "ansicht" ? "Archiv zur Ansicht laden? Die laufende Sitzung wird ersetzt; Lernende können sich NICHT automatisch wieder verbinden (Ansichtsmodus)." : "Archiv als Fortsetzungsstunde laden? Die laufende Sitzung wird ersetzt; Geräte mit passendem Schlüssel verbinden sich automatisch, andere warten auf Zuordnung.";
+      if (!confirm(text)) return;
+      const r = await post("/api/lehrer/iserv/wiederherstellen", { dateiname: w.dataset.datei, modus });
+      if (r.ok) { toast(`📥 ${r.lernende} Lernplätze geladen (${modus})`); loadState(); } else toast(r.error || "Fehler", "#dc2626");
+      return;
+    }
+    const d = e.target.closest("[data-archiv-del]");
+    if (d) { if (!confirm("Dieses Archiv auf IServ endgültig löschen?")) return; const r = await post("/api/lehrer/iserv/loeschen", { dateiname: d.dataset.archivDel }); if (r.ok) { toast("Archiv gelöscht"); $("#iserv-list").click(); } else toast(r.error || "Fehler", "#dc2626"); }
+  });
+
+  // ── Fortsetzung ──
+  function renderFortsetzung(f) {
+    const pill = $("#fortsetzung-pill"); pill.textContent = f.active ? "aktiv" : "inaktiv"; pill.className = "pill " + (f.active ? "pill-open" : "pill-offline");
+    const frei = (f.ziele || []).filter(z => z.status === "verfuegbar");
+    $("#fortsetzung-ziele").textContent = f.active ? `Quelle: ${f.source_name || "–"} · seit ${zeit(f.started_at)} · ${frei.length} von ${(f.ziele || []).length} alten Lernplätzen noch nicht vergeben.` : "";
+    const host = $("#fortsetzung-anfragen");
+    if (!(f.anfragen || []).length) { host.innerHTML = '<p class="empty-state">Keine wartenden Lernenden.</p>'; return; }
+    host.innerHTML = f.anfragen.map(a => {
+      const options = frei.map(z => `<option value="${esc(z.student_id)}"${a.kandidaten.length === 1 && a.kandidaten[0] === z.student_id ? " selected" : ""}>${esc(z.pseudonym)} (${esc(z.klasse)})</option>`).join("");
+      const hinweis = a.kandidaten.length === 1 ? "eindeutiger Treffer" : a.kandidaten.length > 1 ? `${a.kandidaten.length} mögliche Treffer – bitte wählen` : "kein Treffer – neuer Lernplatz?";
+      return `<div class="request-item is-new" data-anfrage="${esc(a.id)}"><span class="request-typ">wartet</span><div class="who"><strong>${esc(a.pseudonym)}</strong><small>Klasse ${esc(a.klasse)} · ${zeit(a.created_at)} · ${hinweis}</small></div>
+        <select data-ziel-select aria-label="Alter Lernplatz"><option value="">– alten Lernplatz wählen –</option>${options}</select>
+        <button class="btn btn-primary btn-sm" type="button" data-fs="zuordnen" data-id="${esc(a.id)}">Zuordnen</button>
+        <button class="btn btn-outline btn-sm" type="button" data-fs="neustart" data-id="${esc(a.id)}">Neu starten</button>
+        <button class="btn btn-danger-outline btn-sm" type="button" data-fs="ablehnen" data-id="${esc(a.id)}">Ablehnen</button></div>`;
+    }).join("");
+  }
+  $("#fortsetzung-auto").addEventListener("click", async () => { const r = await post("/api/lehrer/fortsetzung/auto"); if (r.ok) toast(`✨ ${r.zugeordnet} zugeordnet · ${r.mehrdeutig} mehrdeutig · ${r.ohne_treffer} ohne Treffer`); else toast(r.error || "Fehler", "#dc2626"); });
+  $("#fortsetzung-beenden").addEventListener("click", async () => { if (!confirm("Fortsetzungsmodus beenden? Wartende Lernende starten mit einem neuen Lernplatz; verbundene bleiben erhalten.")) return; const r = await post("/api/lehrer/fortsetzung/beenden"); if (r.ok) toast("Fortsetzungsmodus beendet"); else toast(r.error || "Fehler", "#dc2626"); });
+  document.addEventListener("click", async e => {
+    const b = e.target.closest("[data-fs]"); if (!b) return;
+    const item = b.closest(".request-item"); const ziel = item.querySelector("[data-ziel-select]").value;
+    if (b.dataset.fs === "zuordnen" && !ziel) { toast("Bitte zuerst einen alten Lernplatz wählen", "#d97706"); return; }
+    const r = await post("/api/lehrer/fortsetzung/zuordnen", { anfrage_id: b.dataset.id, aktion: b.dataset.fs, target_student_id: ziel });
+    if (r.ok) toast("Erledigt: " + r.status); else toast(r.error || "Fehler", "#dc2626");
+  });
+
+  // ── Aktionen Tabelle ──
   document.addEventListener("click", async e => {
     const decide = e.target.closest("[data-decide]");
     if (decide) {
@@ -130,7 +271,7 @@
       return;
     }
     if (e.target.id === "reset-session") {
-      if (!confirm("Wirklich alle Schüler:innen, Antworten, Notizen und Anfragen dieser Sitzung löschen?")) return;
+      if (!confirm("Wirklich alle Lernenden, Antworten, Arbeitsstände, Zeichnungen und Anfragen dieser Sitzung löschen? Zwischenstände bleiben erhalten.")) return;
       const r = await post("/api/lehrer/sitzung-zuruecksetzen");
       if (r.ok) { Object.keys(students).forEach(removeStudent); renderRequests([]); toast("Sitzung zurückgesetzt", "#64748b"); }
     }
@@ -138,22 +279,29 @@
   });
 
   async function loadState() {
-    const res = await fetch("/api/lehrer/state"); if (res.status === 401) { location.href = "/lehrer/login"; return; }
-    const d = await res.json();
+    const d = await get("/api/lehrer/state");
+    if (!d.ok) return;
     gesperrt = new Set(d.gesperrt || []);
     Object.keys(students).forEach(k => delete students[k]);
-    $("#student-table").innerHTML = '<tr id="no-students"><td colspan="10" class="empty-state">Noch niemand angemeldet.</td></tr>';
+    $("#student-table").innerHTML = '<tr id="no-students"><td colspan="12" class="empty-state">Noch niemand angemeldet.</td></tr>';
     (d.schueler || []).slice().reverse().forEach(upsertStudent);
     renderRequests(d.anfragen || []);
     renderBudget(d.budget);
+    renderGruppe(d.gruppenfreigabe || {});
+    renderSnapshots(d.snapshots || []);
+    renderFortsetzung(d.fortsetzung || {});
+    const st = d.iserv || {};
+    $("#iserv-status").textContent = st.konfiguriert ? `Ziel: ${st.host} · ${st.pfad} · Marker ${st.marker}` : (st.fehler || "IServ nicht konfiguriert");
+    $("#iserv-pill").textContent = st.konfiguriert ? "IServ konfiguriert" : "IServ nicht konfiguriert";
+    $("#iserv-pill").className = "pill " + (st.konfiguriert ? "pill-open" : "pill-offline");
   }
 
   // ── Socket ──
   function setupSocket() {
     if (typeof io === "undefined") { loadState(); return; }
     const socket = io({ transports: ["websocket", "polling"] });
-    socket.on("connect", () => socket.emit("lehrer_join"));
-    socket.on("alle_schueler", list => { Object.keys(students).forEach(k => delete students[k]); $("#student-table").innerHTML = '<tr id="no-students"><td colspan="10" class="empty-state">Noch niemand angemeldet.</td></tr>'; list.slice().reverse().forEach(upsertStudent); });
+    socket.on("connect", () => socket.emit("lehrer_join", { token: DASH.token }));
+    socket.on("alle_schueler", list => { Object.keys(students).forEach(k => delete students[k]); $("#student-table").innerHTML = '<tr id="no-students"><td colspan="12" class="empty-state">Noch niemand angemeldet.</td></tr>'; list.slice().reverse().forEach(upsertStudent); });
     socket.on("sperr_status_all", d => { gesperrt = new Set(d.gesperrt || []); Object.values(students).forEach(upsertStudent); });
     socket.on("offene_anfragen", list => renderRequests(list));
     socket.on("token_update", renderBudget);
@@ -162,11 +310,15 @@
     socket.on("schueler_offline", d => { if (students[d.id]) { students[d.id].online = false; upsertStudent(students[d.id]); } });
     socket.on("fortschritt_update", s => upsertStudent(s));
     socket.on("antwort_zaehler", d => { if (students[d.schueler_id]) { students[d.schueler_id].antworten = d.antworten; upsertStudent(students[d.schueler_id]); } });
+    socket.on("autosave_update", d => { if (students[d.schueler_id]) { students[d.schueler_id].autosave_at = d.updated_at; students[d.schueler_id].autosave_revision = d.revision; upsertStudent(students[d.schueler_id]); } });
     socket.on("neue_anfrage", addRequest);
     socket.on("anfrage_erledigt", d => removeRequest(d.anfrage_id, d.schueler_id));
     socket.on("schueler_geloescht", d => removeStudent(d.id));
     socket.on("ki_sperr_status", d => { if (d.gesperrt) gesperrt.add(d.schueler_id); else gesperrt.delete(d.schueler_id); if (students[d.schueler_id]) upsertStudent(students[d.schueler_id]); });
-    socket.on("sitzung_zurueckgesetzt", () => { Object.keys(students).forEach(removeStudent); renderRequests([]); });
+    socket.on("gruppenfreigabe_update", renderGruppe);
+    socket.on("fortsetzung_update", renderFortsetzung);
+    socket.on("sitzung_zurueckgesetzt", () => loadState());
+    loadState();
   }
   document.addEventListener("DOMContentLoaded", () => { renderBudget({ today: parseInt($("#kpi-tokens").textContent, 10) || 0, limit: DASH.limit || 1 }); setupSocket(); });
 })();
