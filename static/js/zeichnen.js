@@ -279,5 +279,7 @@ WK.zeichnen = (() => {
     if (r && r.ok) Object.entries(r.zeichnungen || {}).forEach(([g, z]) => { if (!pending[g] && z.json) pending[g] = z.json; if (z.preview) previews[g] = z.preview; });
   }
 
-  return { render, mount, dispose, mountPad, ladeServer, editors };
+  function resizeAll() { Object.values(editors).forEach(ed => { try { passeGroesseAn(ed); } catch (e) { /* egal */ } }); }
+
+  return { render, mount, dispose, mountPad, ladeServer, editors, resizeAll };
 })();

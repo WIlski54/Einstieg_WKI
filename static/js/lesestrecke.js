@@ -67,6 +67,7 @@ WK.lesestrecke = (() => {
     html += `</article>`;
     host.innerHTML = html;
     if (st.fertig && !state.completed.has(station(key))) markComplete(station(key));
+    if (WK.schritte) WK.schritte.aktualisieren(key);
   }
 
   WK.actions["lese-reload"] = el => mount(el.dataset.key, true);

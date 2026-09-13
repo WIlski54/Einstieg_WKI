@@ -15,6 +15,9 @@ GSM-Produktionsstandard „Interaktives Arbeitsblatt mit Autosave und IServ-Arch
   Freitext, Recherche-Stichpunkte, drei Zeichenaufträge (Fabric.js), Blitzfragen ohne Wiederholung,
   Begriffs-Domino, Quellenverzeichnis, Transferaufgabe
 - A/B/C-Differenzierung pro Aufgabe – der Niveauwechsel ändert nur die jeweilige Karte
+- Schrittmodus: immer nur eine Station offen, erledigte klappen zusammen, spätere bleiben
+  ausgeblendet; „Später machen“ überspringt, die Reiter werden nacheinander freigeschaltet
+- Sprache auf Sek-I-Niveau: kurze Sätze, wenig Text, Fakten unverändert
 - Handschrift mit Finger oder Pencil für Stichpunkte, Transkription durch die KI nach Freigabe
 - automatische Sicherung: IndexedDB (48 h) und Server-Autosave mit monotonen Revisionen,
   Flush bei Tabwechsel und Schließen, JSON-Export/-Import mit Textfallback für das iPad

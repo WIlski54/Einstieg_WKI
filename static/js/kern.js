@@ -129,6 +129,7 @@ window.WK = (() => {
       postJSON("/api/fortschritt", { aufgabe: key, niveau: key === "T" ? "Transfer" : niveauOf(nr) });
       dirty();
     }
+    if (WK.schritte && !state.restoring) WK.schritte.nachAbschluss(key);
   }
 
   // Expliziter, bewertbarer Versuch – getrennt vom Autosave (Standard §12).
@@ -155,6 +156,11 @@ window.WK = (() => {
 
   function showTab(key, opts) {
     if (!document.getElementById("tab-" + key)) key = "material";
+    if (WK.schritte && !WK.schritte.tabFrei(key)) {
+      if (!(opts && opts.silent)) showToast("🔒 Erst den vorherigen Abschnitt durcharbeiten.", "#d97706");
+      key = WK.schritte.erstesFreiesTab();
+      if (state.activeTab === key) return;
+    }
     const geaendert = state.activeTab !== key;
     state.activeTab = key;
     $$(".tab-btn").forEach(b => { const on = b.dataset.tab === key; b.classList.toggle("active", on); b.setAttribute("aria-selected", on); });

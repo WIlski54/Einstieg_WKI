@@ -19,6 +19,7 @@
   <script src="{{ url_for('static', filename='js/lesestrecke.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/zeichnen.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/spiele.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/schritte.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/ki.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/reader.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/app.js', v=v) }}" defer></script>
@@ -57,32 +58,26 @@
             <strong>Aufgabe</strong>
             <p>Recherchiere die wichtigsten Informationen zum Ersten Weltkrieg. Ergänze die Abschnitte unter den Überschriften stichpunktartig. Achte auf eine sinnvolle zeitliche Ordnung, verwende mindestens zwei verlässliche Quellen und notiere diese am Ende deiner Einträge.</p>
           </div>
-          <p>Das analoge Arbeitsblatt hat fünf Abschnitte. In dieser digitalen Version bekommt jeder Abschnitt einen eigenen Reiter: zuerst eine kurze Lesestrecke mit Verständnisfragen, dann Übungen, eine Zeichenaufgabe und das Feld für deine eigenen Recherche-Stichpunkte mit Quelle. Der letzte Reiter bündelt Zeitstrahl, Blitzfragen, Domino und dein Quellenverzeichnis.</p>
-          <div class="section-map">
-            <a class="section-pill" data-action="tab" data-tab="ursachen" href="#tab-ursachen">🧭 Ursachen</a>
-            <a class="section-pill" data-action="tab" data-tab="ausloeser" href="#tab-ausloeser">🎯 Auslöser</a>
-            <a class="section-pill" data-action="tab" data-tab="verlauf" href="#tab-verlauf">🪖 Verlauf</a>
-            <a class="section-pill" data-action="tab" data-tab="kriegsende" href="#tab-kriegsende">🕊️ Kriegsende</a>
-            <a class="section-pill" data-action="tab" data-tab="folgen" href="#tab-folgen">🧩 Folgen</a>
-            <a class="section-pill" data-action="tab" data-tab="abschluss" href="#tab-abschluss">📚 Zeitstrahl &amp; Quellen</a>
+          <p>Du arbeitest die fünf Abschnitte nacheinander durch: <strong>Ursachen → Auslöser → Verlauf → Kriegsende → Folgen</strong>. In jedem Abschnitt liest du zuerst eine kurze Lesestrecke. Dann kommen die Aufgaben – immer eine nach der anderen. Am Ende sammelst du deine Quellen.</p>
+          <div class="btn-row">
+            <button class="btn btn-primary" type="button" data-action="tab" data-tab="ursachen">▶️ Los geht's: Ursachen</button>
           </div>
         </article>
 
         <article class="card">
-          <span class="eyebrow">So arbeitest du</span>
-          <h3>Niveaus, Rückmeldung, Sicherung und KI</h3>
-          <ul class="howto">
-            <li><strong>Niveau wählen:</strong> Bei jeder Aufgabe kannst du zwischen 🟢 A (Basis), 🟡 B (Standard) und 🔴 C (Experte) wechseln – nur diese eine Karte ändert sich. Fang ruhig mit A an und steigere dich.</li>
-            <li><strong>Sofortige Rückmeldung:</strong> Multiple Choice, Lückentexte, Zuordnungen, Reihenfolgen, Diagramme, Karten, Blitzfragen und Domino werden direkt geprüft.</li>
-            <li><strong>Automatische Sicherung:</strong> Alles, was du eingibst, wird auf diesem Gerät und auf dem Server gesichert – auch ohne Klick. Der Stand oben rechts zeigt dir das. Zusätzlich kannst du über „Sicherung“ eine JSON-Datei sichern oder laden.</li>
-            <li><strong>Abgeben:</strong> „Antwort abgeben“, „Stichpunkte abgeben“ und „Zeichnung abgeben“ schicken deine Arbeit ins Protokoll der Lehrkraft.</li>
-            <li><strong>KI:</strong> Der KI-Tutor unten rechts, das KI-Feedback zu Texten, die Bewertung deiner Zeichnungen und die Handschrifterkennung brauchen die Freigabe deiner Lehrkraft. Die KI gibt keine Lösungen vor.</li>
-          </ul>
+          <details class="material-details">
+            <summary>ℹ️ So arbeitest du</summary>
+            <ul class="howto">
+              <li><strong>Eine Aufgabe nach der anderen:</strong> Die nächste Aufgabe erscheint, wenn du auf „Weiter“ tippst. Wenn du nicht weiterkommst: „Später machen“.</li>
+              <li><strong>Niveau:</strong> 🟢 A ist leicht, 🟡 B ist mittel, 🔴 C ist schwer. Du kannst bei jeder Aufgabe wechseln.</li>
+              <li><strong>Sicherung:</strong> Alles wird automatisch gespeichert. Der grüne Stand oben zeigt dir das.</li>
+              <li><strong>Abgeben:</strong> „Abgeben“ schickt deine Arbeit an deine Lehrkraft.</li>
+              <li><strong>KI:</strong> Der KI-Tutor und die KI-Rückmeldungen brauchen die Freigabe deiner Lehrkraft. Die KI verrät keine Lösungen.</li>
+            </ul>
+          </details>
         </article>
 
         <article class="card">
-          <span class="eyebrow">Originalmaterial</span>
-          <h3>Das Arbeitsblatt als Vorlage</h3>
           <details class="material-details">
             <summary>📄 Original-Arbeitsblatt (2 Seiten) anzeigen</summary>
             <div class="material-pages">
@@ -96,15 +91,16 @@
         </article>
 
         <article class="card">
-          <span class="eyebrow">Recherche-Tipps</span>
-          <h3>Verlässliche Quellen für dieses Thema</h3>
-          <ul class="howto">
-            <li><strong>Schulbuch:</strong> Kapitel zum Ersten Weltkrieg – Seitenzahlen notieren.</li>
-            <li><strong>bpb.de</strong> – Bundeszentrale für politische Bildung: Dossiers und Zeitleisten.</li>
-            <li><strong>dhm.de/lemo</strong> – Lebendiges Museum Online des Deutschen Historischen Museums.</li>
-            <li><strong>planet-wissen.de</strong> sowie Dokumentationen von ARD/ZDF.</li>
-            <li><strong>Wikipedia:</strong> gut zum Einstieg – wichtige Angaben über die Belege oder eine zweite Quelle prüfen. KI-Chatbots können Fakten und Quellen erfinden.</li>
-          </ul>
+          <details class="material-details">
+            <summary>🔎 Gute Quellen für dieses Thema</summary>
+            <ul class="howto">
+              <li><strong>Schulbuch:</strong> Kapitel zum Ersten Weltkrieg. Seitenzahlen notieren.</li>
+              <li><strong>bpb.de</strong> – Bundeszentrale für politische Bildung.</li>
+              <li><strong>dhm.de/lemo</strong> – Deutsches Historisches Museum.</li>
+              <li><strong>planet-wissen.de</strong> und Dokus von ARD/ZDF.</li>
+              <li><strong>Wikipedia:</strong> gut zum Einstieg. Wichtige Angaben mit einer zweiten Quelle prüfen. KI-Chatbots können Fakten erfinden.</li>
+            </ul>
+          </details>
         </article>
       </section>
 

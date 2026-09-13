@@ -31,6 +31,7 @@
     else if (state.gruppe.active) note.textContent = "KI von der Lehrkraft für die Klasse freigegeben";
   }
   WK.updateProgress();
+  WK.schritte.init();
   WK.showTab(state.activeTab, { silent: true });
   WK.setupSocket();
   WK.autosave.enable();
