@@ -9,7 +9,8 @@ WK.lesestrecke = (() => {
 
   function station(key) { return lesestreckeNr[key]; }
   // Text und Schaubild nebeneinander; in der Fragephase bleibt beides ausgeblendet.
-  const inhalt = a => `<div class="lese-inhalt"><div class="lese-text">${a.text}</div>${a.bild ? `<figure class="lese-figur"><img src="${esc(a.bild)}" alt="${esc(a.bild_alt || "Schaubild")}" loading="lazy"></figure>` : ""}</div>`;
+  // Schaubild als Knopf: Tippen öffnet es bildschirmfüllend (bild.js) – auf dem iPad sonst zu klein.
+  const inhalt = a => `<div class="lese-inhalt"><div class="lese-text">${a.text}</div>${a.bild ? `<figure class="lese-figur"><button type="button" class="bild-zoom" data-action="bild-open" aria-label="Schaubild vergrößern"><img src="${esc(a.bild)}" alt="${esc(a.bild_alt || "Schaubild")}" loading="lazy"></button><figcaption class="bild-hinweis">🔍 Tippen zum Vergrößern</figcaption></figure>` : ""}</div>`;
 
   // ─── Prüfmodus: alle Abschnitte offen, Frage mit markierter Lösung ───
   let pruefDaten = null;

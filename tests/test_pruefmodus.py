@@ -35,3 +35,9 @@ def test_schueler_sehen_weiter_keine_loesung(student):
     d = student.get("/api/lesestrecke/ursachen").get_json()
     assert d["ok"] and all("loesung" not in a for a in d["abschnitte"])
     assert student.get("/lehrer/pruefen").status_code == 302
+
+
+def test_schaubilder_lassen_sich_vergroessern(student):
+    html = student.get("/arbeitsblatt").get_data(as_text=True)
+    assert 'id="bild-dialog"' in html and "bild.js" in html
+    assert 'data-action="bild-open"' in html   # Glossar-Schaubild ist antippbar

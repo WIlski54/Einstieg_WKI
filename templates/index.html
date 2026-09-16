@@ -21,6 +21,7 @@
   <script src="{{ url_for('static', filename='js/spiele.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/schritte.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/glossar.js', v=v) }}" defer></script>
+  <script src="{{ url_for('static', filename='js/bild.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/pruefen.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/ki.js', v=v) }}" defer></script>
   <script src="{{ url_for('static', filename='js/reader.js', v=v) }}" defer></script>
@@ -201,10 +202,19 @@
     <div class="ki-modal glossar-modal" role="dialog" aria-modal="true" aria-labelledby="glossar-titel">
       <span class="eyebrow">Fachbegriff</span>
       <h3 id="glossar-titel">Begriff</h3>
-      <figure class="glossar-figur" id="glossar-figur" hidden><img id="glossar-bild" alt=""></figure>
+      <figure class="glossar-figur" id="glossar-figur" hidden><button type="button" class="bild-zoom" data-action="bild-open" aria-label="Schaubild vergrößern"><img id="glossar-bild" alt=""></button><figcaption class="bild-hinweis">🔍 Tippen zum Vergrößern</figcaption></figure>
       <p id="glossar-text" class="glossar-text"></p>
       <button class="btn btn-primary btn-wide" type="button" id="glossar-close" data-action="glossar-close">Verstanden – zurück zum Text</button>
     </div>
+  </div>
+
+  <!-- Bildvergrößerung: Schaubilder bildschirmfüllend (iPad) -->
+  <div class="ki-overlay bild-overlay" id="bild-dialog" hidden>
+    <figure class="bild-modal" role="dialog" aria-modal="true" aria-label="Schaubild vergrößert">
+      <img id="bild-gross" alt="">
+      <figcaption id="bild-caption" class="bild-caption"></figcaption>
+      <button class="btn btn-primary" type="button" id="bild-close" data-action="bild-close">Schließen</button>
+    </figure>
   </div>
 
   <div class="ki-overlay session-overlay" id="session-overlay" hidden>
