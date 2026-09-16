@@ -590,7 +590,7 @@ def ausloeser_4():
         barrel(60, 60, 110, 120, ""), t(115, 200, "PULVERFASS = Ursachen", 12, 900, DUNKEL),
         t(115, 94, "Imperialismus", 10, 700, "#fff"), t(115, 112, "Nationalismus", 10, 700, "#fff"), t(115, 130, "Militarismus", 10, 700, "#fff"), t(115, 148, "Bündnisse", 10, 700, "#fff"),
         spark(230, 80), arrow(232, 96, 180, 120, ROT, 3, "6 4"),
-        t(300, 60, "FUNKE = Auslöser", 13, 900, ROT), t(300, 80, "Attentat von Sarajevo", 12, 700), t(300, 96, "28. Juni 1914", 11, 400, GRAU),
+        t(326, 60, "FUNKE = Auslöser", 13, 900, ROT), t(326, 80, "Attentat von Sarajevo", 12, 700), t(326, 96, "28. Juni 1914", 11, 400, GRAU),
         box(210, 130, 176, 80, "Ohne Pulverfass\nhätte der Funke\nnichts entzündet.", "#fff", GRAU, 12, 400))
 
 
