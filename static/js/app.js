@@ -7,6 +7,13 @@
   WK.buildNav();
   WK.aufgaben.buildPanels();
   WK.reader.init();
+  if (WK.pruefmodus) {   // Lehrkraft: alles offen, keine Sitzung, keine Speicherung
+    WK.schritte.init();
+    WK.pruefen.init();
+    WK.showTab(state.activeTab, { silent: true });
+    showToast("🔍 Prüfmodus: alle Reiter offen, nichts wird gespeichert.", "#006AB3");
+    return;
+  }
   WK.lernplatzSpeichern();
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if (isIOS) document.body.classList.add("is-ios");

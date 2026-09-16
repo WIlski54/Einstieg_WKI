@@ -42,7 +42,7 @@ WK.reader = (() => {
   });
   // Nur ein Original gleichzeitig ausklappen
   document.addEventListener("toggle", e => {
-    if (e.target.classList && e.target.classList.contains("material-details") && e.target.open) {
+    if (e.target.classList && e.target.classList.contains("material-details") && e.target.open && !WK.pruefmodus) {   // Prüfmodus: alles bleibt offen
       $$(".material-details").forEach(d => { if (d !== e.target) d.open = false; });
     }
   }, true);

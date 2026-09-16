@@ -437,6 +437,14 @@ th { font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color:
 .width-select { width: auto; min-width: 110px; }
 .zeichen-wrap { border: 2px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; touch-action: none; -webkit-user-select: none; user-select: none; }
 .zeichen-wrap canvas { touch-action: none; display: block; }
+/* Prüfmodus der Lehrkraft */
+body.pruefmodus .tutor-fab, body.pruefmodus .tutor-panel, body.pruefmodus .btn-ai, body.pruefmodus .schritt-leiste, body.pruefmodus .schritt-toggle, body.pruefmodus .tab-count { display: none !important; }
+.pruef-niveaus { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pruef-label { font-size: .85rem; opacity: .9; }
+body.pruefmodus .btn-ghost-light.is-active { background: var(--gsm-orange); color: #1e293b; border-color: var(--gsm-orange); }
+.lese-pruef { margin-top: 10px; }
+.lese-pruef .mc-btn[disabled] { opacity: 1; }
+.lese-pruef .mc-btn.correct { border-color: #16a34a; background: #dcfce7; font-weight: 700; }
 .pad-host { margin: 6px 0 10px; }
 .pad-box { border: 1px dashed #c9d6e4; border-radius: 12px; padding: 10px; background: #f7f9fc; }
 .pad-wrap { background: #fffdf5; }

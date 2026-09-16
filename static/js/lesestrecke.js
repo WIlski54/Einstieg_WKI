@@ -8,8 +8,36 @@ WK.lesestrecke = (() => {
   const laden = {};      // key -> Promise
 
   function station(key) { return lesestreckeNr[key]; }
+  // Text und Schaubild nebeneinander; in der Fragephase bleibt beides ausgeblendet.
+  const inhalt = a => `<div class="lese-inhalt"><div class="lese-text">${a.text}</div>${a.bild ? `<figure class="lese-figur"><img src="${esc(a.bild)}" alt="${esc(a.bild_alt || "Schaubild")}" loading="lazy"></figure>` : ""}</div>`;
+
+  // ─── Prüfmodus: alle Abschnitte offen, Frage mit markierter Lösung ───
+  let pruefDaten = null;
+  async function mountPruef(key) {
+    const host = document.getElementById("lese-" + key); if (!host) return;
+    if (!pruefDaten) {
+      const d = await getJSON("/api/lehrer/pruefen/lesestrecken");
+      if (!d || !d.ok) { host.innerHTML = `<article class="card intro-card"><span class="eyebrow">Lesestrecke</span><p class="muted">⚠️ ${esc(d && d.fehler ? d.fehler : "Lesestrecken konnten nicht geladen werden.")}</p></article>`; return; }
+      pruefDaten = d.lesestrecken;
+    }
+    const d = pruefDaten[key]; if (!d) return;
+    let html = `<article class="card intro-card lese-card" id="lese-card-${key}">
+      <header class="task-header">
+        <span class="task-number task-number-lese" aria-hidden="true">${esc(station(key))}</span>
+        <div class="task-title"><span class="eyebrow">${esc(d.eyebrow)} · Prüfmodus: ${d.anzahl} Abschnitte, Lösung grün</span><h2>${esc(d.titel)}</h2></div>
+      </header>`;
+    d.abschnitte.forEach((a, i) => {
+      html += `<section class="lese-now lese-pruef"><h3>${i + 1}. ${esc(a.ueberschrift)}</h3>${inhalt(a)}
+        <div class="lese-frage"><p class="task-question">❓ ${esc(a.frage)}</p>
+        <div class="mc-options" role="group">${a.optionen.map((o, j) => `<button class="mc-btn${j === a.loesung ? " correct" : ""}" type="button" disabled>${esc(o)}</button>`).join("")}</div>
+        <p class="lese-erkl">💡 ${esc(a.erklaerung)}</p></div></section>`;
+    });
+    host.innerHTML = html + `</article>`;
+    if (WK.glossar) WK.glossar.verlinken(host);
+  }
 
   async function mount(key, force) {
+    if (WK.pruefmodus) return mountPruef(key);
     const host = document.getElementById("lese-" + key);
     if (!host) return;
     if (daten[key] && !force) return;
@@ -37,8 +65,6 @@ WK.lesestrecke = (() => {
         <span class="done-badge"${st.fertig ? "" : " hidden"}>✅ gelesen</span>
       </header>
       <p class="lese-progress" role="status">${st.fertig ? `Alle ${n} Abschnitte gelesen – zum Nachschlagen aufklappen.` : `Abschnitt ${st.phase + 1} von ${n}`} <span class="lese-dots" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i class="${i < st.phase || st.fertig ? "done" : i === st.phase ? "now" : ""}"></i>`).join("")}</span></p>`;
-    // Text und Schaubild nebeneinander; in der Fragephase bleibt beides ausgeblendet.
-    const inhalt = a => `<div class="lese-inhalt"><div class="lese-text">${a.text}</div>${a.bild ? `<figure class="lese-figur"><img src="${esc(a.bild)}" alt="${esc(a.bild_alt || "Schaubild")}" loading="lazy"></figure>` : ""}</div>`;
     gelesen.forEach((a, i) => {
       html += `<details class="lese-done"><summary>✅ ${i + 1}. ${esc(a.ueberschrift)}</summary>${inhalt(a)}${a.erklaerung ? `<p class="lese-erkl">💡 ${esc(a.erklaerung)}</p>` : ""}</details>`;
     });

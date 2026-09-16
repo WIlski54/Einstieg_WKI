@@ -242,6 +242,18 @@ def lesestrecke_fuer_client(key: str, status: dict) -> dict:
     }
 
 
+def lesestrecke_vollstaendig(key: str) -> dict:
+    """Für den Prüfmodus der Lehrkraft: alle Abschnitte mit Lösung und Erklärung."""
+    strecke = LESESTRECKEN[key]
+    abschnitte = [{
+        "ueberschrift": a["ueberschrift"], "text": a["text"], "frage": a["frage"], "optionen": list(a["optionen"]),
+        "loesung": int(a["loesung"]), "erklaerung": a["erklaerung"],
+        "bild": f"/static/img/lese/{a['bild']}.svg?v={ASSET_VERSION}" if a.get("bild") else None, "bild_alt": a.get("bild_alt", ""),
+    } for a in strecke["abschnitte"]]
+    return {"key": key, "station": strecke["station"], "eyebrow": strecke["eyebrow"], "titel": strecke["titel"],
+            "abschnitte": abschnitte, "anzahl": len(abschnitte)}
+
+
 def pruefen(key: str, phase: int, wahl: int) -> tuple[bool, str]:
     abschnitt = LESESTRECKEN[key]["abschnitte"][phase]
     korrekt = int(wahl) == abschnitt["loesung"]

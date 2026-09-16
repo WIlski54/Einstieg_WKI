@@ -23,6 +23,7 @@ WK.schritte = (() => {
     return (reihenfolge[tabKey] || []).find(nr => !abgehakt(nr)) || null;
   }
   function tabFrei(key) {
+    if (WK.pruefmodus) return true;
     const i = tabKeys.indexOf(key);
     if (i <= 0) return true;
     return reihenfolge[tabKeys[i - 1]].every(durchgearbeitet);
@@ -92,6 +93,10 @@ WK.schritte = (() => {
 
   function aktualisieren(tabKey) {
     const liste = reihenfolge[tabKey]; if (!liste) return;
+    if (WK.pruefmodus) {   // alles sichtbar, keine Leisten, keine Sperren
+      liste.forEach(nr => { const el = elementFuer(tabKey, nr); if (el) { el.hidden = false; el.classList.remove("is-collapsed", "is-current", "is-open"); } });
+      return;
+    }
     const aktuell = aktuelleStation(tabKey);
     let danach = false;
     liste.forEach(nr => {

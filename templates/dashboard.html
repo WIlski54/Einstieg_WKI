@@ -16,6 +16,7 @@
     <div class="dashboard-actions">
       <span class="pill {{ 'pill-open' if ki_konfiguriert else 'pill-locked' }}">{{ 'KI konfiguriert' if ki_konfiguriert else 'KI ohne Schlüssel' }}</span>
       <span class="pill {{ 'pill-open' if iserv.konfiguriert else 'pill-offline' }}" id="iserv-pill">{{ 'IServ konfiguriert' if iserv.konfiguriert else 'IServ nicht konfiguriert' }}</span>
+      <a class="btn btn-ghost-light btn-sm" href="{{ url_for('lehrer_pruefen') }}" target="_blank" rel="noopener" title="Alle Reiter, Texte und Abbildungen durchsehen – ohne Schrittmodus, nichts wird gespeichert">🔍 Prüfmodus</a>
       <button class="btn btn-ghost-light btn-sm" id="refresh-dashboard" type="button">Aktualisieren</button>
       <form action="{{ url_for('lehrer_logout') }}" method="post"><button class="btn btn-accent btn-sm" type="submit">Abmelden</button></form>
     </div>

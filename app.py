@@ -1173,10 +1173,41 @@ def api_lesestrecke_antwort(abschnitt):
 import glossar  # noqa: E402
 
 
+def schueler_oder_lehrer_required(func):
+    """Nur-Lese-Inhalte, die Lernende und die Lehrkraft (Prüfmodus) brauchen."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if ist_lehrer() or session.get("schueler_id"):
+            return func(*args, **kwargs)
+        return jsonify({"ok": False, "error": "nicht angemeldet"}), 401
+
+    return wrapper
+
+
 @app.route("/api/glossar")
-@schueler_required
+@schueler_oder_lehrer_required
 def api_glossar():
     return jsonify(dict(glossar.glossar_fuer_client(), ok=True))
+
+
+# ── Prüfmodus: die Lehrkraft sieht das ganze Arbeitsblatt offen, ohne etwas zu speichern ──
+@app.route("/lehrer/pruefen")
+@lehrer_required
+def lehrer_pruefen():
+    token = request.headers.get("X-Lehrer-Token") or session.get("lehrer_token", "")
+    return render_template(
+        "index.html",
+        pruefmodus=True, lehrer_token=token,
+        pseudonym="Prüfmodus", klasse="—", schueler_id="", resume_token="", abschnitte=ABSCHNITTE,
+        aufgaben_gesamt=len(ALLE_AUFGABEN), app_id=APP_ID, schema_version=STATE_SCHEMA_VERSION,
+        titel=APP_TITEL, v=ASSET_VERSION,
+    )
+
+
+@app.route("/api/lehrer/pruefen/lesestrecken")
+@lehrer_required
+def api_lehrer_pruefen_lesestrecken():
+    return jsonify({"ok": True, "lesestrecken": {k: inhalte_server.lesestrecke_vollstaendig(k) for k in inhalte_server.LESESTRECKEN}})
 
 
 # ── IServ-Archiv ─────────────────────────────────────────────────────────────

@@ -8,6 +8,10 @@ window.WK = (() => {
   const APP = window.APP || {};
   const NIVEAU_LABEL = { A: "🟢 A · Basis", B: "🟡 B · Standard", C: "🔴 C · Experte" };
   const STORAGE_KEY = (APP.appId || "gsm") + ":lernplatz";
+  // Prüfmodus der Lehrkraft: keine Schüler-APIs, keine Speicherung, Lehrer-Token im Header.
+  const PRUEF = !!APP.pruefmodus;
+  const pruefStub = url => PRUEF && String(url).startsWith("/api/") && !String(url).startsWith("/api/lehrer/") && url !== "/api/glossar";
+  const apiHeaders = extra => { const h = Object.assign({}, extra || {}); if (PRUEF && APP.lehrerToken) h["X-Lehrer-Token"] = APP.lehrerToken; return h; };
 
   const state = {
     completed: new Set(),
@@ -64,8 +68,9 @@ window.WK = (() => {
 
   // Netzwerkfehler dürfen nie als Ausnahme durchschlagen: immer ein Objekt zurückgeben.
   async function postJSON(url, payload, opts) {
+    if (pruefStub(url)) return { ok: true, pruefmodus: true, httpStatus: 200 };
     try {
-      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload || {}), keepalive: !!(opts && opts.keepalive) });
+      const res = await fetch(url, { method: "POST", headers: apiHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload || {}), keepalive: !!(opts && opts.keepalive) });
       if (res.status === 401) { sessionEnded("abgelaufen"); return { fehler: "Sitzung abgelaufen", httpStatus: 401 }; }
       const data = await res.json().catch(() => ({}));
       data.httpStatus = res.status;   // nie „status“: das Feld gehört den API-Antworten
@@ -76,8 +81,9 @@ window.WK = (() => {
     }
   }
   async function getJSON(url) {
+    if (pruefStub(url)) return { ok: true, pruefmodus: true, httpStatus: 200 };
     try {
-      const res = await fetch(url, { headers: { "Accept": "application/json" } });
+      const res = await fetch(url, { headers: apiHeaders({ "Accept": "application/json" }) });
       if (res.status === 401) { sessionEnded("abgelaufen"); return { fehler: "Sitzung abgelaufen", httpStatus: 401 }; }
       if (res.status === 204) return { httpStatus: 204, leer: true };
       const data = await res.json().catch(() => ({}));
@@ -106,6 +112,7 @@ window.WK = (() => {
   function updateProgress() {
     const done = state.completed.size;
     const pct = Math.round((done / totalTasks) * 100);
+    if (!$("#progress-fill")) return;   // Prüfmodus hat keine Fortschrittsanzeige
     $("#progress-fill").style.width = pct + "%";
     $("#progress-text").textContent = `${done} / ${totalTasks} Stationen`;
     $("#progress-pct").textContent = pct + " %";
@@ -185,7 +192,7 @@ window.WK = (() => {
     else if (grund === "archiviert" || grund === "ersetzt") { if (WK.autosave) WK.autosave.clearLocal(); }   // Token bleibt für die Fortsetzungsstunde
     const o = $("#session-overlay"); o.hidden = false;
     $("#session-overlay-text").textContent = texte[grund] || "Die Unterrichtssitzung wurde beendet.";
-    setTimeout(() => { location.href = grund === "archiviert" || grund === "ersetzt" ? "/warten" : "/login"; }, 4000);
+    setTimeout(() => { location.href = PRUEF ? "/lehrer/login" : grund === "archiviert" || grund === "ersetzt" ? "/warten" : "/login"; }, 4000);
   }
 
   // ─── Socket.IO ─────────────────────────────────────────────────────────
@@ -237,7 +244,7 @@ window.WK = (() => {
   });
 
   return {
-    INHALTE, APP, NIVEAU_LABEL, state, aufgabenByNr, tabByNr, lesestreckeNr, totalTasks,
+    INHALTE, APP, NIVEAU_LABEL, state, aufgabenByNr, tabByNr, lesestreckeNr, totalTasks, pruefmodus: PRUEF,
     $, $$, esc, shuffle, normalize, isDifferenziert, niveauOf, cfgOf, card, body, uhrzeit,
     showFb, clearFb, retryBtn, showToast, postJSON, getJSON,
     lernplatzSpeichern, lernplatzLoeschen, dirty, updateProgress, markComplete, sendAntwort,
