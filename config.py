@@ -24,7 +24,7 @@ DB_SCHEMA_VERSION = 2         # additive Migrationen
 ARCHIV_FORMAT = "gsm-iabackup"
 STATE_MAX_BYTES = 2 * 1024 * 1024
 SNAPSHOT_MAX_BYTES = 25 * 1024 * 1024
-ASSET_VERSION = "20260913b"
+ASSET_VERSION = "20260916a"
 
 # ── Lehrkraft und Sitzung ────────────────────────────────────────────────────
 LEHRER_PASSWORD = os.environ.get("LEHRER_PASSWORD", "").strip()

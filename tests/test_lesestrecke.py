@@ -46,7 +46,7 @@ def test_glossar_deckt_alle_fetten_begriffe(student):
             assert os.path.exists(os.path.join(root, "static", "img", "lese", e["bild"] + ".svg")), key
     r = student.get("/api/glossar").get_json()
     assert r["ok"] and "marokkokrise" in r["eintraege"] and r["aliase"]["marokkokrisen 1905 und 1911"] == "marokkokrise"
-    assert r["eintraege"]["marokkokrise"]["bild"].endswith("glossar-marokkokrise.svg")
+    assert "glossar-marokkokrise.svg" in r["eintraege"]["marokkokrise"]["bild"]
     assert r["eintraege"]["tannenberg"]["bild"] is None
 
 

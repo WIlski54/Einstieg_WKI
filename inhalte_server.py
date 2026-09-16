@@ -5,6 +5,7 @@ aber nie die richtige Position. Jede Frage lässt sich aus ihrem Abschnitt allei
 Sprache: Sek I, kurze Sätze, Fakten unverändert.
 """
 
+from config import ASSET_VERSION
 import random
 
 LESESTRECKEN = {
@@ -230,7 +231,7 @@ def lesestrecke_fuer_client(key: str, status: dict) -> dict:
     abschnitte = []
     for i, a in enumerate(strecke["abschnitte"]):
         eintrag = {"ueberschrift": a["ueberschrift"], "text": a["text"], "frage": a["frage"], "optionen": list(a["optionen"]),
-                   "bild": f"/static/img/lese/{a['bild']}.svg" if a.get("bild") else None, "bild_alt": a.get("bild_alt", "")}
+                   "bild": f"/static/img/lese/{a['bild']}.svg?v={ASSET_VERSION}" if a.get("bild") else None, "bild_alt": a.get("bild_alt", "")}
         if i < phase:
             eintrag["erklaerung"] = a["erklaerung"]
         abschnitte.append(eintrag)

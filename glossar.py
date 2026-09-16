@@ -6,7 +6,9 @@ die Erklärung als Einblendung – ohne die App zu verlassen. Sprache: Sek I, ku
 
 import re
 
-BILD = "/static/img/lese/{}.svg"
+from config import ASSET_VERSION
+
+BILD = "/static/img/lese/{}.svg?v=" + ASSET_VERSION
 
 
 def normalisieren(text: str) -> str:

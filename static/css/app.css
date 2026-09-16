@@ -195,6 +195,8 @@ textarea { resize: vertical; line-height: 1.5; }
 .hs-mm circle, .legend-dot.hs-mm { fill: var(--mm); background: var(--mm); }
 .hs-en circle, .legend-dot.hs-en { fill: var(--en); background: var(--en); }
 .hs-neutral circle, .legend-dot.hs-neutral { fill: #6b7280; background: #6b7280; }
+.hs-mm .hs-label { fill: var(--mm); }
+.hs-en .hs-label { fill: var(--en); }
 .hs-front circle, .legend-dot.hs-front { fill: #b91c1c; background: #b91c1c; }
 .hs-ort circle, .legend-dot.hs-ort { fill: var(--gsm-magenta); background: var(--gsm-magenta); }
 .hs-neu circle, .legend-dot.hs-neu { fill: #0f766e; background: #0f766e; }

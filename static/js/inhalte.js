@@ -11,10 +11,7 @@ window.INHALTE = {
     europa1914: {
       titel: "Europa 1914 – zwei Blöcke",
       legende: [["mm", "Mittelmächte / Dreibund"], ["en", "Entente"], ["neutral", "neutral"]],
-      linien: [
-        ["berlin", "wien", "mm"], ["berlin", "rom", "mm"], ["wien", "rom", "mm"],
-        ["paris", "petersburg", "en"], ["paris", "london", "en"], ["london", "petersburg", "en"],
-      ],
+      linien: [],   // Blöcke nur über Farbe der Punkte und Namen – Linien quer über die Karte waren verwirrend
       punkte: [
         { id: "berlin", lon: 13.4, lat: 52.5, label: "Deutsches Reich", bloc: "mm", icon: "🦅", titel: "Deutsches Reich (Berlin)", text: "Kaiserreich seit 1871. Wirtschaftlich stark, aber spät dran bei den Kolonien. Kaiser Wilhelm II. will einen „Platz an der Sonne“ und baut eine große Flotte. Verbündet mit Österreich-Ungarn (1879) und Italien (1882)." },
         { id: "wien", lon: 16.4, lat: 48.2, label: "Österreich-Ungarn", bloc: "mm", icon: "👑", titel: "Österreich-Ungarn (Wien)", text: "Ein Staat mit vielen Völkern. Serbische Nationalisten bedrohen den Zusammenhalt. 1908 nimmt sich Österreich-Ungarn Bosnien – mit der Hauptstadt Sarajevo." },
