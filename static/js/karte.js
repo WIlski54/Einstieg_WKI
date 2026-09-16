@@ -9,9 +9,9 @@ WK.karte = (() => {
   // Beschriftungen, die sich sonst überlappen, bekommen feste Versätze (dx, dy relativ zum Punkt).
   const LABEL_OFFSET = {
     "europa1914:bruessel": { dx: -26, dy: -30 }, "europa1914:belgrad": { dx: 34, dy: 36 }, "europa1914:wien": { dx: 0, dy: -30 },
-    "europa1920:saar": { dx: -8, dy: 36 }, "europa1920:strassburg": { dx: 0, dy: -30 }, "europa1920:prag": { dx: -30, dy: -30 },
-    "europa1920:wien": { dx: 40, dy: 36 }, "europa1920:budapest": { dx: 36, dy: 36 }, "europa1920:danzig": { dx: 0, dy: -30 },
-    "europa1920:riga": { dx: 44, dy: -6 }, "europa1920:warschau": { dx: 26, dy: 36 }, "kriegsende:brest": { dx: 0, dy: -30 },
+    "europa1920:saar": { dx: -34, dy: -30 }, "europa1920:strassburg": { dx: 34, dy: 36 }, "europa1920:prag": { dx: -30, dy: -30 },
+    "europa1920:wien": { dx: -36, dy: 36 }, "europa1920:budapest": { dx: 36, dy: 36 }, "europa1920:danzig": { dx: 0, dy: -30 },
+    "europa1920:riga": { dx: 96, dy: 5 }, "europa1920:warschau": { dx: 26, dy: 36 }, "kriegsende:brest": { dx: 0, dy: -30 },
     "kriegsende:spa": { dx: 30, dy: -30 }, "kriegsende:compiegne": { dx: -10, dy: 36 }, "kriegsende:amiens": { dx: -40, dy: -30 },
     "julikrise:bruessel": { dx: -30, dy: -30 }, "julikrise:paris": { dx: -34, dy: 36 }, "fronten:westfront": { dx: -30, dy: 36 },
     "julikrise:sarajevo": { dx: -6, dy: 36 }, "julikrise:belgrad": { dx: 34, dy: -26 },
@@ -20,6 +20,8 @@ WK.karte = (() => {
   const PIN_OFFSET = {
     "julikrise:sarajevo": { dx: -16, dy: 12 }, "julikrise:belgrad": { dx: 18, dy: -14 },
     "europa1914:serbien": { dx: 0, dy: 10 },
+    "europa1920:saar": { dx: -18, dy: -14 }, "europa1920:strassburg": { dx: 16, dy: 14 },
+    "europa1920:wien": { dx: -12, dy: -6 }, "europa1920:budapest": { dx: 14, dy: 10 },
   };
 
   function buildMapSVG(spec, nr, karteKey) {

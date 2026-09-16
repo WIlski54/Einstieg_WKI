@@ -49,6 +49,7 @@ WK.aufgaben = (() => {
     if (t.typ === "zeichnen" && WK.zeichnen) WK.zeichnen.mount(t);
     if (t.typ === "notizen" && WK.zeichnen) WK.zeichnen.mountPad(t);
     if ((t.typ === "blitz" || t.typ === "domino") && WK.spiele) WK.spiele.mount(t);
+    if (t.typ === "transfer" && state.runtime[t.nr] && state.runtime[t.nr].modus === "bausteine") bausteineZeichnen(t.nr);
   }
 
   // ─── Multiple Choice ───────────────────────────────────────────────────
@@ -351,7 +352,83 @@ WK.aufgaben = (() => {
       <p class="hint ki-hint">„Antwort abgeben“ schickt deinen Text ins Protokoll der Lehrkraft. Das KI-Feedback muss die Lehrkraft freigeben; die KI gibt Hinweise, aber keine Lösungen.</p>`;
   }
   renderers.freitext = t => renderTextTask(t.nr, cfgOf(t));
-  renderers.transfer = t => renderTextTask("T", t);
+  renderers.transfer = t => { const cfg = cfgOf(t); return cfg.modus === "bausteine" ? renderBausteine(t.nr, cfg) : renderTextTask(t.nr, cfg); };
+
+  // ─── Textbausteine (Niveau A der Transferaufgabe): antippen, ordnen, Urteil wählen ───
+  function renderBausteine(nr, cfg) {
+    let pool = shuffle(cfg.bausteine.map((_, i) => i));
+    if (pool.every((v, i) => v === i)) pool = pool.slice(1).concat(pool[0]);
+    state.runtime[nr] = { modus: "bausteine", pool, text: [], result: null, urteil: null, bausteine: cfg.bausteine };
+    return `
+      <p class="task-question">${esc(cfg.aufgabe)}</p>
+      <p class="hint">👆 Tippe einen Baustein an – er wandert in deinen Text. Tippe ihn dort noch einmal an, wenn er zurück soll.</p>
+      <div class="baustein-bereich">
+        <div><p class="field-label">Bausteine</p><div class="sort-list baustein-pool" id="pool-${nr}" role="list"></div></div>
+        <div><p class="field-label">Dein Text (in der richtigen Reihenfolge)</p><div class="sort-list baustein-text" id="text-${nr}" role="list"></div>
+          <p class="baustein-schluss">${esc(cfg.schluss)}</p></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" type="button" data-action="check-bausteine" data-nr="${nr}">✅ Reihenfolge prüfen</button><button class="btn btn-outline" type="button" data-action="reset-bausteine" data-nr="${nr}">🔄 Neu anfangen</button></div>
+      <div class="urteil" id="urteil-${nr}" hidden>
+        <p class="task-question">${esc(cfg.urteil.frage)}</p>
+        <div class="mc-options" role="group">${cfg.urteil.optionen.map((o, i) => `<button class="mc-btn" type="button" data-action="urteil" data-nr="${nr}" data-idx="${i}">${esc(o)}</button>`).join("")}</div>
+      </div>`;
+  }
+  function bausteineZeichnen(nr) {
+    const rt = state.runtime[nr]; if (!rt || rt.modus !== "bausteine") return;
+    const pool = document.getElementById("pool-" + nr), text = document.getElementById("text-" + nr);
+    if (!pool || !text) return;
+    pool.innerHTML = rt.pool.map(idx => `<button type="button" role="listitem" class="sort-item baustein" data-action="baustein-rein" data-nr="${nr}" data-idx="${idx}"><span class="handle">+</span><span>${esc(rt.bausteine[idx])}</span></button>`).join("")
+      || `<p class="muted baustein-leer">Alle Bausteine sind in deinem Text.</p>`;
+    text.innerHTML = rt.text.map((idx, pos) => `<button type="button" role="listitem" class="sort-item${rt.result ? (rt.result[pos] ? " correct" : " incorrect") : ""}" data-action="baustein-raus" data-nr="${nr}" data-pos="${pos}"><span class="handle">${pos + 1}.</span><span>${esc(rt.bausteine[idx])}</span><span class="swap-hint" aria-hidden="true">✕</span></button>`).join("")
+      || `<p class="muted baustein-leer">Noch leer – tippe links einen Baustein an.</p>`;
+    const urteil = document.getElementById("urteil-" + nr);
+    if (urteil) {
+      urteil.hidden = !(rt.result && rt.result.every(Boolean));
+      $$(".mc-btn", urteil).forEach(b => b.classList.toggle("correct", rt.urteil !== null && parseInt(b.dataset.idx, 10) === rt.urteil));
+    }
+  }
+  WK.actions["baustein-rein"] = el => {
+    const nr = el.dataset.nr, rt = state.runtime[nr]; const idx = parseInt(el.dataset.idx, 10);
+    rt.pool = rt.pool.filter(i => i !== idx); rt.text.push(idx); rt.result = null;
+    bausteineZeichnen(nr); dirty();
+  };
+  WK.actions["baustein-raus"] = el => {
+    const nr = el.dataset.nr, rt = state.runtime[nr]; const pos = parseInt(el.dataset.pos, 10);
+    const [idx] = rt.text.splice(pos, 1); rt.pool.push(idx); rt.result = null;
+    bausteineZeichnen(nr); dirty();
+  };
+  function checkBausteine(nr, silent) {
+    const rt = state.runtime[nr]; if (!rt) return;
+    const n = rt.bausteine.length;
+    if (rt.text.length < n) { showFb(nr, "err", `⚠️ Es fehlen noch ${n - rt.text.length} Bausteine. Tippe sie links an.`); return; }
+    rt.result = rt.text.map((idx, pos) => idx === pos);
+    const ok = rt.result.every(Boolean); const richtig = rt.result.filter(Boolean).length;
+    bausteineZeichnen(nr);
+    if (!silent) sendAntwort(nr, "sortierung", ok ? "Bausteine in richtiger Reihenfolge" : `${richtig}/${n} Bausteine richtig`, ok, "Textbausteine ordnen");
+    if (ok) showFb(nr, "ok", rt.urteil === null ? "✅ Richtige Reihenfolge! Jetzt noch dein Urteil: Tippe unten eine Antwort an." : "✅ Richtige Reihenfolge und Urteil gewählt – fertig!");
+    else showFb(nr, "err", `❌ ${richtig} von ${n} Bausteinen stehen richtig (grün). Tippe falsche Bausteine an, sie gehen zurück – dann noch einmal einsetzen.`);
+    dirty();
+  }
+  WK.actions["check-bausteine"] = el => checkBausteine(el.dataset.nr);
+  WK.actions["reset-bausteine"] = el => { renderBody(aufgabenByNr[el.dataset.nr]); bausteineZeichnen(el.dataset.nr); dirty(); };
+  WK.actions.urteil = el => {
+    const nr = el.dataset.nr, rt = state.runtime[nr]; if (!rt || !rt.result || !rt.result.every(Boolean)) return;
+    rt.urteil = parseInt(el.dataset.idx, 10);
+    bausteineZeichnen(nr);
+    const t = aufgabenByNr[nr]; const cfg = cfgOf(t);
+    const text = rt.text.map(i => rt.bausteine[i]).join(" ") + " " + cfg.schluss + " Urteil: " + cfg.urteil.optionen[rt.urteil];
+    sendAntwort(nr, "freitext-kreativ", text.slice(0, 400), null, cfg.aufgabe);
+    showFb(nr, "ok", "✅ Fertig! Dein Text steht in der richtigen Reihenfolge und du hast ein Urteil gewählt. Deine Lehrkraft sieht ihn im Protokoll.");
+    markComplete(nr); dirty();
+  };
+  function bausteineRestore(nr, data) {
+    const rt = state.runtime[nr]; if (!rt || rt.modus !== "bausteine" || !data || !Array.isArray(data.text)) return;
+    const n = rt.bausteine.length;
+    const text = data.text.filter(i => Number.isInteger(i) && i >= 0 && i < n).filter((v, i, a) => a.indexOf(v) === i);
+    rt.text = text; rt.pool = rt.bausteine.map((_, i) => i).filter(i => !text.includes(i));
+    rt.urteil = Number.isInteger(data.urteil) ? data.urteil : null;
+    if (data.geprueft) checkBausteine(nr, true); else bausteineZeichnen(nr);
+  }
   function updateCount(nr) {
     const ta = document.getElementById("ft-" + nr); const c = document.getElementById("count-" + nr);
     if (!ta || !c) return;
@@ -365,7 +442,7 @@ WK.aufgaben = (() => {
     ta.focus(); updateCount(btn.dataset.nr); dirty();
   };
   WK.actions["save-freitext"] = el => {
-    const nr = el.dataset.nr; const t = aufgabenByNr[nr]; const cfg = t.typ === "transfer" ? t : cfgOf(t);
+    const nr = el.dataset.nr; const t = aufgabenByNr[nr]; const cfg = cfgOf(t);
     const ta = document.getElementById("ft-" + nr); const text = (ta ? ta.value : "").trim();
     const min = cfg.min || 60;
     if (text.length < min) { showFb(nr, "err", `⚠️ Bitte schreibe noch etwas mehr (mindestens ${min} Zeichen).`); return; }
@@ -374,11 +451,11 @@ WK.aufgaben = (() => {
     markComplete(nr);
   };
   WK.actions["check-freitext"] = el => {
-    const nr = el.dataset.nr; const t = aufgabenByNr[nr]; const cfg = t.typ === "transfer" ? t : cfgOf(t);
+    const nr = el.dataset.nr; const t = aufgabenByNr[nr]; const cfg = cfgOf(t);
     const ta = document.getElementById("ft-" + nr); const text = (ta ? ta.value : "").trim();
     const min = cfg.min || 60;
     if (text.length < min) { showFb(nr, "err", `⚠️ Bitte schreibe noch etwas mehr (mindestens ${min} Zeichen).`); return; }
-    const question = `${cfg.aufgabe} (Niveau ${nr === "T" ? "Transfer" : niveauOf(nr)})`;
+    const question = `${cfg.aufgabe} (Niveau ${niveauOf(nr)}${nr === "T" ? ", Transfer" : ""})`;
     WK.ki.korrektur(nr, question, text, t.kontext || "", data => {
       sendAntwort(nr, nr === "T" ? "freitext-kreativ" : "freitext", text.slice(0, 220) + " → KI: " + (data.feedback || "").slice(0, 150), data.correct, cfg.aufgabe);
       const hint = data.hint ? `<br><span class="ki-hint-text">💡 ${esc(data.hint)}</span>` : "";
@@ -496,6 +573,7 @@ WK.aufgaben = (() => {
       else if (t.typ === "zuordnung") { if (rt.matched && rt.matched.length) out[t.nr] = { typ: "zuordnung", paare: rt.matched.slice() }; }
       else if (t.typ === "sortierung") { if (rt.order) out[t.nr] = { typ: "sortierung", reihenfolge: rt.order.slice(), geprueft: !!rt.result }; }
       else if (t.typ === "karte" && WK.karte) { const v = WK.karte.collect(t.nr); if (v) out[t.nr] = v; }
+      else if (t.typ === "transfer" && rt.modus === "bausteine" && (rt.text.length || rt.urteil !== null)) out[t.nr] = { typ: "transfer", text: rt.text.slice(), urteil: rt.urteil, geprueft: !!rt.result };
     }));
     return out;
   }, data => {
@@ -508,6 +586,7 @@ WK.aufgaben = (() => {
       else if (t.typ === "zuordnung") zuordnungRestore(nr, d);
       else if (t.typ === "sortierung") sortRestore(nr, d);
       else if (t.typ === "karte" && WK.karte) WK.karte.restore(nr, d);
+      else if (t.typ === "transfer") bausteineRestore(nr, d);
     });
   }, 10);
 

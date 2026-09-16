@@ -1006,9 +1006,41 @@ window.INHALTE = {
         {
           nr: "T", typ: "transfer", eyebrow: "Transfer · Beurteilen", titel: "Urkatastrophe des 20. Jahrhunderts?",
           kontext: "Klasse 9 Geschichte, Transferaufgabe zum ganzen Arbeitsblatt. Begriffe: Ursachen, Auslöser, Verlauf, Kriegsende, Folgen, Versailler Vertrag, Weimarer Republik, Zweiter Weltkrieg, George F. Kennan.",
-          aufgabe: "Der Historiker George F. Kennan nannte den Ersten Weltkrieg die „Urkatastrophe des 20. Jahrhunderts“. Erkläre, was er damit meinen könnte. Beurteile: Stimmst du ihm zu? Nutze Ursachen, Verlauf und Folgen – in der richtigen zeitlichen Reihenfolge.",
-          begriffe: ["Ursachen", "Verlauf", "Folgen", "Versailler Vertrag", "Weimarer Republik", "Zweiter Weltkrieg"],
-          min: 200,
+          niveaus: {
+            // A: Textbausteine antippen und in die richtige Reihenfolge bringen, dann ein Urteil wählen (auch für GL-Lernende)
+            A: {
+              modus: "bausteine",
+              aufgabe: "Der Historiker George F. Kennan nannte den Ersten Weltkrieg die „Urkatastrophe des 20. Jahrhunderts“. Baue seine Erklärung: Tippe die Textbausteine in der richtigen Reihenfolge an. Danach entscheidest du: Stimmst du ihm zu?",
+              bausteine: [
+                "Vor 1914 gab es Wettrüsten, Bündnisse und Streit um Kolonien.",
+                "1914 begann der Erste Weltkrieg. Er dauerte vier Jahre.",
+                "Millionen Soldaten starben in den Schützengräben.",
+                "1918 verlor Deutschland den Krieg.",
+                "Der Versailler Vertrag machte viele Deutsche wütend.",
+                "Die Weimarer Republik war schwach. 1933 kam Hitler an die Macht.",
+                "1939 begann der Zweite Weltkrieg.",
+              ],
+              schluss: "Darum sagt Kennan: Der Erste Weltkrieg war der Anfang von vielen Katastrophen.",
+              urteil: {
+                frage: "Stimmst du Kennan zu? Tippe eine Antwort an.",
+                optionen: [
+                  "Ja. Ohne den Ersten Weltkrieg hätte es den Versailler Vertrag und Hitler so nicht gegeben.",
+                  "Teilweise. Der Krieg war ein Anfang. Aber die Menschen haben später selbst entschieden.",
+                ],
+              },
+            },
+            B: {
+              aufgabe: "Der Historiker George F. Kennan nannte den Ersten Weltkrieg die „Urkatastrophe des 20. Jahrhunderts“. Erkläre in eigenen Worten, was er meint. Nutze die Satzanfänge in dieser Reihenfolge: vor dem Krieg → im Krieg → nach dem Krieg. Sag am Ende, ob du zustimmst.",
+              starter: ["Vor 1914 …", "Im Krieg …", "Nach 1918 …", "Darum nennt Kennan …", "Ich stimme zu, weil …", "Ich stimme nicht ganz zu, weil …"],
+              begriffe: ["Wettrüsten", "Schützengraben", "Versailler Vertrag", "Weimarer Republik", "Zweiter Weltkrieg"],
+              min: 120,
+            },
+            C: {
+              aufgabe: "Der Historiker George F. Kennan nannte den Ersten Weltkrieg die „Urkatastrophe des 20. Jahrhunderts“. Erkläre, was er damit meinen könnte. Beurteile: Stimmst du ihm zu? Nutze Ursachen, Verlauf und Folgen – in der richtigen zeitlichen Reihenfolge.",
+              begriffe: ["Ursachen", "Verlauf", "Folgen", "Versailler Vertrag", "Weimarer Republik", "Zweiter Weltkrieg"],
+              min: 200,
+            },
+          },
         },
       ],
     },

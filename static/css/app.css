@@ -169,6 +169,17 @@ textarea { resize: vertical; line-height: 1.5; }
 .sort-item.correct { border-color: var(--success); background: #dcfce7; }
 .sort-item.correct .handle { background: var(--success); color: #fff; }
 .sort-item.incorrect { border-color: var(--danger); background: #fee2e2; }
+/* Textbausteine (Transfer, Niveau A): links der Vorrat, rechts der eigene Text */
+.baustein-bereich { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.baustein-bereich .field-label { margin: 0 0 6px; }
+.sort-item.baustein { border-style: dashed; background: #f7f9fc; }
+.sort-item.baustein .handle { background: var(--gsm-blau); color: #fff; }
+.baustein-text .sort-item .swap-hint { color: var(--danger); font-weight: 900; }
+.baustein-leer { padding: 10px; border: 2px dashed var(--border); border-radius: 10px; text-align: center; }
+.baustein-schluss { margin: 10px 0 0; padding: 8px 12px; border-left: 4px solid var(--gsm-orange); background: #fff8e0; border-radius: 6px; font-weight: 600; }
+.urteil { margin-top: 12px; }
+.urteil .mc-btn.correct { border-color: var(--success); background: #dcfce7; }
+@media (max-width: 720px) { .baustein-bereich { grid-template-columns: 1fr; } }
 
 /* Diagramm */
 .chart-wrap { position: relative; height: 320px; margin: 4px 0 6px; }

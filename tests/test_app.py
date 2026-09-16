@@ -154,8 +154,8 @@ def test_inhalte_js_passt_zur_serverstruktur():
 
 def test_inhalte_niveaus_complete():
     src = open(os.path.join(ROOT, "static", "js", "inhalte.js"), encoding="utf-8").read()
-    differenziert = re.findall(r'typ: "(mc|luecke|zuordnung|sortierung|diagramm|karte|freitext|zeichnen|blitz|domino)"', src)
-    assert len(differenziert) == 42
+    differenziert = re.findall(r'typ: "(mc|luecke|zuordnung|sortierung|diagramm|karte|freitext|zeichnen|blitz|domino|transfer)"', src)
+    assert len(differenziert) == 43   # inkl. Transferaufgabe T mit A/B/C
     assert src.count("niveaus: {") == len(differenziert)
     for niveau in ("A: {", "B: {", "C: {"):
         assert src.count(niveau) >= len(differenziert)

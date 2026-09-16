@@ -143,7 +143,7 @@ window.WK = (() => {
   function sendAntwort(nr, typ, text, korrekt, frage) {
     if (state.restoring) return;
     const key = String(nr);
-    postJSON("/api/antwort", { aufgabe: key, niveau: key === "T" ? "Transfer" : niveauOf(nr), typ, frage: String(frage || "").slice(0, 300), antwort: String(text).slice(0, 400), korrekt: korrekt === undefined ? null : korrekt });
+    postJSON("/api/antwort", { aufgabe: key, niveau: niveauOf(nr), typ, frage: String(frage || "").slice(0, 300), antwort: String(text).slice(0, 400), korrekt: korrekt === undefined ? null : korrekt });
   }
 
   // ─── Navigation ────────────────────────────────────────────────────────
