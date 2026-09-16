@@ -575,12 +575,14 @@ def ausloeser_3():
     out = []
     for i, (name, datum) in enumerate(steine):
         x = 30 + i * 60
-        kipp = min(i * 9, 40)
-        out.append(f"<g transform='rotate({-kipp} {x + 18} 170)'><rect x='{x}' y='60' width='36' height='110' rx='6' fill='{'#fde7f3' if i == 0 else '#fff'}' stroke='{DUNKEL}' stroke-width='2'/>"
+        # Der Stoß kommt von links: der erste Stein ist am weitesten gekippt, der letzte steht noch.
+        # Drehung im Uhrzeigersinn um die rechte untere Kante = Kopf fällt nach rechts auf den nächsten Stein.
+        kipp = [38, 36, 32, 24, 12, 0][i]
+        out.append(f"<g transform='rotate({kipp} {x + 36} 170)'><rect x='{x}' y='60' width='36' height='110' rx='6' fill='{'#fde7f3' if i == 0 else '#fff'}' stroke='{DUNKEL}' stroke-width='2'/>"
                    f"<text x='{x + 18}' y='120' font-size='10' font-weight='700' text-anchor='middle' transform='rotate(-90 {x + 18} 120)'>{escape(name)}</text></g>")
         out.append(t(x + 18, 200, datum, 11, 700, ROT))
     return svg("Die Julikrise als Kettenreaktion", t(200, 32, "Jeder Schritt löst den nächsten aus", 14, 900, DUNKEL), *out,
-               arrow(12, 96, 40, 100, MAGENTA), t(200, 228, "Attentat → Kriegserklärung → Mobilmachung → Krieg in ganz Europa", 10, 400, GRAU))
+               arrow(10, 96, 70, 100, MAGENTA, 4), t(200, 228, "Attentat → Kriegserklärung → Mobilmachung → Krieg in ganz Europa", 10, 400, GRAU))
 
 
 def ausloeser_4():

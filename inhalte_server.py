@@ -67,7 +67,7 @@ LESESTRECKEN = {
             {
                 "ueberschrift": "Blankoscheck und Ultimatum",
                 "bild": "ausloeser-2", "bild_alt": "Schaubild: Blankoscheck und Ultimatum",
-                "text": "Am <strong>5./6. Juli</strong> versprach Deutschland Österreich-Ungarn volle Unterstützung. Das nennt man den <strong>„Blankoscheck“</strong>. Am <strong>23. Juli</strong> stellte Wien Serbien ein <strong>Ultimatum</strong>: harte Forderungen mit kurzer Frist. Serbien nahm fast alles an. Trotzdem erklärte Österreich-Ungarn am <strong>28. Juli</strong> Serbien den Krieg.",
+                "text": "Am <strong>5./6. Juli</strong> versprach Deutschland Österreich-Ungarn volle Unterstützung. Das nennt man den <strong>„Blankoscheck“</strong>. Am <strong>23. Juli</strong> stellte Wien Serbien ein <strong>Ultimatum</strong>: Serbien sollte die Hetze gegen Österreich verbieten, die Hintermänner des Attentats bestrafen und österreichische Beamte im eigenen Land ermitteln lassen. Frist: 48 Stunden. Serbien nahm fast alles an, nur keine fremden Ermittler im Land. Trotzdem erklärte Österreich-Ungarn am <strong>28. Juli</strong> Serbien den Krieg.",
                 "frage": "Was ist der „Blankoscheck“?",
                 "optionen": ["Serbien zahlt Geld an Österreich-Ungarn", "Großbritannien verspricht Serbien Hilfe", "Deutschland verspricht Österreich-Ungarn volle Unterstützung"],
                 "loesung": 2,

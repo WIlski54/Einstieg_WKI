@@ -70,7 +70,7 @@ GLOSSAR = {
     },
     "ultimatum": {
         "titel": "Das Ultimatum", "bild": "ausloeser-2",
-        "text": "Ein Ultimatum ist eine Forderung mit Frist. Wenn sie nicht erfüllt wird, folgen Konsequenzen. Wien stellte Serbien am 23. Juli 1914 zehn harte Forderungen mit 48 Stunden Frist. Serbien nahm fast alle an – trotzdem kam der Krieg.",
+        "text": "Ein Ultimatum ist eine Forderung mit Frist. Wird sie nicht erfüllt, folgen Konsequenzen. Wien stellte Serbien am 23. Juli 1914 zehn Forderungen mit 48 Stunden Frist: Hetze gegen Österreich verbieten, Hintermänner des Attentats bestrafen, österreichische Beamte in Serbien ermitteln lassen. Serbien nahm alles an außer den fremden Ermittlern – trotzdem kam der Krieg.",
         "aliase": ["Ultimatum"],
     },
     "belgien": {
