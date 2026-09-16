@@ -55,12 +55,18 @@ WK.zeichnen = (() => {
 
   function passeGroesseAn(ed) {
     const wrap = document.getElementById("zw-" + ed.nr); if (!wrap || !wrap.offsetWidth) return;
-    const w = Math.max(300, Math.min(wrap.clientWidth, 900)); const h = Math.round(w * 0.6);
+    const w = Math.max(300, wrap.clientWidth); const h = Math.round(w * 0.6);   // volle Breite des Rahmens – sonst endet die Fläche unsichtbar vor dem Rand
     if (Math.abs(ed.canvas.getWidth() - w) < 2) return;
     const zoom = w / 900;
     ed.canvas.setDimensions({ width: w, height: h });
     ed.canvas.setZoom(zoom);
   }
+
+  // Rahmenbreite beobachten (Fenster, Drehen des iPads, Auf-/Zuklappen) und die Fläche nachziehen
+  let resizeTimer = null;
+  const beobachter = ("ResizeObserver" in window) ? new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeAll, 80); }) : null;
+  function beobachteGroesse(ed) { const wrap = document.getElementById("zw-" + ed.nr); if (beobachter && wrap) beobachter.observe(wrap); }
+  window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeAll, 150); });
 
   function erzeugeEditor(t) {
     if (editors[t.nr]) return editors[t.nr];
@@ -70,6 +76,7 @@ WK.zeichnen = (() => {
     const ed = { nr: t.nr, geraet: t.geraet, canvas, tool: "pencil", color: "#1e293b", width: 4, drawing: null, timer: null, laden: false };
     editors[t.nr] = ed;
     passeGroesseAn(ed);
+    beobachteGroesse(ed);
     brushAktualisieren(ed);
     const geaendert = () => { if (ed.laden) return; statistik(ed); dirty(); clearTimeout(ed.timer); ed.timer = setTimeout(() => speichern(ed), 1500); };
     canvas.on("object:added", geaendert); canvas.on("object:modified", geaendert); canvas.on("object:removed", geaendert); canvas.on("path:created", geaendert);
@@ -235,7 +242,8 @@ WK.zeichnen = (() => {
         </div></div>`;
     if (!fabricDa()) return;
     const c = new fabric.Canvas(document.getElementById("pad-" + abschnitt), { isDrawingMode: true, selection: false, backgroundColor: "#ffffff" });
-    const w = Math.max(300, Math.min(host.clientWidth, 900));
+    const padWrap = document.getElementById("padw-" + abschnitt);
+    const w = Math.max(300, (padWrap && padWrap.clientWidth) || host.clientWidth);
     c.setDimensions({ width: w, height: 240 });
     c.freeDrawingBrush = new fabric.PencilBrush(c); c.freeDrawingBrush.color = "#1e293b"; c.freeDrawingBrush.width = 3;
     pads[abschnitt] = c;
