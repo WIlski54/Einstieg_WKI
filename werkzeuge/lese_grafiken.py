@@ -10,6 +10,7 @@ eine echte Abbildung gleichen Namens ersetzen.
 
 import math
 import os
+import re
 from html import escape
 
 ZIEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static", "img", "lese")
@@ -126,7 +127,7 @@ def flagge(x, y, art, w=18, h=12):
 
 def fahnenmast(x, y, art, hoehe=24, w=18, h=12):
     return (f"<line x1='{x}' y1='{y}' x2='{x}' y2='{y - hoehe}' stroke='#374151' stroke-width='1.6'/>"
-            f"<circle cx='{x}' cy='{y - hoehe}' r='1.6' fill='#374151'/>" + flagge(x + 1, y - hoehe + 1, art, w, h))
+            f"<circle cx='{x}' cy='{y - hoehe}' r='1.6' fill='#374151'/>" + flagge2(x + 1, y - hoehe + 1, art, w, h))
 
 
 def dampfer(x, y, s=1.0, art="D"):
@@ -394,6 +395,101 @@ def fussleiste(W, H, zeilen, hoehe=36, farbe=TEXT, size=12):
     return out
 
 
+
+# ─── Echte Europakarte (Natural Earth, aus karte-daten.js) und Grabenszene ────
+PX = lambda lon: (lon + 12) * 17
+PY = lambda lat: (63 - lat) * 22
+_LAND = None
+
+
+def land_pfad():
+    global _LAND
+    if _LAND is None:
+        js = os.path.join(os.path.dirname(os.path.dirname(ZIEL)), "js", "karte-daten.js")
+        with open(js, encoding="utf-8") as f:
+            m = re.search(r'WK_KARTE_LAND = "([^"]+)"', f.read())
+        _LAND = m.group(1)
+    return _LAND
+
+
+def europakarte(x, y, w, h, lon0, lat1, lon1, lat0, overlays="", clip_id=None):
+    """Kartenausschnitt mit echten Küstenlinien. (lon0, lat1) = links oben, (lon1, lat0) = rechts unten.
+    Overlays werden in Kartenkoordinaten (PX/PY) gezeichnet; mit clip_id lassen sie sich auf die Landfläche beschneiden."""
+    vx, vy = PX(lon0), PY(lat1)
+    vw, vh = PX(lon1) - vx, PY(lat0) - vy
+    clip = f"<clipPath id='{clip_id}'><use href='#landform'/></clipPath>" if clip_id else ""
+    return (f"<svg x='{x}' y='{y}' width='{w}' height='{h}' viewBox='{vx:.1f} {vy:.1f} {vw:.1f} {vh:.1f}' preserveAspectRatio='xMidYMid slice'>{clip}"
+            f"<rect x='0' y='0' width='900' height='638' fill='#bfdbfe'/><use href='#landform' fill='#efe6cf' stroke='#a89f88' stroke-width='1'/>{overlays}</svg>"
+            f"<rect x='{x}' y='{y}' width='{w}' height='{h}' fill='none' stroke='#94a3b8' stroke-width='1.5' rx='4'/>")
+
+
+def gebiet(punkte, fill, clip_id, stroke="#475569", sw=1.5, opacity=.85):
+    """Ländergebiet als Polygon in Längen-/Breitengraden, auf die Landfläche beschnitten."""
+    d = "M" + " L".join(f"{PX(lo):.1f},{PY(la):.1f}" for lo, la in punkte) + " Z"
+    return f"<path d='{d}' fill='{fill}' fill-opacity='{opacity}' stroke='{stroke}' stroke-width='{sw}' stroke-linejoin='round' clip-path='url(#{clip_id})'/>"
+
+
+def landform_def():
+    """Küstenlinien einmal als <defs>-Pfad; europakarte() referenziert ihn per <use>."""
+    return f"<defs><path id='landform' d='{land_pfad()}'/></defs>"
+
+
+def mt(lon, lat, text, size=10, weight=800, fill=TEXT, anchor="middle"):
+    """Beschriftung in Kartenkoordinaten."""
+    return tl(round(PX(lon), 1), round(PY(lat), 1), text, size, weight, fill, anchor)
+
+
+def grabenszene(x0, y0, w, h, links="Graben", rechts="Graben", mitte="Niemandsland", extras=""):
+    """Querschnitt Stellungskrieg: zwei Gräben mit Sandsäcken, Holzverbau und Soldaten,
+    dazwischen Krater und Stacheldraht auf Pfählen."""
+    yg = y0 + h * 0.42
+    out = ("<defs><linearGradient id='gKriegshimmel' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#8b97a6'/><stop offset='1' stop-color='#dbe0e7'/></linearGradient>"
+           "<linearGradient id='gErde' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#8a5a34'/><stop offset='1' stop-color='#3f2814'/></linearGradient></defs>")
+    out += f"<rect x='{x0}' y='{y0}' width='{w}' height='{h}' fill='url(#gKriegshimmel)'/>"
+    for i in range(3):
+        out += f"<ellipse cx='{x0 + w * (0.22 + 0.28 * i):.1f}' cy='{y0 + h * 0.15:.1f}' rx='{w * 0.1:.1f}' ry='{h * 0.07:.1f}' fill='#6b7280' opacity='.35'/>"
+    pts = [(x0 + w * i / 12, yg + (2.5 if i % 2 else -2.5)) for i in range(13)]
+    d = f"M{x0},{yg:.1f} " + " ".join(f"L{a:.1f},{b:.1f}" for a, b in pts) + f" L{x0 + w},{yg:.1f} L{x0 + w},{y0 + h} L{x0},{y0 + h} Z"
+    out += f"<path d='{d}' fill='url(#gErde)'/>"
+    for cx, r in ((x0 + w * 0.43, w * 0.05), (x0 + w * 0.53, w * 0.03), (x0 + w * 0.6, w * 0.045)):
+        out += (f"<ellipse cx='{cx:.1f}' cy='{yg + 2:.1f}' rx='{r:.1f}' ry='{r * 0.35:.1f}' fill='#2b1a0e' opacity='.75'/>"
+                f"<path d='M{cx - r:.1f},{yg + 1:.1f} q{r:.1f},-{r * 0.5:.1f} {2 * r:.1f},0' stroke='#a1734a' stroke-width='2' fill='none'/>")
+    tiefe = h * 0.36
+    gw = w * 0.14
+
+    def graben(gx, spiegel):
+        g = f"<rect x='{gx:.1f}' y='{yg:.1f}' width='{gw:.1f}' height='{tiefe:.1f}' fill='#2b1a0e'/>"
+        g += "".join(f"<line x1='{gx:.1f}' y1='{yg + tiefe * k / 4:.1f}' x2='{gx + gw:.1f}' y2='{yg + tiefe * k / 4:.1f}' stroke='#8b5e3c' stroke-width='1.5' opacity='.8'/>" for k in (1, 2, 3))
+        feld = gx - gw * 0.6 if spiegel else gx + gw
+        for reihe in range(2):
+            for k in range(3):
+                sx = feld + k * gw * 0.2 - (gw * 0.1 if reihe else 0)
+                g += f"<rect x='{sx:.1f}' y='{yg - 7 - reihe * 6:.1f}' width='{gw * 0.2:.1f}' height='6' rx='3' fill='#b8a77e' stroke='#7a6a45' stroke-width='.8'/>"
+        sx = gx + gw * 0.5
+        g += (f"<rect x='{sx - 6:.1f}' y='{yg + 8:.1f}' width='12' height='{tiefe - 10:.1f}' rx='3' fill='#4b5a3a'/>"
+              f"<circle cx='{sx:.1f}' cy='{yg + 5:.1f}' r='5' fill='#e8c39e'/>"
+              f"<path d='M{sx - 7:.1f},{yg + 4:.1f} a7,6 0 0 1 14,0 z' fill='#5b6b4a' stroke='#3b4a2c' stroke-width='.8'/>"
+              f"<line x1='{sx + (4 if not spiegel else -4):.1f}' y1='{yg + 10:.1f}' x2='{sx + (22 if not spiegel else -22):.1f}' y2='{yg - 6:.1f}' stroke='#3b2a1a' stroke-width='2.5'/>")
+        return g
+    out += graben(x0 + w * 0.08, False) + graben(x0 + w * 0.78, True)
+
+    def draht(xa, xb):
+        s = ""
+        for pxx in (xa, (xa + xb) / 2, xb):
+            s += f"<path d='M{pxx - 5:.1f},{yg:.1f} l10,-14 M{pxx + 5:.1f},{yg:.1f} l-10,-14' stroke='#3f3f46' stroke-width='1.5'/>"
+        for yy in (yg - 11, yg - 5):
+            s += f"<line x1='{xa:.1f}' y1='{yy:.1f}' x2='{xb:.1f}' y2='{yy:.1f}' stroke='#3f3f46' stroke-width='.8'/>"
+            xx = xa
+            while xx < xb:
+                s += f"<circle cx='{xx:.1f}' cy='{yy:.1f}' r='2.6' fill='none' stroke='#3f3f46' stroke-width='.8'/>"
+                xx += 4.5
+        return s
+    out += draht(x0 + w * 0.27, x0 + w * 0.39) + draht(x0 + w * 0.63, x0 + w * 0.75)
+    out += extras
+    out += tl(x0 + w * 0.15, y0 + h - 6, links, 10, 800) + tl(x0 + w * 0.85, y0 + h - 6, rechts, 10, 800) + tl(x0 + w * 0.5, y0 + h - 6, mitte, 10, 800, ROT)
+    return out
+
+
 # ─── Lesestrecke Ursachen ─────────────────────────────────────────────────
 def ursachen_1():
     W, H = 480, 288
@@ -546,16 +642,69 @@ def ursachen_4():
 
 # ─── Lesestrecke Auslöser ─────────────────────────────────────────────────
 def ausloeser_1():
-    return svg("Das Attentat von Sarajevo",
-        t(200, 30, "Sarajevo, 28. Juni 1914", 15, 900, DUNKEL),
-        f"<rect x='150' y='110' width='150' height='44' rx='10' fill='{DUNKEL}'/><rect x='180' y='90' width='80' height='26' rx='8' fill='{DUNKEL}'/>",
-        f"<circle cx='180' cy='158' r='12' fill='#111'/><circle cx='270' cy='158' r='12' fill='#111'/>",
-        person(205, 96, "#fff", .8), person(238, 96, "#fff", .8),
-        t(225, 184, "Franz Ferdinand + Sophie", 12, 700), t(225, 200, "im offenen Auto", 11, 400, GRAU),
-        person(60, 110, ROT, 1.1), t(60, 158, "Gavrilo Princip", 12, 700, ROT), t(60, 172, "serbischer Nationalist", 10, 400, GRAU),
-        arrow(80, 118, 146, 124, ROT, 3, "6 4"),
-        box(300, 60, 90, 44, "Schuld?\nSerbien!", "#fde7f3", MAGENTA, 12), arrow(300, 96, 270, 106, MAGENTA, 2, "4 3"),
-        t(200, 226, "Der Funke für die Julikrise", 11, 400, GRAU))
+    """Straßenszene in Sarajevo: offener Wagen mit Chauffeur, Thronfolger in Uniform und
+    Herzogin mit Federhut; Princip auf dem Gehweg. Wien gibt Serbien die Schuld."""
+    W, H = 480, 288
+    defs = ("<defs><linearGradient id='gStrasse' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#b3bac4'/><stop offset='1' stop-color='#6b7280'/></linearGradient>"
+            "<linearGradient id='gWagen' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#2c4a78'/><stop offset='1' stop-color='#0f1f3a'/></linearGradient></defs>")
+    haus = lambda x, w, y, fill, stroke: f"<rect x='{x}' y='{y}' width='{w}' height='{178 - y}' fill='{fill}' stroke='{stroke}' stroke-width='1.2'/><rect x='{x}' y='{y - 8}' width='{w}' height='8' fill='#7f1d1d'/>"
+    fenster = "".join(f"<rect x='{x}' y='{y}' width='14' height='20' rx='1' fill='#bfdbfe' stroke='#8a7a5a' stroke-width='1'/>" for x in (22, 66, 110) for y in (92, 132))
+    bogen = "".join(f"<path d='M{x},{y + 30} v-19 a11,11 0 0 1 22,0 v19 z' fill='#bfdbfe' stroke='#9a7d7d' stroke-width='1'/>" for x in (196, 252, 308, 364, 420) for y in (86, 130))
+
+    def sitzfigur(x, farbe, kopf_y=150):
+        return (f"<path d='M{x - 16},{200} v-30 a16,14 0 0 1 32,0 v30 z' fill='{farbe}'/>"
+                f"<circle cx='{x}' cy='{kopf_y}' r='9' fill='#f1c9a5'/>")
+
+    chauffeur = (sitzfigur(276, "#4b5563", 158)
+                 + "<rect x='266' y='146' width='20' height='6' rx='2' fill='#1f2937'/><rect x='262' y='150' width='14' height='2.5' fill='#111'/>")
+    franz = (sitzfigur(322, "#1e3a8a")
+             + "<line x1='310' y1='166' x2='334' y2='196' stroke='#dc2626' stroke-width='4'/>"                      # Schärpe
+             + "".join(f"<circle cx='322' cy='{y}' r='1.7' fill='#fbbf24'/>" for y in (172, 180, 188, 196))          # Knopfreihe
+             + "<ellipse cx='307' cy='167' rx='6' ry='3' fill='#fbbf24' stroke='#b45309' stroke-width='.8'/><ellipse cx='337' cy='167' rx='6' ry='3' fill='#fbbf24' stroke='#b45309' stroke-width='.8'/>"   # Epauletten
+             + "<circle cx='313' cy='180' r='2.4' fill='#fbbf24' stroke='#b45309' stroke-width='.8'/><circle cx='313' cy='187' r='2.4' fill='#e5e7eb' stroke='#6b7280' stroke-width='.8'/>"   # Orden
+             + "<path d='M316,153 q6,4 12,0' stroke='#3b2a1a' stroke-width='2' fill='none' stroke-linecap='round'/>"    # Schnurrbart
+             + "<rect x='311' y='134' width='22' height='13' rx='3' fill='#064e3b' stroke='#022c22' stroke-width='1'/><rect x='311' y='143' width='22' height='4' fill='#fbbf24'/>"   # Helm mit Goldband
+             + "".join(f"<path d='M322,134 q{dx},-14 {ex},-18 q{dx * .8:.1f},-2 {ex * 1.5:.1f},-6' stroke='#f8fafc' stroke-width='3.4' fill='none' stroke-linecap='round'/>"
+                       f"<path d='M322,134 q{dx},-14 {ex},-18 q{dx * .8:.1f},-2 {ex * 1.5:.1f},-6' stroke='#9ca3af' stroke-width='.8' fill='none' stroke-linecap='round'/>"
+                       for dx, ex in ((-8, -14), (-4, -7), (0, 0), (3, 5)))
+             + "<circle cx='322' cy='134' r='2.6' fill='#fbbf24' stroke='#b45309' stroke-width='.8'/>")   # weißer Federbusch mit Goldknopf
+    sophie = (f"<circle cx='356' cy='146' r='7' fill='#3b2a1a'/>" + sitzfigur(356, "#f5f0e6")
+              + "<path d='M342,168 l3,-4 l3,4 l3,-4 l3,4 l3,-4 l3,4 l3,-4 l3,4 l3,-4 l3,4' stroke='#fff' stroke-width='2' fill='none'/>"      # Spitzenkragen
+              + "".join(f"<circle cx='{x}' cy='{y}' r='1.6' fill='#fff' stroke='#9ca3af' stroke-width='.6'/>" for x, y in ((348, 170), (352, 173), (356, 174), (360, 173), (364, 170)))   # Perlen
+              + "<rect x='344' y='128' width='24' height='14' rx='4' fill='#6d28d9'/><ellipse cx='356' cy='142' rx='24' ry='5' fill='#7c3aed' stroke='#4c1d95' stroke-width='1'/>"   # Hut
+              + "<path d='M360,130 q10,-16 24,-16 M357,129 q4,-18 14,-24 M352,129 q-6,-14 -18,-16' stroke='#f8fafc' stroke-width='3.2' fill='none' stroke-linecap='round'/>"
+              + "<path d='M362,130 q9,-12 20,-13' stroke='#c4b5fd' stroke-width='1.4' fill='none' stroke-linecap='round'/>")   # Straußenfedern
+    wagen = ("<ellipse cx='296' cy='246' rx='108' ry='7' fill='#000' opacity='.18'/>"
+             "<path d='M204,232 V210 Q204,204 212,202 L254,198 L262,182 H380 Q392,182 392,192 V232 Z' fill='url(#gWagen)' stroke='#0b1526' stroke-width='1.5'/>"
+             "<line x1='300' y1='188' x2='300' y2='228' stroke='#4b6a9a' stroke-width='1.5'/><line x1='262' y1='198' x2='392' y2='198' stroke='#4b6a9a' stroke-width='1'/>"
+             "<path d='M256,198 L266,168' stroke='#0b1526' stroke-width='3'/><path d='M258,197 L267,170 L286,170 L280,197 Z' fill='#bae6fd' opacity='.55'/>"   # Windschutzscheibe
+             "<rect x='198' y='208' width='8' height='22' rx='2' fill='#94a3b8' stroke='#475569' stroke-width='1'/><circle cx='210' cy='206' r='5' fill='#fde68a' stroke='#b45309' stroke-width='1'/>"   # Kühler, Scheinwerfer
+             "<rect x='232' y='232' width='140' height='5' rx='2' fill='#111'/>"   # Trittbrett
+             + "".join(f"<circle cx='{cx}' cy='236' r='14' fill='#111'/><circle cx='{cx}' cy='236' r='8' fill='#9ca3af' stroke='#4b5563' stroke-width='1'/>"
+                       f"<path d='M{cx - 8},236 h16 M{cx},228 v16 M{cx - 5.7},230.3 l11.4,11.4 M{cx + 5.7},230.3 l-11.4,11.4' stroke='#374151' stroke-width='1'/><circle cx='{cx}' cy='236' r='2.5' fill='#1f2937'/>"
+                       for cx in (240, 356)))
+    return svg("Das Attentat von Sarajevo am 28. Juni 1914",
+        SZENE_DEFS, defs, f"<clipPath id='cpSzene'><rect width='{W}' height='{H}' rx='14'/></clipPath>", "<g clip-path='url(#cpSzene)'>",
+        f"<rect width='{W}' height='{H}' fill='url(#gHimmel)'/>",
+        # Kulisse: Häuserzeile mit Minarett und Kuppel
+        haus(0, 170, 70, "#efe4c8", "#b8a37a"), fenster,
+        "<rect x='26' y='30' width='8' height='40' fill='#e7e0cf' stroke='#a89f88' stroke-width='1'/><path d='M22,30 l8,-12 l8,12 z' fill='#2e7d5b'/><rect x='22' y='44' width='16' height='3' fill='#a89f88'/>",
+        haus(170, 310, 56, "#f3dede", "#b98a8a"), bogen,
+        "<path d='M206,56 a24,24 0 0 1 48,0 z' fill='#2e7d5b' stroke='#1f5c42' stroke-width='1'/><line x1='230' y1='32' x2='230' y2='24' stroke='#1f5c42' stroke-width='2'/>",
+        "<rect x='0' y='178' width='480' height='10' fill='#cbd5e1'/><rect x='0' y='188' width='480' height='100' fill='url(#gStrasse)'/>",
+        tl(240, 26, "Sarajevo, 28. Juni 1914: der Funke", 16, 900, DUNKEL),
+        # Wagen mit Insassen (Figuren zuerst, die Karosserie verdeckt den Unterkörper)
+        chauffeur, franz, sophie, wagen,
+        tl(300, 262, "Franz Ferdinand + Sophie", 11, 800, DUNKEL), tl(300, 274, "Thronfolger von Österreich-Ungarn, im offenen Wagen", 9, 700, GRAU),
+        # Attentäter auf dem Gehweg
+        mensch(92, 250, 0.85, "#1f2937"),
+        "<line x1='100' y1='218' x2='122' y2='214' stroke='#1f2937' stroke-width='4' stroke-linecap='round'/><rect x='120' y='211' width='10' height='4' rx='1' fill='#111'/><rect x='120' y='214' width='3' height='5' fill='#111'/>",
+        arrow(134, 213, 194, 211, ROT, 3, "6 4"),
+        tl(92, 268, "Gavrilo Princip", 11, 800, ROT), tl(92, 280, "serbischer Nationalist", 9, 700, GRAU),
+        # Wien gibt Serbien die Schuld
+        sprechblase(300, 48, 150, 40, ["Wien: Schuld", "hat Serbien!"], 448, 108, MAGENTA, 11),
+        fahnenmast(448, 132, "OE", 24),
+        "</g>", w=W, h=H)
 
 
 def ausloeser_2():
@@ -596,29 +745,53 @@ def ausloeser_4():
 
 # ─── Lesestrecke Verlauf ──────────────────────────────────────────────────
 def verlauf_1():
-    return svg("Marneschlacht und Stellungskrieg",
-        box(300, 30, 84, 50, "Deutsches\nReich", "#e5e7eb", GRAU, 11), box(200, 30, 56, 50, "Belgien", "#f1ead9", GRAU, 10), box(30, 30, 110, 50, "Frankreich", "#dbe9f7", BLAU, 12),
-        f"<circle cx='70' cy='70' r='5' fill='{ROT}'/>", t(70, 92, "Paris", 11, 700),
-        curve("M300,56 C240,40 180,50 130,66", ROT, 4), kreuz(122, 66, 10),
-        t(150, 106, "gestoppt: Marne, Sept. 1914", 11, 900, ROT),
-        t(200, 128, "Danach: Stellungskrieg", 14, 900, DUNKEL),
-        f"<path d='M20,170 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14' fill='none' stroke='#8b5e3c' stroke-width='4'/>",
-        f"<path d='M20,196 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14 l20,-14 l20,14' fill='none' stroke='#8b5e3c' stroke-width='4'/>",
-        t(20, 220, "Nordsee", 11, 700, GRAU, "start"), t(380, 220, "Schweiz", 11, 700, GRAU, "end"), t(200, 187, "Niemandsland", 10, 700, ROT))
+    W, H = 480, 288
+    front = [(2.75, 51.15), (2.9, 50.85), (2.75, 50.3), (2.95, 49.6), (3.6, 49.35), (4.9, 49.3), (5.4, 49.2), (5.6, 48.9), (6.3, 48.7), (7.0, 47.9), (7.45, 47.55)]
+    d = "M" + " L".join(f"{PX(lo):.1f},{PY(la):.1f}" for lo, la in front)
+    overlays = (f"<path d='{d}' fill='none' stroke='#fff' stroke-width='6' stroke-linejoin='round'/><path d='{d}' fill='none' stroke='{ROT}' stroke-width='3' stroke-linejoin='round'/>"
+                + curve(f"M{PX(6.9):.1f},{PY(50.75):.1f} C{PX(5.2):.1f},{PY(51.3):.1f} {PX(3.6):.1f},{PY(50.6):.1f} {PX(3.4):.1f},{PY(49.15):.1f}", DUNKEL, 3)
+                + kreuz(PX(3.4), PY(49.02), 7)
+                + f"<circle cx='{PX(2.35):.1f}' cy='{PY(48.85):.1f}' r='4' fill='{ROT}' stroke='#fff' stroke-width='1.5'/>"
+                + tl(round(PX(2.35) - 7, 1), round(PY(48.85) + 4, 1), "Paris", 10, 800, TEXT, "end")
+                + tl(round(PX(3.4) + 9, 1), round(PY(49.02) + 4, 1), "Marne", 10, 900, ROT, "start")
+                + mt(0.9, 47.2, "Frankreich", 12, 800, "#1e3a8a") + mt(8.6, 50.3, "Deutschland", 11, 800, "#111") + mt(5.7, 50.3, "Belgien", 9, 800, "#7c2d12")
+                + mt(1.4, 52.9, "Nordsee", 9, 700, GRAU) + mt(8.3, 46.9, "Schweiz", 9, 700, GRAU) + mt(4.9, 49.85, "Westfront", 9, 900, ROT))
+    return svg("1914: Der Schlieffen-Plan scheitert an der Marne, danach Stellungskrieg",
+        SZENE_DEFS, f"<clipPath id='cpSzene'><rect width='{W}' height='{H}' rx='14'/></clipPath>", "<g clip-path='url(#cpSzene)'>",
+        f"<rect width='{W}' height='{H}' fill='{HELL}'/>",
+        tl(240, 24, "1914: Der Schlieffen-Plan scheitert", 15, 900, DUNKEL),
+        landform_def(),
+        europakarte(10, 36, 228, 184, -4.5, 54.2, 10.8, 44.6, overlays),
+        grabenszene(250, 36, 220, 184),
+        tl(124, 238, "Marne, Sept. 1914: vor Paris gestoppt", 10, 900, ROT),
+        tl(360, 238, "Danach: Stellungskrieg", 11, 900, DUNKEL),
+        tl(360, 252, "Gräben von der Nordsee bis zur Schweiz", 9, 700, GRAU),
+        tl(240, 276, "Im Osten (Tannenberg) bleibt die Front beweglich.", 10, 700, GRAU),
+        "</g>", w=W, h=H)
 
 
 def verlauf_2():
-    return svg("Materialschlacht 1916",
-        f"<rect x='0' y='150' width='400' height='90' fill='#8b5e3c'/>",
-        f"<rect x='40' y='150' width='60' height='40' fill='#5b3b22'/><rect x='300' y='150' width='60' height='40' fill='#5b3b22'/>",
-        person(70, 160, "#fff", .7), person(330, 160, "#fff", .7),
-        t(70, 214, "Graben", 11, 700, "#fff"), t(330, 214, "Graben", 11, 700, "#fff"), t(200, 214, "Niemandsland", 11, 700, "#fff"),
-        curve("M100,150 C160,60 240,60 296,148", ROT, 3, "6 4"), curve("M300,150 C240,80 160,80 104,148", ROT, 3, "6 4"),
-        f"<path d='M150,120 h8 v10 h-8 z M190,105 h8 v10 h-8 z M240,120 h8 v10 h-8 z' fill='{DUNKEL}'/>",
-        f"<path d='M120,150 l30,-8 l0,8 z' fill='{DUNKEL}'/><path d='M280,150 l-30,-8 l0,8 z' fill='{DUNKEL}'/>",
-        t(200, 30, "Granaten, Maschinengewehre, Stacheldraht", 13, 900, DUNKEL),
-        box(20, 44, 160, 48, "Verdun 1916\n≈ 700.000 Tote + Verwundete", "#fff", ROT, 11), box(220, 44, 160, 48, "Somme 1916\n> 1 Million Verluste", "#fff", ROT, 11),
-        t(200, 112, "Die Front bewegt sich fast nicht.", 12, 700, ROT))
+    W, H = 480, 288
+    x0, y0, w, h = 10, 36, 460, 156
+    yg = y0 + h * 0.42
+    extras = (  # Maschinengewehr am linken Graben, Granaten und Einschläge im Niemandsland, Geschütz rechts
+        f"<path d='M{x0 + w * 0.245:.1f},{yg - 8:.1f} l-6,10 M{x0 + w * 0.245:.1f},{yg - 8:.1f} l6,10 M{x0 + w * 0.245:.1f},{yg - 8:.1f} v10' stroke='#1f2937' stroke-width='1.6'/>"
+        f"<line x1='{x0 + w * 0.235:.1f}' y1='{yg - 9:.1f}' x2='{x0 + w * 0.3:.1f}' y2='{yg - 13:.1f}' stroke='#1f2937' stroke-width='3.5' stroke-linecap='round'/>"
+        + "".join(f"<circle cx='{x0 + w * 0.31 + i * 6:.1f}' cy='{yg - 13.5 - i * 0.4:.1f}' r='1.2' fill='#f59e0b'/>" for i in range(4))
+        + f"<path d='M{x0 + w * 0.9:.1f},{yg - 30:.1f} Q{x0 + w * 0.72:.1f},{y0 + 10:.1f} {x0 + w * 0.5:.1f},{yg - 24:.1f}' fill='none' stroke='#111' stroke-width='1.8' stroke-dasharray='5 4'/>"
+        f"<path d='M{x0 + w * 0.12:.1f},{yg - 26:.1f} Q{x0 + w * 0.3:.1f},{y0 + 8:.1f} {x0 + w * 0.56:.1f},{yg - 16:.1f}' fill='none' stroke='#111' stroke-width='1.8' stroke-dasharray='5 4'/>"
+        + spark(x0 + w * 0.5, yg - 12) + spark(x0 + w * 0.58, yg - 4)
+        + f"<circle cx='{x0 + w * 0.935:.1f}' cy='{yg - 10:.1f}' r='9' fill='#374151' stroke='#111' stroke-width='1.5'/><circle cx='{x0 + w * 0.935:.1f}' cy='{yg - 10:.1f}' r='3' fill='#9ca3af'/>"
+        f"<line x1='{x0 + w * 0.935:.1f}' y1='{yg - 14:.1f}' x2='{x0 + w * 0.88:.1f}' y2='{yg - 34:.1f}' stroke='#111' stroke-width='5' stroke-linecap='round'/>")
+    return svg("1915/1916: Materialschlachten bei Verdun und an der Somme",
+        SZENE_DEFS, f"<clipPath id='cpSzene'><rect width='{W}' height='{H}' rx='14'/></clipPath>", "<g clip-path='url(#cpSzene)'>",
+        f"<rect width='{W}' height='{H}' fill='{HELL}'/>",
+        tl(240, 24, "Granaten, Maschinengewehre, Stacheldraht", 15, 900, DUNKEL),
+        grabenszene(x0, y0, w, h, "Graben", "Graben", "Niemandsland", extras),
+        box(24, 204, 200, 40, "Verdun 1916\n≈ 700.000 Tote und Verwundete", "#fff", ROT, 11, 800, ROT),
+        box(256, 204, 200, 40, "Somme 1916\nüber 1 Million Verluste", "#fff", ROT, 11, 800, ROT),
+        tl(240, 270, "Die Front bewegt sich trotzdem fast nicht.", 12, 900, ROT),
+        "</g>", w=W, h=H)
 
 
 def verlauf_3():
@@ -647,15 +820,31 @@ def verlauf_4():
 
 # ─── Lesestrecke Kriegsende ───────────────────────────────────────────────
 def kriegsende_1():
-    return svg("Sommer 1918: militärisch verloren",
-        f"<rect x='190' y='60' width='20' height='120' fill='{DUNKEL}'/><rect x='150' y='180' width='100' height='12' rx='4' fill='{DUNKEL}'/>",
-        f"<line x1='60' y1='52' x2='340' y2='96' stroke='{DUNKEL}' stroke-width='8' stroke-linecap='round'/>",
-        f"<line x1='70' y1='54' x2='70' y2='84' stroke='{GRAU}' stroke-width='2'/><line x1='330' y1='94' x2='330' y2='140' stroke='{GRAU}' stroke-width='2'/>",
-        box(14, 84, 112, 44, "Deutschland:\nerschöpft, Hunger", "#fde7f3", MAGENTA, 10, 700, MAGENTA),
-        box(268, 140, 124, 54, "Alliierte + USA:\n10.000 neue Soldaten\njeden Tag", "#dbe9f7", BLAU, 10, 700, DUNKEL),
-        f"<rect x='90' y='200' width='220' height='34' rx='6' fill='#fff' stroke='{ROT}' stroke-width='2'/>",
-        t(200, 214, "29. Sept. 1918: Die Generäle", 10, 700, ROT), t(200, 227, "verlangen einen Waffenstillstand", 10, 700, ROT),
-        t(200, 30, "Die Waage kippt", 14, 900, DUNKEL))
+    """Die Waage kippt – animiert: erst kommen die amerikanischen Soldaten an, dann kippt der Balken.
+    Ohne Bewegungswunsch (prefers-reduced-motion) steht die Waage sofort gekippt."""
+    css = ("<style>"
+           "@keyframes kippen{0%{transform:rotate(0deg)}70%{transform:rotate(16deg)}85%{transform:rotate(13deg)}100%{transform:rotate(14deg)}}"
+           "@keyframes hochL{0%{transform:translate(0,0)}70%{transform:translate(5px,-38px)}85%{transform:translate(4px,-31px)}100%{transform:translate(4px,-34px)}}"
+           "@keyframes runterR{0%{transform:translate(0,0)}70%{transform:translate(-5px,38px)}85%{transform:translate(-4px,31px)}100%{transform:translate(-4px,34px)}}"
+           "@keyframes rein{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}"
+           ".balken{transform-origin:200px 128px;animation:kippen 2.2s ease-in-out 1.7s forwards}"
+           ".schaleL{animation:hochL 2.2s ease-in-out 1.7s forwards}.schaleR{animation:runterR 2.2s ease-in-out 1.7s forwards}"
+           ".soldat{opacity:0;animation:rein .5s ease-out forwards}.s1{animation-delay:.3s}.s2{animation-delay:.75s}.s3{animation-delay:1.2s}"
+           "@media (prefers-reduced-motion:reduce){.balken,.schaleL,.schaleR,.soldat{animation:none}.balken{transform:rotate(14deg)}"
+           ".schaleL{transform:translate(4px,-34px)}.schaleR{transform:translate(-4px,34px)}.soldat{opacity:1}}"
+           "</style>")
+    soldaten = "".join(f"<g class='soldat s{i + 1}'>{person(302 + i * 20, 130, '#1e3a5f', .6)}</g>" for i in range(3))
+    return svg("Sommer 1918: militärisch verloren – die Waage kippt",
+        css,
+        t(200, 26, "Die Waage kippt", 14, 900, DUNKEL),
+        f"<rect x='194' y='128' width='12' height='70' fill='{DUNKEL}'/><rect x='156' y='196' width='88' height='10' rx='4' fill='{DUNKEL}'/>",
+        f"<g class='balken'><line x1='60' y1='128' x2='340' y2='128' stroke='{DUNKEL}' stroke-width='8' stroke-linecap='round'/><circle cx='200' cy='128' r='7' fill='{ORANGE}' stroke='{DUNKEL}' stroke-width='2'/></g>",
+        f"<g class='schaleL'><line x1='60' y1='128' x2='60' y2='146' stroke='{GRAU}' stroke-width='2'/>"
+        + box(14, 146, 92, 40, "Deutschland:\nerschöpft, Hunger", "#fde7f3", MAGENTA, 10, 700, MAGENTA) + "</g>",
+        f"<g class='schaleR'><line x1='340' y1='128' x2='340' y2='150' stroke='{GRAU}' stroke-width='2'/>{soldaten}"
+        + box(284, 150, 110, 50, "Alliierte + USA:\n10.000 neue\nSoldaten jeden Tag", "#dbe9f7", BLAU, 10, 700, DUNKEL) + "</g>",
+        f"<rect x='10' y='190' width='134' height='46' rx='6' fill='#fff' stroke='{ROT}' stroke-width='2'/>",
+        t(77, 204, "29. Sept. 1918:", 10, 800, ROT), t(77, 216, "Die Generäle verlangen", 10, 700, ROT), t(77, 228, "einen Waffenstillstand", 10, 700, ROT))
 
 
 def kriegsende_2():
@@ -664,9 +853,9 @@ def kriegsende_2():
         f"<rect x='45' y='130' width='12' height='50' fill='{DUNKEL}'/><rect x='75' y='130' width='12' height='50' fill='{DUNKEL}'/><rect x='105' y='130' width='12' height='50' fill='{DUNKEL}'/><rect x='135' y='130' width='12' height='50' fill='{DUNKEL}'/>",
         t(100, 200, "Reichstag bekommt Macht", 11, 900, DUNKEL), t(100, 214, "Oktober 1918: Reformen", 10, 400, GRAU),
         t(300, 40, "Verbündete geben auf:", 13, 900, ROT),
-        f"<g transform='rotate(20 240 100)'>{flag(222, 84, GRUEN, 'BG')}</g>", t(240, 130, "Bulgarien", 10, 700), t(240, 142, "29. Sept.", 10, 400, GRAU),
-        f"<g transform='rotate(35 310 100)'>{flag(292, 84, ROT, 'OSM')}</g>", t(310, 130, "Osman. Reich", 10, 700), t(310, 142, "30. Okt.", 10, 400, GRAU),
-        f"<g transform='rotate(50 375 100)'>{flag(357, 84, '#7c2d12', 'Ö-U')}</g>", t(375, 130, "Österr.-Ung.", 10, 700), t(375, 142, "3. Nov.", 10, 400, GRAU),
+        f"<g transform='rotate(20 234 100)'>{flag(216, 84, GRUEN, 'BG')}</g>", t(234, 130, "Bulgarien", 10, 700), t(234, 154, "29. Sept.", 10, 400, GRAU),
+        f"<g transform='rotate(35 300 100)'>{flag(282, 84, ROT, 'OSM')}</g>", t(300, 130, "Osmanisches", 10, 700), t(300, 142, "Reich", 10, 700), t(300, 154, "30. Okt.", 10, 400, GRAU),
+        f"<g transform='rotate(50 364 100)'>{flag(346, 84, '#7c2d12', 'Ö-U')}</g>", t(364, 130, "Österreich-", 10, 700), t(364, 142, "Ungarn", 10, 700), t(364, 154, "3. Nov.", 10, 400, GRAU),
         t(300, 190, "Deutschland steht allein", 12, 700, TEXT),
         t(200, 24, "Herbst 1918", 12, 400, GRAU))
 
@@ -723,15 +912,45 @@ def folgen_2():
 
 
 def folgen_3():
-    kronen = "".join(krone(50 + i * 60, 60) + kreuz(50 + i * 60, 56, 20, ROT) for i in range(4))
-    return svg("Eine neue Landkarte",
-        t(140, 24, "Vier Reiche zerfallen", 13, 900, DUNKEL), kronen,
-        t(50, 96, "Deutsches Reich", 8, 700), t(110, 96, "Österr.-Ung.", 8, 700), t(170, 96, "Russland", 8, 700), t(230, 96, "Osman. Reich", 8, 700),
-        arrow(140, 106, 140, 122, DUNKEL),
-        box(16, 130, 74, 34, "Polen", "#dcfce7", GRUEN, 11), box(96, 130, 100, 34, "Tschechoslow.", "#dcfce7", GRUEN, 10), box(202, 130, 84, 34, "Jugoslawien", "#dcfce7", GRUEN, 10),
-        box(16, 170, 120, 34, "Baltische Staaten", "#dcfce7", GRUEN, 10), box(142, 170, 70, 34, "Finnland", "#dcfce7", GRUEN, 10),
-        t(142, 224, "Neue Staaten entstehen", 11, 700, GRUEN),
-        f"<circle cx='340' cy='150' r='44' fill='#fff' stroke='{BLAU}' stroke-width='3'/>", t(340, 146, "Völker-", 12, 900, BLAU), t(340, 162, "bund", 12, 900, BLAU), t(340, 210, "1920 · USA nicht dabei", 9, 700, GRAU))
+    """Zwei echte Europakarten (Natural Earth) nebeneinander: 1914 vier Kaiserreiche, 1920 neue Staaten.
+    Grenzen sind vereinfachte Polygone, auf die Landfläche beschnitten."""
+    W, H = 480, 288
+    DR14 = [(7.0, 53.4), (8.6, 54.9), (10.9, 54.4), (14.2, 53.9), (18.9, 54.8), (21.0, 55.7), (22.8, 54.9), (22.5, 53.5), (19.6, 52.4), (18.2, 51.4), (18.6, 50.4), (16.9, 50.2), (15.0, 51.0), (12.4, 50.2), (13.7, 48.8), (12.9, 47.8), (10.4, 47.3), (9.6, 47.5), (7.6, 47.6), (7.6, 49.0), (5.9, 49.5), (6.4, 49.8), (6.0, 50.8), (5.9, 51.8), (7.0, 52.6)]
+    OU14 = [(13.7, 48.8), (12.4, 50.2), (15.0, 51.0), (16.9, 50.2), (18.6, 50.4), (19.8, 49.7), (23.0, 50.9), (25.8, 50.2), (26.3, 48.3), (25.0, 47.7), (26.6, 47.2), (25.2, 45.5), (22.7, 44.7), (20.8, 45.0), (19.5, 44.3), (19.4, 43.4), (18.5, 42.4), (17.4, 43.0), (15.8, 43.6), (15.2, 44.3), (13.8, 44.8), (13.6, 45.8), (12.4, 46.4), (11.0, 45.8), (10.5, 46.6), (9.6, 47.1), (10.4, 47.3), (12.9, 47.8)]
+    RU14 = [(21.0, 55.7), (22.8, 54.9), (22.5, 53.5), (19.6, 52.4), (18.2, 51.4), (19.8, 49.7), (23.0, 50.9), (25.8, 50.2), (26.3, 48.3), (28.2, 46.6), (30.0, 46.2), (33.5, 46.0), (34.5, 44.5), (36.6, 45.3), (38.5, 47.1), (44.0, 47.6), (44.0, 64.0), (20.5, 64.0)]
+    OSM = [(26.3, 41.7), (28.0, 41.98), (29.2, 41.2), (31.4, 41.2), (36.0, 42.1), (44.0, 41.5), (44.0, 36.5), (36.0, 36.5), (32.0, 36.0), (28.0, 36.5), (26.2, 39.5), (26.6, 40.6)]
+    D20 = [(7.0, 53.4), (8.7, 54.9), (9.5, 54.85), (10.9, 54.4), (14.2, 53.9), (16.6, 54.6), (17.4, 53.9), (16.9, 52.9), (15.9, 52.3), (16.0, 51.4), (17.6, 51.0), (18.2, 50.5), (17.5, 50.2), (16.9, 50.2), (15.0, 51.0), (12.4, 50.2), (13.7, 48.8), (12.9, 47.8), (10.4, 47.3), (9.6, 47.5), (7.6, 47.6), (8.2, 48.9), (6.4, 49.5), (6.4, 49.8), (6.1, 50.6), (5.9, 51.8), (7.0, 52.6)]
+    OPR = [(19.6, 54.5), (20.5, 54.7), (21.0, 55.3), (22.8, 54.9), (22.5, 53.5), (19.7, 53.5)]
+    PL = [(17.4, 53.9), (16.6, 54.6), (19.6, 54.5), (19.7, 53.5), (22.5, 53.5), (23.5, 53.9), (26.5, 55.8), (28.0, 54.0), (27.5, 52.2), (26.5, 51.5), (25.8, 50.2), (26.3, 48.4), (22.5, 49.0), (19.8, 49.4), (18.6, 49.5), (18.2, 50.5), (17.6, 51.0), (16.0, 51.4), (15.9, 52.3), (16.9, 52.9)]
+    CS = [(12.4, 50.2), (15.0, 51.0), (16.9, 50.2), (17.5, 50.2), (18.2, 50.5), (18.6, 49.5), (19.8, 49.4), (22.5, 49.0), (22.8, 48.3), (22.1, 48.4), (20.5, 48.6), (18.8, 47.8), (17.1, 47.7), (16.9, 48.6), (15.0, 48.9), (13.7, 48.8)]
+    AT = [(9.6, 47.5), (10.4, 47.3), (12.9, 47.8), (13.7, 48.8), (15.0, 48.9), (16.9, 48.6), (17.1, 47.7), (16.1, 46.9), (14.6, 46.4), (13.7, 46.5), (12.4, 46.7), (11.0, 46.8), (10.5, 46.9), (9.6, 47.1)]
+    HU = [(17.1, 47.7), (18.8, 47.8), (20.5, 48.6), (22.1, 48.4), (22.8, 48.3), (22.0, 47.6), (21.2, 46.2), (20.3, 46.1), (19.0, 45.9), (17.6, 45.8), (16.4, 46.5), (16.1, 46.9)]
+    YU = [(13.6, 45.8), (14.6, 46.4), (16.1, 46.9), (16.4, 46.5), (17.6, 45.8), (19.0, 45.9), (20.3, 46.1), (21.2, 46.2), (21.5, 45.0), (22.7, 44.7), (22.4, 43.0), (22.9, 41.4), (22.5, 41.1), (20.7, 41.0), (20.6, 41.9), (19.4, 42.2), (18.5, 42.4), (17.4, 43.0), (15.8, 43.6), (15.2, 44.3), (14.0, 44.8)]
+    BALT = [(21.0, 55.7), (23.5, 53.9), (26.5, 55.8), (27.5, 56.5), (27.8, 57.6), (28.0, 59.4), (26.0, 59.8), (23.5, 59.5), (21.5, 57.5)]
+    FIN = [(20.5, 64.0), (30.5, 64.0), (31.5, 62.0), (29.0, 60.1), (26.0, 60.4), (21.0, 60.5)]
+    SU = [(26.5, 55.8), (27.5, 56.5), (27.8, 57.6), (28.0, 59.4), (29.0, 60.1), (31.5, 62.0), (30.5, 64.0), (44.0, 64.0), (44.0, 47.6), (38.5, 47.1), (36.6, 45.3), (34.5, 44.5), (33.5, 46.0), (30.0, 46.2), (29.4, 47.5), (26.3, 48.4), (25.8, 50.2), (26.5, 51.5), (27.5, 52.2), (28.0, 54.0)]
+    GRAU_L, GELB, GRUEN_L, ROT_L, NEU = "#9aa5b4", "#f6c453", "#9fd8b3", "#f3a7a7", "#3fbf6f"
+    f = 30   # Schriftgröße in Kartenkoordinaten (Ausschnitt wird auf ~0,28 verkleinert)
+    k14 = (gebiet(DR14, GRAU_L, "cp14") + gebiet(OU14, GELB, "cp14") + gebiet(RU14, GRUEN_L, "cp14") + gebiet(OSM, ROT_L, "cp14")
+           + mt(10.5, 51.6, "Deutsches Reich", f, 900, "#111") + mt(18.0, 47.3, "Österreich-Ungarn", f, 900, "#7c2d12")
+           + mt(34.5, 56.5, "Russisches", f * .9, 900, "#14532d") + mt(34.5, 54.6, "Reich", f * .9, 900, "#14532d") + mt(33.5, 39.8, "Osmanisches", f * .9, 900, "#7f1d1d") + mt(33.5, 38.0, "Reich", f * .9, 900, "#7f1d1d"))
+    k20 = (gebiet(D20, GRAU_L, "cp20") + gebiet(OPR, GRAU_L, "cp20") + gebiet(AT, GELB, "cp20") + gebiet(HU, GELB, "cp20")
+           + gebiet(SU, GRUEN_L, "cp20") + gebiet(OSM, ROT_L, "cp20")
+           + gebiet(PL, NEU, "cp20") + gebiet(CS, NEU, "cp20") + gebiet(YU, NEU, "cp20") + gebiet(BALT, NEU, "cp20") + gebiet(FIN, NEU, "cp20")
+           + mt(10.0, 51.8, "Deutschland", f, 900, "#111") + mt(22.0, 52.3, "Polen", f, 900, "#052e16") + mt(15.8, 49.7, "Tschechoslowakei", f * .85, 900, "#052e16")
+           + mt(13.8, 47.6, "Österreich", f * .8, 900, "#7c2d12") + mt(19.4, 47.1, "Ungarn", f * .8, 900, "#7c2d12") + mt(18.6, 44.2, "Jugoslawien", f * .9, 900, "#052e16")
+           + mt(24.8, 57.6, "Baltische Staaten", f * .8, 900, "#052e16") + mt(26.0, 62.6, "Finnland", f * .85, 900, "#052e16")
+           + mt(35.2, 55.5, "Sowjet-", f * .9, 900, "#14532d") + mt(35.2, 53.6, "russland", f * .9, 900, "#14532d") + mt(34.0, 39.0, "Türkei", f, 900, "#7f1d1d"))
+    return svg("Europa vor und nach dem Krieg: vier Kaiserreiche zerfallen, neue Staaten entstehen",
+        SZENE_DEFS, f"<clipPath id='cpSzene'><rect width='{W}' height='{H}' rx='14'/></clipPath>", "<g clip-path='url(#cpSzene)'>",
+        f"<rect width='{W}' height='{H}' fill='{HELL}'/>",
+        tl(122, 24, "1914: vier Kaiserreiche", 13, 900, DUNKEL), tl(358, 24, "1920: neue Staaten", 13, 900, GRUEN),
+        landform_def(),
+        europakarte(8, 34, 228, 214, -6.0, 64.0, 44.0, 34.5, k14, "cp14"),
+        europakarte(244, 34, 228, 214, -6.0, 64.0, 44.0, 34.5, k20, "cp20"),
+        f"<rect x='236' y='258' width='12' height='12' rx='3' fill='{NEU}'/>", tl(254, 268, "neue Staaten", 10, 800, TEXT, "start"),
+        tl(122, 268, "Grenzen vereinfacht", 9, 700, GRAU), tl(408, 268, "Völkerbund 1920, ohne USA", 9, 700, GRAU),
+        "</g>", w=W, h=H)
 
 
 def folgen_4():

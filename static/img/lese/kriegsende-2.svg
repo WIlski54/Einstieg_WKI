@@ -5,15 +5,17 @@
 <text x='100' y='200' font-size='11' font-weight='900' fill='#004b80' text-anchor='middle'>Reichstag bekommt Macht</text>
 <text x='100' y='214' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>Oktober 1918: Reformen</text>
 <text x='300' y='40' font-size='13' font-weight='900' fill='#dc2626' text-anchor='middle'>Verbündete geben auf:</text>
-<g transform='rotate(20 240 100)'><rect x='222' y='84' width='34' height='22' rx='3' fill='#16a34a' stroke='#fff' stroke-width='1.5'/><text x='239.0' y='100.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>BG</text></g>
-<text x='240' y='130' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Bulgarien</text>
-<text x='240' y='142' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>29. Sept.</text>
-<g transform='rotate(35 310 100)'><rect x='292' y='84' width='34' height='22' rx='3' fill='#dc2626' stroke='#fff' stroke-width='1.5'/><text x='309.0' y='100.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>OSM</text></g>
-<text x='310' y='130' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Osman. Reich</text>
-<text x='310' y='142' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>30. Okt.</text>
-<g transform='rotate(50 375 100)'><rect x='357' y='84' width='34' height='22' rx='3' fill='#7c2d12' stroke='#fff' stroke-width='1.5'/><text x='374.0' y='100.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>Ö-U</text></g>
-<text x='375' y='130' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Österr.-Ung.</text>
-<text x='375' y='142' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>3. Nov.</text>
+<g transform='rotate(20 234 100)'><rect x='216' y='84' width='34' height='22' rx='3' fill='#16a34a' stroke='#fff' stroke-width='1.5'/><text x='233.0' y='100.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>BG</text></g>
+<text x='234' y='130' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Bulgarien</text>
+<text x='234' y='154' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>29. Sept.</text>
+<g transform='rotate(35 300 100)'><rect x='282' y='84' width='34' height='22' rx='3' fill='#dc2626' stroke='#fff' stroke-width='1.5'/><text x='299.0' y='100.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>OSM</text></g>
+<text x='300' y='130' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Osmanisches</text>
+<text x='300' y='142' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Reich</text>
+<text x='300' y='154' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>30. Okt.</text>
+<g transform='rotate(50 364 100)'><rect x='346' y='84' width='34' height='22' rx='3' fill='#7c2d12' stroke='#fff' stroke-width='1.5'/><text x='363.0' y='100.0' font-size='12' font-weight='900' fill='#fff' text-anchor='middle'>Ö-U</text></g>
+<text x='364' y='130' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Österreich-</text>
+<text x='364' y='142' font-size='10' font-weight='700' fill='#1e293b' text-anchor='middle'>Ungarn</text>
+<text x='364' y='154' font-size='10' font-weight='400' fill='#6b7280' text-anchor='middle'>3. Nov.</text>
 <text x='300' y='190' font-size='12' font-weight='700' fill='#1e293b' text-anchor='middle'>Deutschland steht allein</text>
 <text x='200' y='24' font-size='12' font-weight='400' fill='#6b7280' text-anchor='middle'>Herbst 1918</text>
 </svg>

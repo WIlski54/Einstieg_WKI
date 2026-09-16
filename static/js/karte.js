@@ -14,6 +14,12 @@ WK.karte = (() => {
     "europa1920:riga": { dx: 44, dy: -6 }, "europa1920:warschau": { dx: 26, dy: 36 }, "kriegsende:brest": { dx: 0, dy: -30 },
     "kriegsende:spa": { dx: 30, dy: -30 }, "kriegsende:compiegne": { dx: -10, dy: 36 }, "kriegsende:amiens": { dx: -40, dy: -30 },
     "julikrise:bruessel": { dx: -30, dy: -30 }, "julikrise:paris": { dx: -34, dy: 36 }, "fronten:westfront": { dx: -30, dy: 36 },
+    "julikrise:sarajevo": { dx: -6, dy: 36 }, "julikrise:belgrad": { dx: 34, dy: -26 },
+  };
+  // Punkte, die geografisch fast aufeinanderliegen, werden leicht auseinandergezogen (Pixel).
+  const PIN_OFFSET = {
+    "julikrise:sarajevo": { dx: -16, dy: 12 }, "julikrise:belgrad": { dx: 18, dy: -14 },
+    "europa1914:serbien": { dx: 0, dy: 10 },
   };
 
   function buildMapSVG(spec, nr, karteKey) {
@@ -22,11 +28,13 @@ WK.karte = (() => {
     const fronten = (spec.fronten || []).map(f => `<polyline class="map-front" points="${poly(f.punkte)}"><title>${esc(f.name)}</title></polyline>`).join("");
     const punkte = spec.punkte.map(p => {
       const off = LABEL_OFFSET[`${karteKey}:${p.id}`] || { dx: 0, dy: 36 };
+      const pin = PIN_OFFSET[`${karteKey}:${p.id}`] || { dx: 0, dy: 0 };
+      const cx = (parseFloat(px(p.lon)) + pin.dx).toFixed(1), cy = (parseFloat(py(p.lat)) + pin.dy).toFixed(1);
       return `
       <g class="hs-dot hs-${p.bloc}" data-action="spot" data-nr="${nr}" data-spot="${p.id}" role="button" tabindex="0" aria-label="${esc(p.titel)}">
-        <circle cx="${px(p.lon)}" cy="${py(p.lat)}" r="22"/>
-        <text class="hs-icon" x="${px(p.lon)}" y="${py(p.lat)}" text-anchor="middle" dominant-baseline="central" aria-hidden="true">${p.icon}</text>
-        <text class="hs-label" x="${(parseFloat(px(p.lon)) + off.dx).toFixed(1)}" y="${(parseFloat(py(p.lat)) + off.dy).toFixed(1)}" text-anchor="middle">${esc(p.label)}</text>
+        <circle cx="${cx}" cy="${cy}" r="22"/>
+        <text class="hs-icon" x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" aria-hidden="true">${p.icon}</text>
+        <text class="hs-label" x="${(parseFloat(cx) + off.dx).toFixed(1)}" y="${(parseFloat(cy) + off.dy).toFixed(1)}" text-anchor="middle">${esc(p.label)}</text>
       </g>`;
     }).join("");
     const legende = (spec.legende || []).map(([k, l]) => `<span class="legend-item"><i class="legend-dot hs-${k}"></i>${esc(l)}</span>`).join("");
